@@ -1,0 +1,27 @@
+{
+  "name": "POGOServer",
+  "version": "0.1.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maierfelix/POGOServer.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "babel-node": "babel-node --presets=es2015",
+    "start": "nodemon --exec npm run babel-node -- ./src/index.js"
+  },
+  "author": "Felix Maier",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.13.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "body-parser": "^1.15.2",
+    "concat-stream": "^1.5.1",
+    "nodemon": "^1.7.1",
+    "protobufjs": "^5.0.1",
+    "pkmngo-proto": "^0.2.3"
+  },
+  "dependencies": {}
+}
