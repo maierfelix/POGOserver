@@ -5,3 +5,5 @@ export const SERVER_SAVE_INTERVAL = 120000; // all 120s
 export const SERVER_MAX_CONNECTIONS = 64;
 
 export const SERVER_DEFAULT_CONSOLE_COLOR = 32;
+
+export const ASSET_DIGEST_PATH = "../../asset_digest";

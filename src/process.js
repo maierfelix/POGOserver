@@ -31,7 +31,7 @@ export function uncaughtException(excp) {
       this.print("No root privileges!", 31);
     break;
     default:
-      console.log("Unhandled exception occurred: ", code);
+      console.log("Unhandled exception occurred: ", excp.code);
       console.log(excp.stack);
     break;
   };

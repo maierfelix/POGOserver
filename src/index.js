@@ -1,5 +1,7 @@
 import fs from "fs";
 import http from "http";
+import proto from "./proto";
+import querystring from "querystring";
 
 import { inherit } from "./utils";
 
@@ -43,17 +45,30 @@ class GameServer {
   }
 
   createHTTPServer() {
-    this.socket = http.createServer(this.onRequest).listen(CFG.SERVER_PORT);
+    this.socket = http.createServer((req) => {
+      let chunks = [];
+      req.on("data", (chunk) => {
+        chunks.push(chunk);
+      });
+      req.on("end", () => {
+        let buffer = Buffer.concat(chunks);
+        this.onRequest(buffer);
+      });
+    }).listen(CFG.SERVER_PORT);
   }
 
   /**
-   * @param {Request} req
-   * @param {Response} resp
+   * @param {Buffer} body
    */
-  onRequest(req, resp) {
-    if (this.validRequest(req)) {
-      this.answer(valid);
-    }
+  onRequest(body) {
+
+    let request = proto.Networking.Envelopes.RequestEnvelope.decode(body);
+
+    console.log("Got request");
+    console.log("Received:", request.requests.map((request) => {
+      return request.request_type;
+    }).join(","));
+
   }
 
   /**
@@ -61,7 +76,6 @@ class GameServer {
    * @return {Boolean}
    */
   validRequest(req) {
-    console.log(req);
     return (true);
   }
 
