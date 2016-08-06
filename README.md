@@ -13,5 +13,4 @@ TODO:
 - [ ] Database
 - [ ] Player objects
 - [ ] Map server
-- [ ] Receive GPS data# POGOServer
-Pokemon GO server emulation
+- [ ] Receive GPS data
