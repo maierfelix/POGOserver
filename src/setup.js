@@ -15,6 +15,6 @@ export function setup() {
 
   setTimeout(this::this.cycle, 1);
 
-  this.print("Server listening on port " + CFG.SERVER_PORT);
+  this.print(`Server running at ${CFG.SERVER_HOST_IP}:${CFG.SERVER_PORT}`);
 
 }

@@ -29,7 +29,7 @@ export function cycle() {
 }
 
 export function updateTimers() {
-  let local = new Date();
+  let local = Date.now();
   this.passedTicks = local - this.time;
   this.tick += this.passedTicks;
   this.time = local;
@@ -43,11 +43,31 @@ export function resetTimers() {
       this.fullTick = 0;
     }
     this.tick = 0;
+    // Player timeout tick, not precise
+    this.playerTimeoutTick();
   }
   this.saveTick++;
+  // Save interval
   if (this.saveTick >= CFG.SERVER_SAVE_INTERVAL) {
     this.savePlayers();
     this.saveTick = 0;
   }
   return void 0;
+}
+
+export function playerTimeoutTick() {
+
+  let client = null;
+  let maxTimeout = CFG.SERVER_PLAYER_CONNECTION_TIMEOUT;
+
+  let ii = 0, length = this.clients.length;
+
+  for (; ii < length; ++ii) {
+    client = this.clients[ii];
+    if (this.time - client.timeout >= maxTimeout) {
+      this.print(`${client.remoteAddress} timed out!`, 36);
+      this.killPlayer(client);
+    }
+  };
+
 }

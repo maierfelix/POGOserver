@@ -8,8 +8,8 @@ export default function DownloadSettings(obj) {
 
   return (
     new proto.Networking.Responses.DownloadSettingsResponse({
-      hash: "54b359c97e46900f87211ef6e6dd0b7f2a3ea1f5"
-    }).encode();
+      hash: "b1f2bf509a025b7cd76e1c484e2a24411c50f0612"
+    }).encode()
   );
 
 }

@@ -6,10 +6,11 @@ import querystring from "querystring";
 import { inherit } from "./utils";
 
 import * as CFG from "../cfg";
-import { REQUEST } from "../requests";
 
 import * as _setup from "./setup";
 import * as _cycle from "./cycle";
+import * as _player from "./player";
+import * as _request from "./request";
 import * as _process from "./process";
 import * as _database from "./database";
 
@@ -38,45 +39,55 @@ class GameServer {
     this.time = 0;
     this.fullTick = 0;
     this.saveTick = 0;
+    this.timeoutTick = 0;
     this.passedTicks = 0;
+
+    this.clients = [];
 
     this.setup();
 
   }
 
+  clientAlreadyConnected(client) {
+
+    let remoteAddress = client.connection.remoteAddress;
+
+    let ii = 0, length = this.clients.length;
+
+    for (; ii < length; ++ii) {
+      if (this.clients[ii].remoteAddress === remoteAddress) {
+        return (true);
+      }
+    };
+
+    return (false);
+
+  }
+
   createHTTPServer() {
-    this.socket = http.createServer((req) => {
+    let server = http.createServer((req, res) => {
+      if (!this.clientAlreadyConnected(req)) {
+        this.print(`${req.connection.remoteAddress} connected!`, 36);
+        this.addPlayer(req.connection);
+      }
       let chunks = [];
       req.on("data", (chunk) => {
         chunks.push(chunk);
       });
       req.on("end", () => {
+        // Reset player timeout
+        let player = this.getPlayerByRequest(req);
+        if (player !== null) player.timeout = this.time;
+        // Data
         let buffer = Buffer.concat(chunks);
-        this.onRequest(buffer);
+        req.body = buffer;
+        this.onRequest(req, res);
       });
-    }).listen(CFG.SERVER_PORT);
-  }
+    });
+    server.listen(CFG.SERVER_PORT, CFG.SERVER_HOST_IP, () => {
 
-  /**
-   * @param {Buffer} body
-   */
-  onRequest(body) {
-
-    let request = proto.Networking.Envelopes.RequestEnvelope.decode(body);
-
-    console.log("Got request");
-    console.log("Received:", request.requests.map((request) => {
-      return request.request_type;
-    }).join(","));
-
-  }
-
-  /**
-   * @param {Request} req
-   * @return {Boolean}
-   */
-  validRequest(req) {
-    return (true);
+    });
+    return (server);
   }
 
   /**
@@ -88,59 +99,12 @@ class GameServer {
     console.log(`\x1b[${color};1m${msg}\x1b[0m`);
   }
 
-  /**
-   * @param {Request} req
-   */
-  answer(req) {
-
-    switch (req.request_type) {
-      // #LOGIN START
-      case REQUEST.GET_PLAYER:
-
-      break;
-      case REQUEST.GET_HATCHED_EGGS:
-
-      break;
-      case REQUEST.GET_INVENTORY:
-
-      break;
-      case REQUEST.CHECK_AWARDED_BADGES:
-
-      break;
-      case REQUEST.DOWNLOAD_SETTINGS:
-
-      break;
-      case REQUEST.DOWNLOAD_ITEM_TEMPLATES:
-        
-      break;
-      // #LOGIN END
-      case REQUEST.GET_PLAYER_PROFILE:
-        
-      break;
-      case REQUEST.GET_MAP_OBJECTS:
-
-      break;
-      case REQUEST.GET_GYM_DETAILS:
-
-      break;
-    };
-
-  }
-
-  updatePlayers() {
-    //this.print("Updating players");
-    return void 0;
-  }
-
-  savePlayers() {
-    this.print("Saving players into database");
-    return void 0;
-  }
-
 }
 
 inherit(GameServer, _setup);
 inherit(GameServer, _cycle);
+inherit(GameServer, _player);
+inherit(GameServer, _request);
 inherit(GameServer, _process);
 inherit(GameServer, _database);
 

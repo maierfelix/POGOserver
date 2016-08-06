@@ -1,4 +1,4 @@
-import * as CFG from "../cfg";
+import * as CFG from "../../cfg";
 
 import proto from "../proto";
 
@@ -9,7 +9,7 @@ import proto from "../proto";
 export default function GetAssetDigest(obj) {
 
   return (
-    fs.readFileSync(CFG.ASSET_DIGEST_PATH)
+    fs.readFileSync("../../" + CFG.ASSET_DIGEST_PATH)
   );
 
 }
