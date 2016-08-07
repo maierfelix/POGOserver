@@ -1,10 +1,11 @@
 import * as CFG from "../cfg";
 
-function processCommand(cmd, data) {
+export function processCommand(cmd, data) {
   switch (cmd) {
     // How many active connections there are
     case "/clients":
-      this.print("There are many connected players!", 33);
+      let length = this.clients.length;
+      this.print(`${length} connected player${length === 1 ? "": "s"}!`, 33);
     break;
     // Kill the server
     case "/exit":
@@ -19,7 +20,7 @@ export function stdinInput(data) {
   if (data.length < 1) return void 0;
   data = data.split(" ");
   var cmd = data[0];
-  processCommand();
+  this.processCommand(cmd, data);
 };
 
 export function uncaughtException(excp) {

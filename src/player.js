@@ -1,18 +1,98 @@
+import proto from "./proto";
+
 import * as CFG from "../cfg";
 
-export function killPlayer(player) {
+import {
+  getHashCodeFrom,
+  decodeRequestEnvelope
+} from "./utils";
 
-  let index = this.getPlayerIndex(player);
+/**
+ * @class Player
+ */
+class Player {
 
-  if (index >= 0) {
-    this.clients.splice(index, 1);
+  /** @constructor */
+  constructor(obj) {
+
+    this.uid = -1;
+
+    this.name = null;
+
+    this.email = null;
+
+    this.position = {
+      latitude: 0,
+      longitude: 0,
+      altitude: 0
+    };
+
+    this.exp = 0;
+
+    this.stardust = 0;
+    this.pokecoins = 0;
+
+    this.avatar = null;
+    this.badges = null;
+    this.pokedex = null;
+    this.inventory = null;
+
+    this.response = obj.response;
+    this.connection = obj.connection;
+
+    this.timeout = obj.timeout;
+
+    this.remotePort = obj.remotePort;
+    this.remoteAddress = obj.remoteAddress;
+
+    this.currentEncounter = null;
+
+    this.loggedIn = obj.loggedIn || false;
+    this.authenticated = false;
+
   }
-  else {
-    this.print("Failed at killing player", 33);
+
+  /**
+   * @param {String} email
+   */
+  generateUid(email) {
+    this.uid = getHashCodeFrom(String(email));
+  }
+
+  /**
+   * @param {Request} req
+   */
+  updatePosition(req) {
+
+    let data = decodeRequestEnvelope(req.request_message.buffer);
+
+    this.latitude = data.latitude;
+    this.longitude = data.longitude;
+    //this.position.altitude = data.altitude;
+
+    //console.log(`Updated position: ${data.latitude};${data.longitude}`);
+
+  }
+
+  get latitude() {
+    return (this.position.latitude);
+  }
+  set latitude(lat) {
+    this.position.latitude = lat;
+  }
+
+  get longitude() {
+    return (this.position.longitude);
+  }
+  set longitude(lng) {
+    this.position.longitude = lng;
   }
 
 }
 
+/**
+ * @param {Player} player
+ */
 export function getPlayerIndex(player) {
 
   let ip = player.remoteAddress;
@@ -31,12 +111,18 @@ export function getPlayerIndex(player) {
 
 }
 
+/**
+ * @param {Request} req
+ */
 export function getPlayerByRequest(req) {
   return (
     this.getPlayerByIP(req.connection.remoteAddress)
   );
 }
 
+/**
+ * @param {String} ip
+ */
 export function getPlayerByIP(ip) {
 
   let ii = 0, length = this.clients.length;
@@ -51,15 +137,35 @@ export function getPlayerByIP(ip) {
 
 }
 
+/**
+ * @param {Request} connection
+ */
 export function addPlayer(connection) {
 
-  this.clients.push({
-    name: "rofl",
+  this.clients.push(new Player({
     timeout: this.time,
+    connection: connection,
+    response: this.response,
     remotePort: connection.remotePort,
-    remoteAddress: connection.remoteAddress,
-    connection: connection
-  });
+    remoteAddress: connection.remoteAddress
+  }));
+
+}
+
+/**
+ * @param {Player} player
+ */
+export function removePlayer(player) {
+
+  let index = this.getPlayerIndex(player);
+
+  if (index >= 0) {
+    this.clients.splice(index, 1);
+    this.print(`${player.remoteAddress} disconnected!`, 36);
+  }
+  else {
+    this.print("Failed at removing player", 33);
+  }
 
 }
 
@@ -69,6 +175,14 @@ export function updatePlayers() {
 }
 
 export function savePlayers() {
-  this.print("Saving players into database");
+  this.print("Saving players into database..");
+  return void 0;
+}
+
+/**
+ * @param {Player} player
+ */
+export function savePlayer(player) {
+  this.print(`${player.remoteAddress} saved into database`, 34);
   return void 0;
 }

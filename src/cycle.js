@@ -65,8 +65,9 @@ export function playerTimeoutTick() {
   for (; ii < length; ++ii) {
     client = this.clients[ii];
     if (this.time - client.timeout >= maxTimeout) {
-      this.print(`${client.remoteAddress} timed out!`, 36);
-      this.killPlayer(client);
+      this.print(`${client.remoteAddress} timed out`, 34);
+      this.savePlayer(client);
+      this.removePlayer(client);
     }
   };
 

@@ -16,8 +16,8 @@ export default function ResponseEnvelope(obj) {
         })
       }),
       request_id: obj.id,
-      returns: obj.res
-    })
+      returns: obj.response
+    }).encode().toBuffer()
   );
 
 }

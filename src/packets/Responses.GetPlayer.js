@@ -6,22 +6,25 @@ import proto from "../proto";
  */
 function getPlayerDataPacket(obj) {
 
-  return new proto.Data.PlayerData({
-    creation_timestamp_ms: 1467936859925,
-    username: obj.username,
-    team: obj.team,
-    tutorial_state: obj.tutorial_state,
-    avatar: new proto.Data.Player.PlayerAvatar(obj.avatar),
-    max_pokemon_storage: 250,
-    max_item_storage: 350,
-    daily_bonus: new proto.Data.Player.DailyBonus({
-      next_defender_bonus_collect_timestamp_ms: 1470174535972
-    }),
-    contact_settings: new proto.Data.Player.ContactSettings({
-      send_marketing_emails: true
-    }),
-    currencies: obj.currencies
-  });
+  return (
+    new proto.Data.PlayerData({
+      creation_timestamp_ms: 1467936859925,
+      username: obj.username,
+      team: obj.team,
+      tutorial_state: obj.tutorial_state,
+      avatar: new proto.Data.Player.PlayerAvatar(obj.avatar),
+      max_pokemon_storage: 250,
+      max_item_storage: 350,
+      daily_bonus: new proto.Data.Player.DailyBonus({
+        next_defender_bonus_collect_timestamp_ms: 1470174535972
+      }),
+      // equipped_badge: new proto.Data.Player.EquippedBadge({}),
+      contact_settings: new proto.Data.Player.ContactSettings({
+        send_marketing_emails: true
+      }),
+      currencies: obj.currencies
+    })
+  );
 
 }
 

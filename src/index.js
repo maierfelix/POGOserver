@@ -14,6 +14,8 @@ import * as _request from "./request";
 import * as _process from "./process";
 import * as _database from "./database";
 
+const greetMessage = fs.readFileSync(".greet", "utf8");
+
 /**
  * @class GameServer
  */
@@ -28,10 +30,11 @@ class GameServer {
       CRASH: false
     };
 
-    this.paused = false;
-
     this.proto = null;
     this.socket = null;
+    this.player = null;
+    this.request = null;
+    this.response = null;
     this.cycleInstance = null;
 
     // Timer things
@@ -44,6 +47,7 @@ class GameServer {
 
     this.clients = [];
 
+    this.greet();
     this.setup();
 
   }
@@ -64,10 +68,13 @@ class GameServer {
 
   }
 
+  /**
+   * @return {HTTP}
+   */
   createHTTPServer() {
     let server = http.createServer((req, res) => {
+      this.response = res;
       if (!this.clientAlreadyConnected(req)) {
-        this.print(`${req.connection.remoteAddress} connected!`, 36);
         this.addPlayer(req.connection);
       }
       let chunks = [];
@@ -75,18 +82,13 @@ class GameServer {
         chunks.push(chunk);
       });
       req.on("end", () => {
-        // Reset player timeout
-        let player = this.getPlayerByRequest(req);
-        if (player !== null) player.timeout = this.time;
-        // Data
         let buffer = Buffer.concat(chunks);
         req.body = buffer;
+        this.request = req;
         this.onRequest(req, res);
       });
     });
-    server.listen(CFG.SERVER_PORT, CFG.SERVER_HOST_IP, () => {
-
-    });
+    server.listen(CFG.SERVER_PORT);
     return (server);
   }
 
@@ -97,6 +99,10 @@ class GameServer {
   print(msg, color) {
     color = Number.isInteger(color) ? color : CFG.SERVER_DEFAULT_CONSOLE_COLOR;
     console.log(`\x1b[${color};1m${msg}\x1b[0m`);
+  }
+
+  greet() {
+    console.log(greetMessage);
   }
 
 }
