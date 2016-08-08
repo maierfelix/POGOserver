@@ -12,12 +12,6 @@ export const ASSET_DIGEST_PATH = "asset_digest";
 
 export const MINIMUM_CLIENT_VERSION = "0.31.0";
 
-//lets require/import the mongodb native drivers.
-var mongodb = require('mongodb');
-
-//We need to work with "MongoClient" interface in order to connect to a mongodb server.
-var MongoClient = mongodb.MongoClient;
-
 export const SERVER_MONGO_PORT = 27017;
 export const SERVER_MONGO_HOST_IP = "localhost";
 export const SERVER_MONGO_DB_NAME = "pokemongo";
