@@ -6,15 +6,21 @@ export function setup() {
 
   this.print("Booting server...", 33);
 
-  if (CFG.SERVER_PORT < 1) {
-    this.print("Invalid port!", 31);
-    return void 0;
-  }
+  this.setupMongo(() => {
 
-  this.socket = this.createHTTPServer();
+    this.print("Database connection established");
 
-  setTimeout(this::this.cycle, 1);
+    if (CFG.SERVER_PORT < 1) {
+      this.print("Invalid port!", 31);
+      return void 0;
+    }
 
-  this.print(`Server running at ${CFG.SERVER_HOST_IP}:${CFG.SERVER_PORT}`);
+    this.socket = this.createHTTPServer();
+
+    setTimeout(this::this.cycle, 1);
+
+    this.print(`Server running at ${CFG.SERVER_HOST_IP}:${CFG.SERVER_PORT}`);
+
+  });
 
 }

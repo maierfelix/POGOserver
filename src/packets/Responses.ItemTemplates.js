@@ -49,6 +49,7 @@ export default function ItemTemplates(obj) {
           "damage_window_end_ms": 3400,
           "energy_delta": -20
         }),
+        // unused but saved here for later use
         move_sequence_settings: new proto.Settings.Master.MoveSequenceSettings({
           "sequence": ["anim attacker atk-move", "f2fvfx attacker acid_fast", "sfx attacker 051-0_acid", "wait 0.15", "vfx defender acid_fast_hit", "anim defender damageS01", "wait 0.35", "sys ui-sync", "sys complete"]
         }),

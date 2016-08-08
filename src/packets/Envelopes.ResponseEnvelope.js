@@ -11,7 +11,7 @@ export default function ResponseEnvelope(obj) {
       status_code: obj.status,
       unknown6: new proto.Networking.Envelopes.Unknown6Response({
         response_type: 6,
-        response_data: new proto.Networking.Envelopes.Unknown6Response.Unknown2({
+        unknown2: new proto.Networking.Envelopes.Unknown6Response.Unknown2({
           unknown1: 1
         })
       }),

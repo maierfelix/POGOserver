@@ -26,7 +26,7 @@ export default function DownloadSettings(obj) {
           get_map_objects_min_refresh_seconds: 5,
           get_map_objects_max_refresh_seconds: 30,
           get_map_objects_min_distance_meters: 10,
-          google_maps_api_key: "AIzaSyDF9rkP8lhcddBtvH9gVFzjnNo13WtmJIM"
+          google_maps_api_key: CFG.SERVER_GMAPS_API_KEY
         }),
         inventory_settings: new proto.Settings.InventorySettings({
           max_pokemon: 1000,

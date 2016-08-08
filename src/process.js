@@ -12,6 +12,13 @@ export function processCommand(cmd, data) {
       this.print("Killed the server!", 31);
       process.exit();
     break;
+    case "/clear":
+      process.stdout.write("\x1Bc");
+      this.greet();
+    break;
+    case "/save":
+      this.savePlayers();
+    break;
   };
 };
 

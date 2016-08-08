@@ -17,10 +17,9 @@ class Player {
 
     this.uid = -1;
 
-    this.name = null;
-
     this.email = null;
-
+    this._username = "undefined";
+ 
     this.position = {
       latitude: 0,
       longitude: 0,
@@ -59,6 +58,16 @@ class Player {
     this.uid = getHashCodeFrom(String(email));
   }
 
+  updateByObject(obj) {
+
+    for (let key in obj) {
+      if (this.hasOwnProperty(key)) {
+        this[key] = obj[key];
+      }
+    };
+
+  }
+
   /**
    * @param {Request} req
    */
@@ -72,6 +81,21 @@ class Player {
 
     //console.log(`Updated position: ${data.latitude};${data.longitude}`);
 
+  }
+
+  updateAvatar(req) {
+
+    let data = proto.Networking.Requests.Messages.SetAvatarMessage.decode(req.request_message.toBuffer());
+
+    this.avatar = data.player_avatar;
+
+  }
+
+  get username() {
+    return (this._username);
+  }
+  set username(name) {
+    this._username = name;
   }
 
   get latitude() {
@@ -175,7 +199,10 @@ export function updatePlayers() {
 }
 
 export function savePlayers() {
-  this.print("Saving players into database..");
+  for (let client of this.clients) {
+    this.savePlayer(client);
+  };
+  this.print("Saved players into database");
   return void 0;
 }
 
@@ -183,6 +210,6 @@ export function savePlayers() {
  * @param {Player} player
  */
 export function savePlayer(player) {
-  this.print(`${player.remoteAddress} saved into database`, 34);
-  return void 0;
+  this.updateUser(player);
+  //this.print(`${player.remoteAddress} saved into database`, 34);
 }

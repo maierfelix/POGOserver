@@ -1,9 +1,11 @@
 import fs from "fs";
 import http from "http";
 import proto from "./proto";
-import querystring from "querystring";
 
-import { inherit } from "./utils";
+import {
+  inherit,
+  decodeLong
+} from "./utils";
 
 import * as CFG from "../cfg";
 
@@ -28,6 +30,11 @@ class GameServer {
       PAUSE: false,
       DEBUG: false,
       CRASH: false
+    };
+
+    this.db = {
+      instance: null,
+      collections: {}
     };
 
     this.proto = null;

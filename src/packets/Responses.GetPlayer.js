@@ -10,7 +10,7 @@ function getPlayerDataPacket(obj) {
     new proto.Data.PlayerData({
       creation_timestamp_ms: 1467936859925,
       username: obj.username,
-      team: obj.team,
+      team: proto.Enums.TeamColor.YELLOW,
       tutorial_state: obj.tutorial_state,
       avatar: new proto.Data.Player.PlayerAvatar(obj.avatar),
       max_pokemon_storage: 250,
@@ -18,7 +18,6 @@ function getPlayerDataPacket(obj) {
       daily_bonus: new proto.Data.Player.DailyBonus({
         next_defender_bonus_collect_timestamp_ms: 1470174535972
       }),
-      // equipped_badge: new proto.Data.Player.EquippedBadge({}),
       contact_settings: new proto.Data.Player.ContactSettings({
         send_marketing_emails: true
       }),
@@ -40,17 +39,25 @@ function buildPlayerData(obj) {
   let pokecoins = obj.pokecoins;
   let stardust = obj.stardust;
 
-  let avatar = {
-    skin: 2,
+  let avatar = obj.avatar || {
+    skin: 0,
     hair: 2,
     shirt: 1,
     pants: 2,
-    hat: 1,
+    hat: 0,
+    shoes: 2,
     eyes: 3,
+    gender: proto.Enums.Gender.MALE,
     backpack: 1
   };
 
-  let tutorial_state = [0, 1, 3, 4, 7];
+  let tutorial_state = [
+    proto.Enums.TutorialState.LEGAL_SCREEN,
+    proto.Enums.TutorialState.AVATAR_SELECTION,
+    proto.Enums.TutorialState.POKEMON_CAPTURE,
+    proto.Enums.TutorialState.NAME_SELECTION,
+    proto.Enums.TutorialState.FIRST_TIME_EXPERIENCE_COMPLETE
+  ];
 
   let currencies = [
     new proto.Data.Player.Currency({
@@ -87,7 +94,7 @@ export default function GetPlayer(obj) {
     new proto.Networking.Responses.GetPlayerResponse({
       success: true,
       player_data: packet
-    }).encode()
+    })
   );
 
 }

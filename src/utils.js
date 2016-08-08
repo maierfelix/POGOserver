@@ -1,3 +1,4 @@
+import Long from "long";
 import proto from "./proto";
 
 /**
@@ -41,3 +42,17 @@ export function getHashCodeFrom(str) {
   }
   return hash;
 };
+
+/**
+ * @param  {Number} hi
+ * @param  {Number} lo
+ * @param  {Boolean} unsigned
+ * @return {Number}
+ */
+export function decodeLong(hi, lo, unsigned) {
+
+  let value = Long.fromBits(hi, lo, !!unsigned);
+
+  return (parseInt(value.toString()));
+
+}
