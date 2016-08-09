@@ -13,6 +13,7 @@ import * as _setup from "./setup";
 import * as _cycle from "./cycle";
 import * as _player from "./player";
 import * as _request from "./request";
+import * as _response from "./response";
 import * as _process from "./process";
 import * as _database from "./database";
 
@@ -118,6 +119,7 @@ inherit(GameServer, _setup);
 inherit(GameServer, _cycle);
 inherit(GameServer, _player);
 inherit(GameServer, _request);
+inherit(GameServer, _response);
 inherit(GameServer, _process);
 inherit(GameServer, _database);
 

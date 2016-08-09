@@ -15,28 +15,54 @@ export default function GetInventoryData(obj) {
           new proto.Inventory.InventoryItem({
             inventory_item_data: new proto.Inventory.InventoryItemData({
               "player_stats": new proto.Data.Player.PlayerStats({
-                "level": 99,
-                "experience": 1304364,
-                "prev_level_xp": 900000,
-                "next_level_xp": 1350000,
-                "km_walked": 54.55459213256836,
-                "pokemons_encountered": 3942,
-                "unique_pokedex_entries": 93,
-                "pokemons_captured": 3569,
-                "evolutions": 782,
-                "poke_stop_visits": 3113,
-                "pokeballs_thrown": 5783,
-                "eggs_hatched": 27,
-                "big_magikarp_caught": 11,
-                "battle_attack_won": 36,
-                "battle_attack_total": 44,
+                "level": 3,
+                "experience": 2000,
+                "prev_level_xp": 1000,
+                "next_level_xp": 6000,
+                "km_walked": 0.55459213256836,
+                "pokemons_encountered": 1,
+                "unique_pokedex_entries": 1,
+                "pokemons_captured": 1,
+                "evolutions": 0,
+                "poke_stop_visits": 1,
+                "pokeballs_thrown": 1,
+                "eggs_hatched": 0,
+                "big_magikarp_caught": 0,
+                "battle_attack_won": 0,
+                "battle_attack_total": 0,
                 "battle_defended_won": 0,
-                "battle_training_won": 1,
-                "battle_training_total": 2,
-                "prestige_raised_total": 190,
-                "prestige_dropped_total": 27000,
-                "pokemon_deployed": 2,
-                "small_rattata_caught": 79
+                "battle_training_won": 0,
+                "battle_training_total": 0,
+                "prestige_raised_total": 0,
+                "prestige_dropped_total": 0,
+                "pokemon_deployed": 0,
+                "small_rattata_caught": 0
+              })
+            })
+          }),
+          // player camera
+          new proto.Inventory.InventoryItem({
+            inventory_item_data: new proto.Inventory.InventoryItemData({
+              "player_camera": new proto.Data.Player.PlayerCamera({
+                is_default_camera: true
+              })
+            })
+          }),
+          // player currencies
+          new proto.Inventory.InventoryItem({
+            inventory_item_data: new proto.Inventory.InventoryItemData({
+              "player_currency": new proto.Data.Player.PlayerCurrency({
+                gems: 0
+              })
+            })
+          }),
+          // item
+          new proto.Inventory.InventoryItem({
+            inventory_item_data: new proto.Inventory.InventoryItemData({
+              "item": new proto.Inventory.Item.ItemData({
+                item_id: proto.Inventory.Item.ItemId.ITEM_MASTER_BALL,
+                count: 4,
+                unseen: false
               })
             })
           }),
@@ -44,9 +70,9 @@ export default function GetInventoryData(obj) {
           new proto.Inventory.InventoryItem({
             inventory_item_data: new proto.Inventory.InventoryItemData({
               "pokedex_entry": new proto.Data.PokedexEntry({
-                "pokemon_id": 147,
-                "times_encountered": 7,
-                "times_captured": 6,
+                "pokemon_id": 6,
+                "times_encountered": 1,
+                "times_captured": 1,
                 "evolution_stone_pieces": 0,
                 "evolution_stones": 0
               })

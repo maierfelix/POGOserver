@@ -18,9 +18,7 @@ function getPlayerDataPacket(obj) {
       daily_bonus: new proto.Data.Player.DailyBonus({
         next_defender_bonus_collect_timestamp_ms: 1470174535972
       }),
-      contact_settings: new proto.Data.Player.ContactSettings({
-        send_marketing_emails: true
-      }),
+      contact_settings: new proto.Data.Player.ContactSettings(obj.contact_settings),
       currencies: obj.currencies
     })
   );
@@ -51,6 +49,8 @@ function buildPlayerData(obj) {
     backpack: 1
   };
 
+  let contact_settings = obj.contact_settings;
+
   let tutorial_state = [
     proto.Enums.TutorialState.LEGAL_SCREEN,
     proto.Enums.TutorialState.AVATAR_SELECTION,
@@ -74,6 +74,7 @@ function buildPlayerData(obj) {
     username: username,
     team: team,
     tutorial_state: tutorial_state,
+    contact_settings: contact_settings,
     avatar: avatar,
     currencies: currencies
   });

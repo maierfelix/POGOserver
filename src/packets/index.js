@@ -7,11 +7,23 @@ export GetInventory from "./Responses.GetInventory";
 export GetPlayer from "./Responses.GetPlayer";
 export GetPlayerProfile from "./Responses.GetPlayerProfile";
 
+export FortDetails from "./Responses.FortDetails";
+export FortSearch from "./Responses.FortSearch";
 export GetMapObjects from "./Responses.GetMapObjects";
+
+export SetContactSettings from "./Responses.SetContactSettings";
 
 export ItemTemplates from "./Responses.ItemTemplates";
 export CheckAwardedBadges from "./Responses.CheckAwardedBadges";
 export GetDownloadUrls from "./Responses.GetDownloadUrls";
+
+export MarkTutorialComplete from "./Responses.MarkTutorialComplete";
+
+export LevelUpRewards from "./Responses.LevelUpRewards";
+
+export SetAvatar from "./Responses.SetAvatar";
+
+export SfidaActionLog from "./Responses.SfidaActionLog";
 
 export AuthTicket from "./Envelopes.AuthTicket";
 export ResponseEnvelope from "./Envelopes.ResponseEnvelope";

@@ -13,46 +13,12 @@ export default function ItemTemplates(obj) {
       success: true,
       item_templates: new proto.Networking.Responses.DownloadItemTemplatesResponse.ItemTemplate({
         pokemon_settings: null,
-        // unused but saved here for later use
-        item_settings: new proto.Settings.Master.ItemSettings({
-          "item_id": 702,
-          "item_type": 6,
-          "category": 2,
-          "drop_freq": 0,
-          "drop_trainer_level": 0,
-          "pokeball": null,
-          "potion": null,
-          "revive": null,
-          "battle": null,
-          "food": null,
-          "inventory_upgrade": null,
-          "xp_boost": null,
-          "incense": null,
-          "egg_incubator": null,
-          "fort_modifier": null
-        }),
-        // unused but saved here for later use
-        move_settings: new proto.Settings.Master.MoveSettings({
-          "movement_id": 13,
-          "animation_id": 5,
-          "pokemon_type": 1,
-          "power": 25,
-          "accuracy_chance": 1,
-          "critical_chance": 0.05000000074505806,
-          "heal_scalar": 0,
-          "stamina_loss_scalar": 0.05999999865889549,
-          "trainer_level_min": 1,
-          "trainer_level_max": 100,
-          "vfx_name": "wrap",
-          "duration_ms": 4000,
-          "damage_window_start_ms": 2800,
-          "damage_window_end_ms": 3400,
-          "energy_delta": -20
-        }),
-        // unused but saved here for later use
-        move_sequence_settings: new proto.Settings.Master.MoveSequenceSettings({
-          "sequence": ["anim attacker atk-move", "f2fvfx attacker acid_fast", "sfx attacker 051-0_acid", "wait 0.15", "vfx defender acid_fast_hit", "anim defender damageS01", "wait 0.35", "sys ui-sync", "sys complete"]
-        }),
+        item_settings: null,
+        move_settings: null,
+        move_sequence_settings: null,
+        camera: null,
+        iap_item_display: null,
+        equipped_badges: null,
         type_effective: new proto.Settings.Master.TypeEffectiveSettings({
           "attack_scalar": [1, 0.800000011920929, 0.800000011920929, 0.800000011920929, 1, 1, 1, 0.800000011920929, 0.800000011920929, 0.800000011920929, 1, 1.25, 1, 1.25, 1, 1, 1.25, 0.800000011920929],
           "attack_type": 7
@@ -61,25 +27,6 @@ export default function ItemTemplates(obj) {
           "badge_type": 13,
           "badge_rank": 4,
           "targets": [10, 100, 1000]
-        }),
-        // unused but saved here for later use
-        camera: new proto.Settings.Master.CameraSettings({
-          "next_camera": "",
-          "interpolation": [1],
-          "target_type": [12],
-          "ease_in_speed": [0],
-          "east_out_speed": [0],
-          "duration_seconds": [5],
-          "wait_seconds": [0],
-          "transition_seconds": [0.5],
-          "angle_degree": [-20],
-          "angle_offset_degree": [0],
-          "pitch_degree": [20],
-          "pitch_offset_degree": [0],
-          "roll_degree": [0],
-          "distance_meters": [4],
-          "height_percent": [0],
-          "vert_ctr_ratio": [1]
         }),
         player_level: new proto.Settings.Master.PlayerLevelSettings({
           "rank_num": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -117,7 +64,6 @@ export default function ItemTemplates(obj) {
           "nice_throw_threshold": 1,
           "milestone_threshold": 100
         }),
-        iap_item_display: null, // seems like useless??
         iap_settings: new proto.Settings.Master.IapSettings({
           "daily_bonus_coins": 0,
           "daily_defender_bonus_per_pokemon": [500, 10],
@@ -132,8 +78,7 @@ export default function ItemTemplates(obj) {
           "allowed_levels_above_player": 2,
           "candy_cost": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 15, 15],
           "stardust_cost": [200, 200, 400, 400, 600, 600, 800, 800, 1000, 1000, 1300, 1300, 1600, 1600, 1900, 1900, 2200, 2200, 2500, 2500, 3000, 3000, 3500, 3500, 4000, 4000, 4500, 4500, 5000, 5000, 6000, 6000, 7000, 7000, 8000, 8000, 9000, 9000, 10000, 10000]
-        }),
-        equipped_badges: null // seems like unused
+        })
       }),
       timestamp_ms: 1468540960537
     }).encode()

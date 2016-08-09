@@ -47,7 +47,7 @@ export function getUserByEmail(email) {
   return new Promise((resolve) => {
     let collection = this.getUserCollection();
     collection.find({email: email}).toArray((err, docs) => {
-      resolve(docs);
+      resolve(docs[0]);
     });
   });
 }
@@ -67,9 +67,10 @@ export function createUser(obj) {
     email: obj.email,
     position: obj.position,
     exp: obj.exp,
-    stardust: obj.stardust,
-    pokecoins: obj.pokecoins,
-    avatar: obj.avatar
+    stardust: 1337,
+    pokecoins: 1338,
+    avatar: obj.avatar,
+    contact_settings: obj.contact_settings
   };
 
   return new Promise((resolve) => {
@@ -89,9 +90,10 @@ export function updateUser(obj) {
     email: obj.email,
     position: obj.position,
     exp: obj.exp,
-    stardust: obj.stardust,
-    pokecoins: obj.pokecoins,
-    avatar: obj.avatar
+    stardust: 1337,
+    pokecoins: 1338,
+    avatar: obj.avatar,
+    contact_settings: obj.contact_settings
   };
 
   return new Promise((resolve) => {

@@ -57,6 +57,7 @@ import public "POGOProtos/Networking/Requests/Messages/SetContactSettingsMessage
 import public "POGOProtos/Networking/Requests/Messages/SetFavoritePokemonMessage.proto";
 import public "POGOProtos/Networking/Requests/Messages/SetPlayerTeamMessage.proto";
 import public "POGOProtos/Networking/Requests/Messages/StartGymBattleMessage.proto";
+import public "POGOProtos/Networking/Requests/Messages/SfidaActionLogMessage.proto";
 import public "POGOProtos/Networking/Requests/Messages/UpgradePokemonMessage.proto";
 import public "POGOProtos/Networking/Requests/Messages/UseIncenseMessage.proto";
 import public "POGOProtos/Networking/Requests/Messages/UseItemCaptureMessage.proto";
@@ -111,6 +112,7 @@ import public "POGOProtos/Networking/Responses/SetContactSettingsResponse.proto"
 import public "POGOProtos/Networking/Responses/SetFavoritePokemonResponse.proto";
 import public "POGOProtos/Networking/Responses/SetPlayerTeamResponse.proto";
 import public "POGOProtos/Networking/Responses/StartGymBattleResponse.proto";
+import public "POGOProtos/Networking/Responses/SfidaActionLogResponse.proto";
 import public "POGOProtos/Networking/Responses/UpgradePokemonResponse.proto";
 import public "POGOProtos/Networking/Responses/UseIncenseResponse.proto";
 import public "POGOProtos/Networking/Responses/UseItemCaptureResponse.proto";
