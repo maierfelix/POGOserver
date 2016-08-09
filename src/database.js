@@ -67,8 +67,8 @@ export function createUser(obj) {
     email: obj.email,
     position: obj.position,
     exp: obj.exp,
-    stardust: 1337,
-    pokecoins: 1338,
+    stardust: obj.stardust,
+    pokecoins: obj.pokecoins,
     avatar: obj.avatar,
     contact_settings: obj.contact_settings
   };
@@ -90,8 +90,8 @@ export function updateUser(obj) {
     email: obj.email,
     position: obj.position,
     exp: obj.exp,
-    stardust: 1337,
-    pokecoins: 1338,
+    stardust: obj.stardust,
+    pokecoins: obj.pokecoins,
     avatar: obj.avatar,
     contact_settings: obj.contact_settings
   };
