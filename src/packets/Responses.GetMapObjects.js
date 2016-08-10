@@ -10,74 +10,81 @@ export default function GetMapObjects(request) {
 
   var cellsRes = [];
 
-  cells.forEach((cell)=>{
+  cells.forEach((cell) => {
     cellsRes.push(new proto.Map.MapCell({
       s2_cell_id: cell,
-      current_timestamp_ms: new Date().getTime() * 1000,
-      forts: [
-        new proto.Map.Fort.FortData({
-          id: "wuff",
-          last_modified_timestamp_ms: new Date().getTime() * 1000,
-          latitude: 39.19047143172651,
-          longitude: -96.58502161502833,
-          owned_by_team: 2,
-          guard_pokemon_id: 150,
-          guard_pokemon_cp: 2000,
-          gym_points: 1000,
-          is_in_battle: false,
-          enabled: true,
-          type: proto.Map.Fort.FortType.CHECKPOINT,
-          sponsor: proto.Map.Fort.FortSponsor.MCDONALDS,
-          rendering_type: proto.Map.Fort.FortRenderingType.DEFAULT
-        })
-      ],
+      current_timestamp_ms: new Date().getTime() * 1e3,
+      forts: [],
       spawn_points: [],
-      deleted_objects: [ ],
+      deleted_objects: [],
       is_truncated_list: false,
-      fort_summaries: [ ],
-      decimated_spawn_points: [ ],
-      wild_pokemons: [
-        new proto.Map.Pokemon.WildPokemon({
-          encounter_id: 6180230722423979422,
-          last_modified_timestamp_ms: new Date().getTime() * 1e3,
-          latitude: 39.19047143172621,
-          longitude: -96.58502161502838,
-          spawn_point_id: "",
-          pokemon_data: new proto.Data.PokemonData({
-            "move_1": 211,
-            "move_2": 45,
-            "pokemon_id": 21,
-            "height_m": 0.2640344202518463,
-            "stamina_max": 14,
-            "weight_kg": 1.2240252494812012,
-            "individual_defense": 8,
-            "stamina": 14,
-            "individual_stamina": 10,
-            "individual_attack": 12,
-            "cp": 27
-          }),
-          time_till_hidden_ms: 597695
-        })
-      ],
-      catchable_pokemons: [
-        new proto.Map.Pokemon.MapPokemon({
-          spawn_point_id: "",
-          encounter_id: 6180230722423979422,
-          pokemon_id: proto.Enums.PokemonId.SPEAROW,
-          expiration_timestamp_ms: (new Date().getTime() + 1e6) * 1e3,
-          latitude: 39.19047143172621,
-          longitude: -96.58502161502838
-        })
-      ],
-      nearby_pokemons: [
-        new proto.Map.Pokemon.NearbyPokemon({
-          pokemon_id: proto.Enums.PokemonId.SPEAROW,
-          distance_in_meters: 1.0,
-          encounter_id: 6180230722423979422
-        })
-      ]
+      fort_summaries: [],
+      decimated_spawn_points: [],
+      wild_pokemons: [],
+      catchable_pokemons: [],
+      nearby_pokemons: []
     }));
   });
+
+  let cell = cellsRes[cellsRes.length - 1];
+
+  cellsRes[cellsRes.length - 2].forts = [
+    new proto.Map.Fort.FortData({
+      id: "roflcopter",
+      last_modified_timestamp_ms: 1470787552992,
+      //latitude: 39.1914,
+      //longitude: -96.5850,
+      latitude: 39.19047143172622,
+      longitude: -96.58502161502839,
+      enabled: true,
+      type: proto.Map.Fort.FortType.CHECKPOINT,
+      cooldown_complete_timestamp_ms: new Date().getTime(),
+      sponsor: proto.Map.Fort.FortSponsor.UNSET_SPONSOR
+    })
+  ];
+
+  cell.wild_pokemons = [
+    new proto.Map.Pokemon.WildPokemon({
+      encounter_id: 11810991820755313517,
+      last_modified_timestamp_ms: 1470787552996,
+      latitude: 39.19047143172622,
+      longitude: -96.58502161502839,
+      spawn_point_id: "87bdd289c69",
+      pokemon_data: new proto.Data.PokemonData({
+        pokemon_id: 19,
+        cp: 277,
+        stamina: 41,
+        stamina_max: 41,
+        move_1: 221,
+        move_2: 26,
+        height_m: 0.22802678267819977,
+        weight_kg: 1.3452539511871338,
+        individual_attack: 9,
+        individual_defense: 13,
+        individual_stamina: 14,
+        cp_multiplier: 0.5663545199394226
+      }),
+      time_till_hidden_ms: 730176
+    })
+  ];
+
+  cell.catchable_pokemons = [
+    new proto.Map.Pokemon.MapPokemon({
+      spawn_point_id: "87bdd289c69",
+      encounter_id: 11810991820755313517,
+      pokemon_id: 19,
+      latitude: 39.19047143172622,
+      longitude: -96.58502161502839,
+      expiration_timestamp_ms: (new Date().getTime() + 1e6) * 1e3
+    })
+  ];
+
+  cell.nearby_pokemons = [
+    new proto.Map.Pokemon.NearbyPokemon({
+      distance_in_meters: 200.0,
+      pokemon_id: 19
+    })
+  ];
 
   return (
     new proto.Networking.Responses.GetMapObjectsResponse({

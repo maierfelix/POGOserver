@@ -13,17 +13,17 @@ export default function FortSearch(obj) {
       result: proto.Networking.Responses.FortSearchResponse.Result.SUCCESS,
       items_awarded: [
         new proto.Inventory.Item.ItemAward({
-          item_id: proto.Inventory.Item.ItemId.ITEM_ULTRA_BALL,
-          item_count: 1
+          item_id: proto.Inventory.Item.ItemId.ITEM_MASTER_BALL,
+          item_count: 3
         }),
         new proto.Inventory.Item.ItemAward({
-          item_id: proto.Inventory.Item.ItemId.ITEM_GREAT_BALL,
+          item_id: proto.Inventory.Item.ItemId.ITEM_ULTRA_BALL,
           item_count: 2
         })
       ],
       gems_awarded: 0,
       pokemon_data_egg: null,
-      experience_awarded: 100,
+      experience_awarded: 99999,
       cooldown_complete_timestamp_ms: 1470174535972,
       chain_hack_sequence_number: 0
     }).encode()

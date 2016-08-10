@@ -39,6 +39,7 @@ export function authenticatePlayer() {
       this.print(`${player.email.replace("@gmail.com", "")} connected!`, 36);
     }
     else {
+      this.print("Invalid authentication token! Kicking..", 31);
       this.removePlayer(player);
       return void 0;
     }

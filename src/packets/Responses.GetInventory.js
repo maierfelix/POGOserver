@@ -6,6 +6,8 @@ import proto from "../proto";
  */
 export default function GetInventoryData(obj) {
 
+  // TODO: Start loading pkmn party from db
+
   return (
     new proto.Networking.Responses.GetInventoryResponse({
       success: true,
@@ -15,7 +17,7 @@ export default function GetInventoryData(obj) {
           new proto.Inventory.InventoryItem({
             inventory_item_data: new proto.Inventory.InventoryItemData({
               "player_stats": new proto.Data.Player.PlayerStats({
-                "level": 3,
+                "level": 98,
                 "experience": 2000,
                 "prev_level_xp": 1000,
                 "next_level_xp": 6000,
@@ -82,35 +84,24 @@ export default function GetInventoryData(obj) {
           new proto.Inventory.InventoryItem({
             inventory_item_data: new proto.Inventory.InventoryItemData({
               "pokemon_data": new proto.Data.PokemonData({
-                "id": 151,
-                "pokemon_id": 151,
-                "cp": 9454,
-                "stamina": 53,
-                "stamina_max": 53,
-                "move_1": 221,
-                "move_2": 80,
-                "deployed_fort_id": "",
-                "owner_name": "",
-                "is_egg": false,
-                "egg_km_walked_target": 0,
-                "egg_km_walked_start": 0,
-                "origin": 0,
-                "height_m": 0.3461824357509613,
-                "weight_kg": 2.0753486156463623,
-                "individual_attack": 2,
-                "individual_defense": 0,
-                "individual_stamina": 9,
-                "cp_multiplier": 0.5974000096321106,
-                "pokeball": 2,
-                "battles_attacked": 0,
-                "battles_defended": 0,
-                "egg_incubator_id": "",
-                "creation_time_ms": new Date().getTime() * 1000,
-                "num_upgrades": 0,
-                "additional_cp_multiplier": 0,
-                "favorite": 0,
-                "nickname": "Ad°0lf_fH$TL3R",
-                "from_fort": 0
+                pokemon_id: 19,
+                cp: 277,
+                stamina: 41,
+                stamina_max: 41,
+                move_1: 221,
+                move_2: 26,
+                height_m: 0.22802678267819977,
+                weight_kg: 1.3452539511871338,
+                individual_attack: 9,
+                individual_defense: 13,
+                individual_stamina: 14,
+                cp_multiplier: 0.5663545199394226,
+                additional_cp_multiplier: 0,
+                favorite: 0,
+                nickname: "BauerVomLande",
+                owner_name: "Administrator",
+                origin: 0,
+                is_egg: false
               })
             })
           })

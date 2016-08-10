@@ -20,7 +20,7 @@ class Player {
     this.uid = -1;
 
     this.email = null;
-    this._username = "undefined";
+    this._username = "Administrator";
  
     this.position = {
       latitude: 0,

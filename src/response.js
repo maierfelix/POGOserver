@@ -21,7 +21,12 @@ import {
   SetContactSettings,
   SetAvatar,
   MarkTutorialComplete,
-  LevelUpRewards
+  LevelUpRewards,
+  Encounter,
+  NicknamePokemon,
+  UpgradePokemon,
+  EvolvePokemon,
+  SetFavoritePokemon
 } from "./packets";
 
 /**
@@ -88,7 +93,7 @@ export function processResponse(request) {
         buffer = LevelUpRewards();
       break;
       case REQUEST.FORT_DETAILS:
-        buffer = FortDetails();
+        buffer = FortDetails(request);
       break;
       case REQUEST.FORT_SEARCH:
         buffer = FortSearch();
@@ -97,6 +102,21 @@ export function processResponse(request) {
         player.updateContactSettings(request);
         buffer = SetContactSettings(player);
         this.savePlayer(player);
+      break;
+      case REQUEST.ENCOUNTER:
+        buffer = Encounter(request);
+      break;
+      case REQUEST.NICKNAME_POKEMON:
+        buffer = NicknamePokemon(request);
+      break;
+      case REQUEST.UPGRADE_POKEMON:
+        buffer = UpgradePokemon(request);
+      break;
+      case REQUEST.EVOLVE_POKEMON:
+        buffer = EvolvePokemon(request);
+      break;
+      case REQUEST.SET_FAVORITE_POKEMON:
+        buffer = SetFavoritePokemon(request);
       break;
       default:
         this.print(`Unknown request: ${this.getRequestType(request)}`, 31);
