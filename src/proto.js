@@ -1,4 +1,4 @@
-import protobuf from "protobufjs";
+import pogo from "node-pogo-protos";
 import path from "path";
 
-export default protobuf.loadProtoFile({ root: path.join(__dirname, "../"), file: "POGOProtos/POGOProtos.proto" }).build("POGOProtos");
+export default pogo;

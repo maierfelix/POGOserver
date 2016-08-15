@@ -36,12 +36,6 @@ export default function DownloadSettings(obj) {
           "base_bag_items": 350,
           "base_eggs": 9
         }),
-        gps_settings: new proto.Settings.GpsSettings({
-          driving_warning_speed_meters_per_second: 10,
-          driving_warning_cooldown_minutes: 0,
-          driving_speed_sample_interval_seconds: 0,
-          driving_speed_sample_count: 0
-        }),
         minimum_client_version: CFG.MINIMUM_CLIENT_VERSION
       })
     }).encode()

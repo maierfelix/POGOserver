@@ -1,4 +1,5 @@
 import proto from "../proto";
+
 /**
  * @param {Object} obj
  * @return {Object}
@@ -15,12 +16,10 @@ function getPlayerDataPacket(obj) {
       max_pokemon_storage: 250,
       max_item_storage: 350,
       daily_bonus: new proto.Data.Player.DailyBonus({
-        next_collected_timestamp_ms: 1470174535972,
         next_defender_bonus_collect_timestamp_ms: 1470174535972
       }),
       contact_settings: new proto.Data.Player.ContactSettings(obj.contact_settings),
-      currencies: obj.currencies,
-      remaining_codename_claims: 0
+      currencies: obj.currencies
     })
   );
 
