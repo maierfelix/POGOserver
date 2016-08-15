@@ -55,7 +55,7 @@ export default function GetMapObjects(request) {
       longitude: -96.58502161502839,
       spawn_point_id: "87bdd289c69",
       pokemon_data: new proto.Data.PokemonData({
-        pokemon_id: 19,
+        pokemon_id: 16,
         cp: 277,
         stamina: 41,
         stamina_max: 41,

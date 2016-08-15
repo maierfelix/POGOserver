@@ -16,7 +16,8 @@ import * as _player from "./player";
 import * as _request from "./request";
 import * as _response from "./response";
 import * as _process from "./process";
-import * as _database from "./database";
+import * as _mongo from "./db/mongo";
+import * as _mysql from "./db/mysql";
 
 const greetMessage = fs.readFileSync(".greet", "utf8");
 
@@ -153,7 +154,8 @@ inherit(GameServer, _player);
 inherit(GameServer, _request);
 inherit(GameServer, _response);
 inherit(GameServer, _process);
-inherit(GameServer, _database);
+inherit(GameServer, _mongo);
+inherit(GameServer, _mysql);
 
 let server = new GameServer();
 

@@ -1,13 +1,13 @@
 import mongodb from "mongodb";
 
-import * as CFG from "../cfg";
+import * as CFG from "../../cfg";
 
 export function setupMongo() {
 
   return new Promise((resolve) => {
     mongodb.MongoClient.connect(CFG.SERVER_MONGO_URL, (error, db) => {
       if (error) {
-        this.print("Unable to connect to database", 31);
+        this.print(error, 31);
       } else {
         this.db.instance = db;
         this.loadCollection(CFG.SERVER_MONGO_COLLECTION_USERS).then(() => {
