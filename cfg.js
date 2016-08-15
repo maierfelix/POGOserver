@@ -10,7 +10,7 @@ export const SERVER_LOG_REQUESTS = true;
 
 export const SERVER_DEFAULT_CONSOLE_COLOR = 32;
 
-export const ASSET_DIGEST_PATH = "0005368950BD6068_ASSET_DIGEST";
+export const ASSET_DIGEST_PATH = "ASSET_DIGEST";
 
 export const MINIMUM_CLIENT_VERSION = "0.33.0";
 
@@ -22,5 +22,6 @@ export const SERVER_MONGO_URL = `mongodb://${SERVER_MONGO_HOST_IP}:${SERVER_MONG
 
 export const SERVER_GMAPS_API_KEY = "AIzaSyDF9rkP8lhcddBtvH9gVFzjnNo13WtmJIM";
 
+// account used for pogo-asset-downloader lib
 export const SERVER_POGO_CLIENT_USERNAME = "USERNAME";
 export const SERVER_POGO_CLIENT_PASSWORD = "PASSWORD";
