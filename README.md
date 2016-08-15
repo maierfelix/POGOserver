@@ -45,3 +45,10 @@ You need a running mongodb service, enter your credentials into ``./cfg.js``.
 If everything went fine, it should look like:
 
 ![Preview](http://image.prntscr.com/image/6ce92058147b4067b8027c42258a198c.png "")
+
+## Todo
+  - Viewing a pokemon shows invalid data (wrong weight, height, type etc.)
+  - Transfer button doesnt trigger (maybe related to above?)
+  - Items doesnt show
+  - Pokemon models get downloaded correctly, but somehow they dont load properly. They show on map, but not in pokemon info screen, pokedex or while encountering.
+  - Players exp bar is bugged, proto related?

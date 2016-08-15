@@ -1,5 +1,9 @@
 import proto from "../proto";
 
+import {
+  decodeLong
+} from "../utils";
+
 /**
  * @param {Request} request
  * @return {Object}

@@ -18,6 +18,7 @@ export CheckAwardedBadges from "./Responses.CheckAwardedBadges";
 export GetDownloadUrls from "./Responses.GetDownloadUrls";
 
 export MarkTutorialComplete from "./Responses.MarkTutorialComplete";
+export ClaimCodeName from "./Responses.ClaimCodeName";
 
 export LevelUpRewards from "./Responses.LevelUpRewards";
 

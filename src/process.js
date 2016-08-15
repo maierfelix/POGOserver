@@ -4,22 +4,58 @@ export function processCommand(cmd, data) {
   switch (cmd) {
     // How many active connections there are
     case "/clients":
-      let length = this.clients.length;
-      this.print(`${length} connected player${length === 1 ? "": "s"}!`, 33);
+      var length = this.clients.length;
+      this.print(`${length}:${CFG.SERVER_MAX_CONNECTIONS} connected players!`, 33);
     break;
-    // Kill the server
+    // Exit the server
     case "/exit":
-      this.print("Killed the server!", 31);
-      process.exit();
+      this.socket.close(() => {
+        this.print("Closed http server!", 33);
+        this.db.instance.close(() => {
+          this.print("Closed database connection!", 33);
+          this.print("Killed the server!", 31);
+          setTimeout(() => process.exit(1), 2e3);
+        });
+      });
+    break;
+    case "/kick":
+      this.kickPlayer(data[1]);
+    break;
+    case "/killall":
+      var length = this.clients.length;
+      this.removeAllPlayers();
+      var result = length - this.clients.length;
+      this.print(`Removed ${result} player${result === 1 ? "": "s"}!`);
     break;
     case "/clear":
       process.stdout.write("\x1Bc");
       this.greet();
     break;
+    case "/help":
+      this.printHelp();
+    break;
     case "/save":
-      this.savePlayers();
+      this.saveAllPlayers();
+      var length = this.clients.length;
+      this.print(`Saved ${length} player${length === 1 ? "": "s"} into database!`);
+    break;
+    default:
+      this.print(`${cmd} is not a valid command!`, 31);
     break;
   };
+};
+
+export function printHelp() {
+
+  console.log("\x1b[36;1m===================================== HELP =====================================\x1b[0m");
+  this.print("clients                      : how many players are connected");
+  this.print("exit                         : exit the server");
+  this.print("kick [PlayerUsername]        : kick player by username");
+  this.print("kickall                      : kick all players");
+  this.print("clear                        : clear the server console");
+  this.print("save                         : save all palyers into database");
+  console.log("\n\x1b[36;1m================================================================================\x1b[0m");
+
 };
 
 export function stdinInput(data) {

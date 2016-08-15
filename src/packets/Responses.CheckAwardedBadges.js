@@ -10,7 +10,9 @@ export default function CheckAwardedBadges(obj) {
 
   return (
     new proto.Networking.Responses.CheckAwardedBadgesResponse({
-      success: true
+      success: true,
+      awarded_badges: [],
+      awarded_badge_levels: []
     }).encode()
   );
 

@@ -2,20 +2,19 @@ import mongodb from "mongodb";
 
 import * as CFG from "../cfg";
 
-/**
- * @param {Function} resolve
- */
-export function setupMongo(resolve) {
+export function setupMongo() {
 
-  mongodb.MongoClient.connect(CFG.SERVER_MONGO_URL, (error, db) => {
-    if (error) {
-      this.print("Unable to connect to database", 31);
-    } else {
-      this.db.instance = db;
-      this.loadCollection(CFG.SERVER_MONGO_COLLECTION_USERS).then(() => {
-        resolve();
-      });
-    }
+  return new Promise((resolve) => {
+    mongodb.MongoClient.connect(CFG.SERVER_MONGO_URL, (error, db) => {
+      if (error) {
+        this.print("Unable to connect to database", 31);
+      } else {
+        this.db.instance = db;
+        this.loadCollection(CFG.SERVER_MONGO_COLLECTION_USERS).then(() => {
+          resolve();
+        });
+      }
+    });
   });
 
 }
@@ -70,7 +69,9 @@ export function createUser(obj) {
     stardust: obj.stardust,
     pokecoins: obj.pokecoins,
     avatar: obj.avatar,
-    contact_settings: obj.contact_settings
+    team: obj.team,
+    contact_settings: obj.contact_settings,
+    tutorial_state: obj.tutorial_state
   };
 
   return new Promise((resolve) => {
@@ -93,7 +94,9 @@ export function updateUser(obj) {
     stardust: obj.stardust,
     pokecoins: obj.pokecoins,
     avatar: obj.avatar,
-    contact_settings: obj.contact_settings
+    team: obj.team,
+    contact_settings: obj.contact_settings,
+    tutorial_state: obj.tutorial_state
   };
 
   return new Promise((resolve) => {

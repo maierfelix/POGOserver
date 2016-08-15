@@ -20,7 +20,7 @@ class Player {
     this.uid = -1;
 
     this.email = null;
-    this._username = "Administrator";
+    this._username = "undefined";
  
     this.position = {
       latitude: 0,
@@ -35,20 +35,24 @@ class Player {
 
     this.exp = 0;
 
-    this.stardust = 1337;
-    this.pokecoins = 1338;
+    this.stardust = 0;
+    this.pokecoins = 0;
+
+    this.team = proto.Enums.TeamColor.BLUE;
 
     this.avatar = {
       skin: 0,
-      hair: 2,
-      shirt: 1,
-      pants: 2,
+      hair: 0,
+      shirt: 0,
+      pants: 0,
       hat: 0,
-      shoes: 2,
-      eyes: 3,
-      gender: proto.Enums.Gender.MALE,
-      backpack: 1
+      shoes: 0,
+      eyes: 0,
+      gender: 0,
+      backpack: 0
     };
+
+    this.tutorial_state = [32, 1, 3, 4, 7];
 
     this.badges = null;
     this.pokedex = null;
@@ -181,7 +185,7 @@ export function getPlayerIndex(player) {
  */
 export function getPlayerByRequest(req) {
   return (
-    this.getPlayerByIP(req.connection.remoteAddress)
+    this.getPlayerByIP(req.headers.host)
   );
 }
 
@@ -203,16 +207,35 @@ export function getPlayerByIP(ip) {
 }
 
 /**
- * @param {Request} connection
+ * @param {String} name
  */
-export function addPlayer(connection) {
+export function getPlayerByName(name) {
+
+  let ii = 0, length = this.clients.length;
+
+  for (; ii < length; ++ii) {
+    if (this.clients[ii].username === name) {
+      return (this.clients[ii]);
+    }
+  };
+
+  return (null);
+
+}
+
+/**
+ * @param {Request} req
+ */
+export function addPlayer(req) {
+
+  let connection = req.connection;
 
   this.clients.push(new Player({
     timeout: this.time,
     connection: connection,
     response: this.response,
     remotePort: connection.remotePort,
-    remoteAddress: connection.remoteAddress
+    remoteAddress: req.headers.host
   }));
 
 }
@@ -234,17 +257,45 @@ export function removePlayer(player) {
 
 }
 
-export function updatePlayers() {
-  //this.print("Updating players");
-  return void 0;
+/**
+ * @param {String} name
+ */
+export function kickPlayer(name) {
+
+  if (
+    name === null ||
+    name === void 0 ||
+    typeof name === "string" &&
+    name.length <= 1
+  ) {
+    this.print(`Invalid player name!`, 31);
+    return void 0;
+  }
+
+  let player = this.getPlayerByName(name);
+
+  if (player !== null) {
+    this.removePlayer(player);
+    this.print(`Kicked ${name} from the server!`);
+  }
+  else this.print(`Failed to kick ${name} from the server!`, 31);
+
 }
 
-export function savePlayers() {
+export function updatePlayers() {
+  //this.print("Updating players");
+}
+
+export function saveAllPlayers() {
   for (let client of this.clients) {
     this.savePlayer(client);
   };
-  this.print("Saved players into database");
-  return void 0;
+}
+
+export function removeAllPlayers() {
+  for (let client of this.clients) {
+    this.removePlayer(client);
+  };
 }
 
 /**
@@ -281,6 +332,9 @@ export function forwardPlayer() {
 
   return new Promise((resolve) => {
     this.getUserByEmail(player.email).then((doc) => {
+      if (player.email.length) {
+        this.print(`${player.email.replace("@gmail.com", "")} authenticated!`, 36);
+      }
       if (doc === void 0) {
         this.registerPlayer(doc).then((res) => {
           resolve(res);
@@ -306,6 +360,7 @@ export function registerPlayer(doc) {
   return new Promise((resolve) => {
     this.createUser(player).then(() => {
       this.print(`${this.player.email.replace("@gmail.com", "")} registered!`, 36);
+      player.tutorial_state = [];
       this.loginPlayer(doc).then((res) => {
         resolve(res);
       });

@@ -6,10 +6,10 @@ import * as CFG from "../../cfg";
 let asset = fs.readFileSync(CFG.ASSET_DIGEST_PATH);
 
 /**
- * @param {Object} obj
+ * @param {Request} req
  * @return {Object}
  */
-export default function GetAssetDigest(obj) {
+export default function GetAssetDigest(req) {
 
   return (asset);
 

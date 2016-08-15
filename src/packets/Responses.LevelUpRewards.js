@@ -10,13 +10,8 @@ export default function LevelUpRewards(obj) {
 
   return (
     new proto.Networking.Responses.LevelUpRewardsResponse({
-      result: proto.Networking.Responses.LevelUpRewardsResponse.Result.SUCCESS,
-      items_awarded: [
-        new proto.Inventory.Item.ItemAward({
-          item_id: proto.Inventory.Item.ItemId.ITEM_GREAT_BALL,
-          item_count: 2
-        })
-      ],
+      result: 2,
+      items_awarded: [],
       items_unlocked: []
     }).encode()
   );

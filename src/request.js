@@ -11,7 +11,10 @@ import {
   GetInventory
 } from "./packets";
 
-import { decodeRequestEnvelope } from "./utils";
+import {
+  decodeLong,
+  decodeRequestEnvelope
+} from "./utils";
 
 import jwtDecode from "jwt-decode";
 
@@ -81,16 +84,20 @@ export function onRequest(req, res) {
   // Validate email verification
   if (player.authenticated) {
     if (!player.email_verified) {
+      this.print(`${player.email.replace("@gmail.com", "")}'s email isnt verified, kicking..`, 31);
+      this.removePlayer(player);
       return void 0;
     }
   }
 
   let request = proto.Networking.Envelopes.RequestEnvelope.decode(req.body);
 
-  console.log("#####");
-  request.requests.map((request) => {
-    console.log("Got request:", this.getRequestType(request));
-  }).join(",");
+  if (CFG.SERVER_LOG_REQUESTS) {
+    console.log("#####");
+    request.requests.map((request) => {
+      console.log("Got request:", this.getRequestType(request));
+    }).join(",");
+  }
 
   if (!player.authenticated) {
     this.send(this.authenticatePlayer());
@@ -98,7 +105,7 @@ export function onRequest(req, res) {
   }
 
   this.processRequests(request.requests).then((answer) => {
-    let msg = this.envelopResponse(1, request.request_id, answer, request.hasOwnProperty("auth_ticket"), request.unknown6);
+    let msg = this.envelopResponse(1, request.request_id, answer, request.hasOwnProperty("auth_ticket"));
     this.send(msg);
   });
 
@@ -109,10 +116,9 @@ export function onRequest(req, res) {
  * @param  {Long} id
  * @param  {Array} response
  * @param  {Boolean} auth
- * @param  {Buffer} unknown6
  * @return {Buffer}
  */
-export function envelopResponse(status, id, response, auth, unknown6) {
+export function envelopResponse(status, id, response, auth) {
 
   let answer = ResponseEnvelope({
     id: id,
@@ -133,16 +139,53 @@ export function envelopResponse(status, id, response, auth, unknown6) {
 export function processRequests(requests) {
 
   return new Promise((resolve) => {
-    let ii = 0;
+
+    let index = 0;
     let length = requests.length;
     let body = [];
-    for (; ii < length; ++ii) {
-      this.processResponse(requests[ii]).then((request) => {
+
+    let loop = (index) => {
+      this.processResponse(requests[index]).then((request) => {
         body.push(request);
-        if (ii + 1 >= length) resolve(body);
+        if (++index >= length) resolve(body);
+        else return loop(index);
       });
     };
+
+    loop(0);
+
   });
+
+}
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+export function routeRequest(req, res) {
+
+  let url = String(req.url);
+  let route = url.substring(url.lastIndexOf("/") + 1);
+  let host = req.headers.host;
+
+  switch (route) {
+    case "rpc":
+      this.onRequest(req, res);
+    break;
+    case "oauth":
+      let out = null;
+      let buffer = req.body.toString();
+      let signature = "321187995bc7cdc2b5fc91b11a96e2baa8602c62";
+      if (/Email.*com.nianticlabs.pokemongo/.test(buffer)) {
+        out = new Buffer(buffer.replace(/&client_sig=[^&]*&/, "&client_sig=" + signature + "&"));
+      }
+      console.log("OAUTH", out);
+      if (out instanceof Buffer) this.send(out);
+    break;
+    default:
+      console.log(`Unknown request url: https://${req.headers.host}${req.url}`);
+    break;
+  };
 
 }
 

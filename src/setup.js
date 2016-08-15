@@ -4,23 +4,26 @@ import * as CFG from "../cfg";
 
 export function setup() {
 
-  this.print("Booting server...", 33);
+  this.print("Booting server..", 33);
 
-  this.setupMongo(() => {
+  this.createAssetDownloadSession().then(() => {
+    this.print("Created asset download session");
+    this.setupMongo().then(() => {
 
-    this.print("Database connection established");
+      this.print("Database connection established");
 
-    if (CFG.SERVER_PORT < 1) {
-      this.print("Invalid port!", 31);
-      return void 0;
-    }
+      if (CFG.SERVER_PORT < 1) {
+        this.print("Invalid port!", 31);
+        return void 0;
+      }
 
-    this.socket = this.createHTTPServer();
+      this.socket = this.createHTTPServer();
 
-    setTimeout(this::this.cycle, 1);
+      setTimeout(this::this.cycle, 1);
 
-    this.print(`Server running at ${CFG.SERVER_HOST_IP}:${CFG.SERVER_PORT}`);
+      this.print(`Server running at ${CFG.SERVER_HOST_IP}:${CFG.SERVER_PORT}`);
 
+    });
   });
 
 }

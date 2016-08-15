@@ -3,11 +3,12 @@ import http from "http";
 import proto from "./proto";
 
 import {
-  inherit,
-  decodeLong
+  inherit
 } from "./utils";
 
 import * as CFG from "../cfg";
+
+import pogodown from "pogo-asset-downloader";
 
 import * as _setup from "./setup";
 import * as _cycle from "./cycle";
@@ -62,7 +63,7 @@ class GameServer {
 
   clientAlreadyConnected(client) {
 
-    let remoteAddress = client.connection.remoteAddress;
+    let remoteAddress = client.headers.host;
 
     let ii = 0, length = this.clients.length;
 
@@ -76,14 +77,45 @@ class GameServer {
 
   }
 
+  createAssetDownloadSession() {
+
+    return new Promise((resolve) => {
+      pogodown.login({
+        username: CFG.SERVER_POGO_CLIENT_USERNAME,
+        password: CFG.SERVER_POGO_CLIENT_PASSWORD,
+        downloadModels: false
+      }).then(() => {
+        resolve();
+      });
+    });
+
+  }
+
+  /**
+   * @param  {Array} assets
+   */
+  generateDownloadUrlByAssetId(assets) {
+    return new Promise((resolve) => {
+      pogodown.getAssetByAssetId(assets).then((response) => {
+        // maybe cache and provide own local download link?
+        resolve(response);
+      });
+    });
+  }
+
   /**
    * @return {HTTP}
    */
   createHTTPServer() {
     let server = http.createServer((req, res) => {
+      if (this.clients.length >= CFG.SERVER_MAX_CONNECTIONS) {
+        this.print(`Server is full! Refused ${req.headers.host}`, 31);
+        return void 0;
+      }
       this.response = res;
+      // client already connected
       if (!this.clientAlreadyConnected(req)) {
-        this.addPlayer(req.connection);
+        this.addPlayer(req);
       }
       let chunks = [];
       req.on("data", (chunk) => {
@@ -93,7 +125,7 @@ class GameServer {
         let buffer = Buffer.concat(chunks);
         req.body = buffer;
         this.request = req;
-        this.onRequest(req, res);
+        this.routeRequest(req, res);
       });
     });
     server.listen(CFG.SERVER_PORT);
@@ -106,7 +138,7 @@ class GameServer {
    */
   print(msg, color) {
     color = Number.isInteger(color) ? color : CFG.SERVER_DEFAULT_CONSOLE_COLOR;
-    console.log(`\x1b[${color};1m${msg}\x1b[0m`);
+    console.log(`[Console] \x1b[${color};1m${msg}\x1b[0m`);
   }
 
   greet() {
