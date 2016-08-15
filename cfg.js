@@ -10,7 +10,7 @@ export const SERVER_LOG_REQUESTS = true;
 
 export const SERVER_DEFAULT_CONSOLE_COLOR = 32;
 
-export const ASSET_DIGEST_PATH = "ASSET_DIGEST";
+export const ASSET_DIGEST_PATH = "asset_digest";
 
 export const MINIMUM_CLIENT_VERSION = "0.33.0";
 
