@@ -77,7 +77,7 @@ class Player {
   updateByObject(obj) {
     for (let key in obj) {
       if (this.hasOwnProperty(key)) {
-        if (key == 'send_marketing_emails' || key == 'send_push_notifications') {
+        if (key === "send_marketing_emails" || key === "send_push_notifications") {
           this[key] = !!obj[key];
         } else {
           this[key] = obj[key];
