@@ -11,12 +11,18 @@ export function setupConnection() {
       if (error) {
         this.print(error, 31);
         this.retry("Retrying again in ", () => this.setupConnection().then(resolve), 5);
+        return void 0;
       } else {
         this.db.instance = db;
         this.loadCollection(CFG.SERVER_MONGO_COLLECTION_USERS).then(() => {
+          this.print(`\x1b[36;1mMongoDB\x1b[0m\x1b[32;1m connection established\x1b[0m`);
           resolve();
         });
       }
+      db.on("close", (error) => {
+        this.print(error, 31);
+        this.retry("Trying to reconnect in ", () => this.setupConnection().then(resolve), 5);
+      });
     });
   });
 

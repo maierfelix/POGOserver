@@ -21,8 +21,13 @@ export function setupConnection() {
       }
       this.db.instance = connection;
       this.createTableIfNoExists().then(() => {
+        this.print(`\x1b[36;1mMySQL\x1b[0m\x1b[32;1m connection established\x1b[0m`);
         resolve();
       });
+    });
+    connection.on("error", (error) => {
+      this.print(error, 31);
+      this.retry("Trying to reconnect in ", () => this.setupConnection().then(resolve), 5);
     });
   });
 
