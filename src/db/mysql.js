@@ -63,29 +63,30 @@ export function createTable(name) {
   this.print(`Creating table ${CFG.SERVER_MYSQL_TABLE}`, 36);
   return new Promise((resolve) => {
     let query = `
-      CREATE TABLE IF NOT EXISTS ${name} (
-        id int(11) NOT NULL,
-        username longtext NOT NULL,
-        email longtext NOT NULL,
-        exp int(255) NOT NULL,
-        stardust int(255) NOT NULL,
-        pokecoins int(255) NOT NULL,
-        team int(11) NOT NULL,
-        latitude double NOT NULL,
-        longitude double NOT NULL,
-        altitude int(255) NOT NULL,
-        send_marketing_emails tinyint(1) NOT NULL,
-        send_push_notifications tinyint(1) NOT NULL,
-        skin int(11) NOT NULL,
-        hair int(11) NOT NULL,
-        shirt int(11) NOT NULL,
-        pants int(11) NOT NULL,
-        hat int(11) NOT NULL,
-        shoes int(11) NOT NULL,
-        eyes int(11) NOT NULL,
-        gender int(11) NOT NULL,
-        backpack int(11) NOT NULL
-      ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+      CREATE TABLE ${name} (
+       id int(11) NOT NULL AUTO_INCREMENT,
+       username longtext NOT NULL,
+       email longtext NOT NULL,
+       exp int(255) NOT NULL,
+       stardust int(255) NOT NULL,
+       pokecoins int(255) NOT NULL,
+       team int(11) NOT NULL,
+       latitude double NOT NULL,
+       longitude double NOT NULL,
+       altitude int(255) NOT NULL,
+       send_marketing_emails tinyint(1) NOT NULL,
+       send_push_notifications tinyint(1) NOT NULL,
+       skin int(11) NOT NULL,
+       hai int(11) NOT NULL,
+       shirt int(11) NOT NULL,
+       pants int(11) NOT NULL,
+       hat int(11) NOT NULL,
+       shoes int(11) NOT NULL,
+       eyes int(11) NOT NULL,
+       gender int(11) NOT NULL,
+       backpack int(11) NOT NULL,
+       PRIMARY KEY (id)
+      ) ENGINE=InnoDB;
     `;
     this.db.instance.query(query, (e, rows, fields) => {
       if (e) console.log(e);
