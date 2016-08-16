@@ -287,7 +287,6 @@ export function loginPlayer() {
 
   return new Promise((resolve) => {
     this.getUserByEmail(player.email).then((doc) => {
-      console.log(doc);
       player.updateByObject(doc);
       buffer = GetPlayer(player).encode();
       resolve(buffer);
