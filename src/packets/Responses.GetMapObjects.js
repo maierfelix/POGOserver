@@ -5,10 +5,11 @@ import {
 } from "../utils";
 
 /**
+ * @param {Player} player
  * @param {Request} request
  * @return {Object}
  */
-export default function GetMapObjects(request) {
+export default function GetMapObjects(player, request) {
 
   var cells = proto.Networking.Requests.Messages.GetMapObjectsMessage.decode(request.request_message.toBuffer()).cell_id;
 
@@ -30,6 +31,9 @@ export default function GetMapObjects(request) {
     }));
   });
 
+  let latitude = player.latitude;
+  let longitude = player.longitude;
+
   let cell = cellsRes[cellsRes.length - 1];
 
   cellsRes[cellsRes.length - 2].forts = [
@@ -38,8 +42,8 @@ export default function GetMapObjects(request) {
       last_modified_timestamp_ms: 1470787552992,
       //latitude: 39.1914,
       //longitude: -96.5850,
-      latitude: 39.19047143172622,
-      longitude: -96.58502161502839,
+      latitude: latitude,
+      longitude: longitude,
       enabled: true,
       type: proto.Map.Fort.FortType.CHECKPOINT,
       cooldown_complete_timestamp_ms: new Date().getTime(),
@@ -51,8 +55,8 @@ export default function GetMapObjects(request) {
     new proto.Map.Pokemon.WildPokemon({
       encounter_id: 11810991820755313517,
       last_modified_timestamp_ms: 1470787552996,
-      latitude: 39.19047143172622,
-      longitude: -96.58502161502839,
+      latitude: latitude,
+      longitude: longitude,
       spawn_point_id: "87bdd289c69",
       pokemon_data: new proto.Data.PokemonData({
         pokemon_id: 16,
@@ -77,8 +81,8 @@ export default function GetMapObjects(request) {
       spawn_point_id: "87bdd289c69",
       encounter_id: 11810991820755313517,
       pokemon_id: 16,
-      latitude: 39.19047143172622,
-      longitude: -96.58502161502839,
+      latitude: latitude,
+      longitude: longitude,
       expiration_timestamp_ms: (new Date().getTime() + 1e6) * 1e3
     })
   ];

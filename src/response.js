@@ -73,7 +73,7 @@ export function processResponse(request) {
         break;
         case REQUEST.GET_MAP_OBJECTS:
           this.player.updatePosition(request);
-          buffer = GetMapObjects(request);
+          buffer = GetMapObjects(player, request);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
