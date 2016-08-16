@@ -77,7 +77,7 @@ export function createTable(name) {
        send_marketing_emails tinyint(1) NOT NULL,
        send_push_notifications tinyint(1) NOT NULL,
        skin int(11) NOT NULL,
-       hai int(11) NOT NULL,
+       hair int(11) NOT NULL,
        shirt int(11) NOT NULL,
        pants int(11) NOT NULL,
        hat int(11) NOT NULL,
