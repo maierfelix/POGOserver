@@ -17,26 +17,7 @@ ______ _____ _____ _____
 # Getting started
 
 ## Tunneling setup
-You need to intercept the traffic between the app and original server and forward it to this custom server implementation.
-I'm using [Fiddler](http://www.telerik.com/fiddler) for this purpose. After installing Fiddler, go to ``Rules->Customize Rules`` and search for the function ``OnBeforeRequest``.
-Append the following code into the functions body:
-````swift
-if (oSession.HostnameIs("pgorelease.nianticlabs.com")) {
-  if (oSession.HTTPMethodIs("CONNECT")) {
-    oSession["x-replywithtunnel"] = "127.0.0.1:3000";
-    return;
-  }
-  oSession.fullUrl = "http://127.0.0.1:3000" + oSession.PathAndQuery;
-}
-````
-Now go to `Tools->Telerik Fiddler Options->HTTPS` and enable ``Decrypt HTTPS traffic``.
-I'm using [Nox App Player](http://en.bignox.com/pokemongo/) for android emulation, so open ``Settings->Wi-Fi->WiredSSID->Modify network`` and setup a proxy with the following settings:
-````swift
-Hostname: 192.168.178.x // your local ip4
-Port: 8888 // fiddler default port
-````
-
-By ``0.31.0`` [certificate pinning](https://eaton-works.com/2016/07/31/reverse-engineering-and-removing-pokemon-gos-certificate-pinning/) was added. To bypass it, you need to install [this great app](https://github.com/rastapasta/pokemon-go-xposed). Just follow the readme guide to install it.
+For now, the pokemon go app traffic has to get forwarded manually to this custom server. To do so, download [this](https://github.com/rastapasta/pokemon-go-xposed/releases) app and follow the installation instructions [here](https://github.com/rastapasta/pokemon-go-xposed#how-to-use-it).
 
 ## Server setup
 
