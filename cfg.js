@@ -33,6 +33,7 @@ export const SERVER_MYSQL_USERNAME = "USERNAME";
 export const SERVER_MYSQL_PASSWORD = "PASSWORD";
 
 // account used for pogo-asset-downloader lib
+export const SERVER_POGO_CLIENT_PROVIDER = "GOOGLE"; // either google or ptc
 export const SERVER_POGO_CLIENT_USERNAME = "USERNAME";
 export const SERVER_POGO_CLIENT_PASSWORD = "PASSWORD";
 

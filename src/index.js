@@ -82,6 +82,7 @@ class GameServer {
 
     return new Promise((resolve) => {
       pogodown.login({
+        provider: String(CFG.SERVER_POGO_CLIENT_PROVIDER).toLowerCase(),
         username: CFG.SERVER_POGO_CLIENT_USERNAME,
         password: CFG.SERVER_POGO_CLIENT_PASSWORD,
         downloadModels: false
