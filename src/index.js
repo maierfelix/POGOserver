@@ -175,10 +175,27 @@ class GameServer {
   /**
    * @param {String} msg
    * @param {Number} color
+   * @param {Boolean} nl
    */
-  print(msg, color) {
+  print(msg, color, nl) {
     color = Number.isInteger(color) ? color : CFG.SERVER_DEFAULT_CONSOLE_COLOR;
-    console.log(`[Console] \x1b[${color};1m${msg}\x1b[0m`);
+    process.stdout.write(`[Console] \x1b[${color};1m${msg}\x1b[0m${nl === void 0 ? "\n" : ""}`);
+  }
+
+  /**
+   * @param {String} msg
+   * @param {Function} func
+   * @param {Number} timer
+   */
+  retry(msg, func, timer) {
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    this.print(`${msg}${timer}s`, 33, true);
+    if (timer >= 1) setTimeout(() => this.retry(msg, func, --timer), 1e3);
+    else {
+      process.stdout.write("\n");
+      func();
+    }
   }
 
   greet() {

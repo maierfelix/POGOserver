@@ -10,6 +10,7 @@ export function setupConnection() {
     mongodb.MongoClient.connect(url, (error, db) => {
       if (error) {
         this.print(error, 31);
+        this.retry("Retrying again in ", () => this.setupConnection().then(resolve), 5);
       } else {
         this.db.instance = db;
         this.loadCollection(CFG.SERVER_MONGO_COLLECTION_USERS).then(() => {

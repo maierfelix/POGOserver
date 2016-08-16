@@ -1,4 +1,8 @@
+import fs from "fs";
+
 import * as CFG from "../cfg";
+
+const helpMessage = fs.readFileSync(".help", "utf8");
 
 export function processCommand(cmd, data) {
   switch (cmd) {
@@ -25,7 +29,9 @@ export function processCommand(cmd, data) {
       this.greet();
     break;
     case "/help":
-      this.printHelp();
+      console.log("\x1b[36;1m==================================== HELP =====================================\x1b[0m");
+      console.log(`\x1b[${CFG.SERVER_DEFAULT_CONSOLE_COLOR};1m${helpMessage}\x1b[0m`);
+      console.log("\x1b[36;1m===============================================================================\x1b[0m");
     break;
     case "/save":
       this.saveAllPlayers();
@@ -36,19 +42,6 @@ export function processCommand(cmd, data) {
       this.print(`${cmd} is not a valid command!`, 31);
     break;
   };
-};
-
-export function printHelp() {
-
-  console.log("\x1b[36;1m===================================== HELP =====================================\x1b[0m");
-  this.print("clients                      : how many players are connected");
-  this.print("exit                         : exit the server");
-  this.print("kick [PlayerUsername]        : kick player by username");
-  this.print("kickall                      : kick all players");
-  this.print("clear                        : clear the server console");
-  this.print("save                         : save all palyers into database");
-  console.log("\n\x1b[36;1m================================================================================\x1b[0m");
-
 };
 
 export function stdinInput(data) {

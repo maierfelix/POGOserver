@@ -27,6 +27,15 @@ export function setupConnection() {
 
 }
 
+/**
+ * @param {Function} resolve
+ */
+export function closeConnection(resolve) {
+  this.db.instance.end(() => {
+    resolve();
+  });
+}
+
 export function createTableIfNoExists() {
   return new Promise((resolve) => {
     this.db.instance.query(`SHOW TABLES LIKE '${CFG.SERVER_MYSQL_TABLE}';`, (e, rows, fields) => {
@@ -76,15 +85,6 @@ export function createTable(name) {
       if (e) console.log(e);
       else resolve();
     });
-  });
-}
-
-/**
- * @param {Function} resolve
- */
-export function closeConnection(resolve) {
-  this.db.instance.end(() => {
-    resolve();
   });
 }
 

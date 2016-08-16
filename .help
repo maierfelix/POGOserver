@@ -1,0 +1,6 @@
+clients                      : how many players are connected
+exit                         : exit the server
+kick [PlayerUsername]        : kick player by username
+kickall                      : kick all players
+clear                        : clear the server console
+save                         : save all palyers into database

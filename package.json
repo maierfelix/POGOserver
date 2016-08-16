@@ -1,6 +1,6 @@
 {
   "name": "POGOServer",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "",
   "repository": {
     "type": "git",
@@ -10,6 +10,10 @@
     "test": "echo \"Error: no test specified\"",
     "babel-node": "babel-node --presets=es2015",
     "start": "nodemon --exec npm run babel-node -- ./src/index.js"
+  },
+  "engines": {
+    "node": ">= 6.x",
+    "npm": ">= 3.x"
   },
   "author": "Felix Maier",
   "license": "MIT",
