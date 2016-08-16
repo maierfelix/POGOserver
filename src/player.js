@@ -77,7 +77,11 @@ class Player {
   updateByObject(obj) {
     for (let key in obj) {
       if (this.hasOwnProperty(key)) {
-        this[key] = obj[key];
+        if (key == 'send_marketing_emails' || key == 'send_push_notifications') {
+          this[key] = !!obj[key];
+        } else {
+          this[key] = obj[key];
+        }
       }
     };
   }
@@ -283,6 +287,7 @@ export function loginPlayer() {
 
   return new Promise((resolve) => {
     this.getUserByEmail(player.email).then((doc) => {
+      console.log(doc);
       player.updateByObject(doc);
       buffer = GetPlayer(player).encode();
       resolve(buffer);
