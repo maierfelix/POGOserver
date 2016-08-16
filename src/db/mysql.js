@@ -101,8 +101,11 @@ export function createTable(name) {
 export function getUserByEmail(email) {
   return new Promise((resolve) => {
     this.db.instance.query(`SELECT * FROM ${CFG.SERVER_MYSQL_TABLE} WHERE email=? LIMIT 1`, [email], (e, rows, fields) => {
-      if (e) console.log(e);
-      else resolve(rows);
+      if (e) {
+        console.log(e);
+      } else {
+        resolve(rows[0]);
+      }
     });
   });
 }
