@@ -74,7 +74,10 @@ export function processResponse(request) {
         case REQUEST.GET_MAP_OBJECTS:
           this.player.updatePosition(request);
           buffer = GetMapObjects(request);
-          this.savePlayer(player);
+          this.savePlayer(player).then(() => {
+            resolve(buffer);
+          });
+          return void 0;
         break;
         case REQUEST.GET_DOWNLOAD_URLS:
           GetDownloadUrls(request, this.generateDownloadUrlByAssetId).then((res) => {
@@ -85,18 +88,27 @@ export function processResponse(request) {
         case REQUEST.SET_AVATAR:
           player.updateAvatar(request);
           buffer = SetAvatar(player);
-          this.savePlayer(player);
+          this.savePlayer(player).then(() => {
+            resolve(buffer);
+          });
+          return void 0;
         break;
         case REQUEST.SFIDA_ACTION_LOG:
           buffer = SfidaActionLog();
         break;
         case REQUEST.MARK_TUTORIAL_COMPLETE:
           buffer = MarkTutorialComplete(player);
-          this.savePlayer(player);
+          this.savePlayer(player).then(() => {
+            resolve(buffer);
+          });
+          return void 0;
         break;
         case REQUEST.CLAIM_CODENAME:
           buffer = ClaimCodeName(request, player);
-          this.savePlayer(player);
+          this.savePlayer(player).then(() => {
+            resolve(buffer);
+          });
+          return void 0;
         break;
         case REQUEST.LEVEL_UP_REWARDS:
           buffer = LevelUpRewards();
@@ -110,7 +122,10 @@ export function processResponse(request) {
         case REQUEST.SET_CONTACT_SETTINGS:
           player.updateContactSettings(request);
           buffer = SetContactSettings(player);
-          this.savePlayer(player);
+          this.savePlayer(player).then(() => {
+            resolve(buffer);
+          });
+          return void 0;
         break;
         case REQUEST.ENCOUNTER:
           buffer = Encounter(request);

@@ -9,14 +9,7 @@ export function processCommand(cmd, data) {
     break;
     // Exit the server
     case "/exit":
-      this.socket.close(() => {
-        this.print("Closed http server!", 33);
-        this.db.instance.close(() => {
-          this.print("Closed database connection!", 33);
-          this.print("Killed the server!", 31);
-          setTimeout(() => process.exit(1), 2e3);
-        });
-      });
+      this.shutdown();
     break;
     case "/kick":
       this.kickPlayer(data[1]);

@@ -37,19 +37,22 @@ function buildPlayerData(obj) {
   let pokecoins = obj.pokecoins;
   let stardust = obj.stardust;
 
-  let avatar = obj.avatar || {
-    skin: 0,
-    hair: 2,
-    shirt: 1,
-    pants: 2,
-    hat: 0,
-    shoes: 2,
-    eyes: 3,
-    gender: proto.Enums.Gender.MALE,
-    backpack: 1
+  let avatar = {
+    skin: obj.skin,
+    hair: obj.hair,
+    shirt: obj.shirt,
+    pants: obj.pants,
+    hat: obj.hat,
+    shoes: obj.shoes,
+    eyes: obj.eyes,
+    gender: obj.gender,
+    backpack: obj.backpack
   };
 
-  let contact_settings = obj.contact_settings;
+  let contact_settings = {
+    send_marketing_emails: obj.send_marketing_emails,
+    send_push_notifications: obj.send_push_notifications
+  };
 
   let tutorial_state = [
     proto.Enums.TutorialState.LEGAL_SCREEN,

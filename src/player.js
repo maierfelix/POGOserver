@@ -20,37 +20,31 @@ class Player {
     this.uid = -1;
 
     this.email = null;
-    this._username = "undefined";
+    this.username = "undefined";
  
-    this.position = {
-      latitude: 0,
-      longitude: 0,
-      altitude: 0
-    };
+    this.latitude = 0;
+    this.longitude = 0;
+    this.altitude = 0;
 
-    this.contact_settings = {
-      send_marketing_emails: false,
-      send_push_notifications: false
-    };
+    this.send_marketing_emails = false;
+    this.send_push_notifications = false;
 
     this.exp = 0;
 
     this.stardust = 0;
     this.pokecoins = 0;
 
-    this.team = proto.Enums.TeamColor.BLUE;
+    this.team = 0;
 
-    this.avatar = {
-      skin: 0,
-      hair: 0,
-      shirt: 0,
-      pants: 0,
-      hat: 0,
-      shoes: 0,
-      eyes: 0,
-      gender: 0,
-      backpack: 0
-    };
+    this.skin = 0;
+    this.hair = 0;
+    this.shirt = 0;
+    this.pants = 0;
+    this.hat = 0;
+    this.shoes = 0;
+    this.eyes = 0;
+    this.gender = 0;
+    this.backpack = 0;
 
     this.tutorial_state = [32, 1, 3, 4, 7];
 
@@ -81,13 +75,11 @@ class Player {
   }
 
   updateByObject(obj) {
-
     for (let key in obj) {
       if (this.hasOwnProperty(key)) {
         this[key] = obj[key];
       }
     };
-
   }
 
   /**
@@ -99,9 +91,7 @@ class Player {
 
     this.latitude = data.latitude;
     this.longitude = data.longitude;
-    //this.position.altitude = data.altitude;
-
-    //console.log(`Updated position: ${data.latitude};${data.longitude}`);
+    this.altitude = data.altitude;
 
   }
 
@@ -111,17 +101,15 @@ class Player {
 
     if (!data) return void 0;
 
-    this.avatar = {
-      skin: data.skin,
-      hair: data.hair,
-      shirt: data.shirt,
-      pants: data.pants,
-      hat: data.hat,
-      shoes: data.shoes,
-      eyes: data.eyes,
-      gender: data.gender,
-      backpack: data.backpack
-    };
+    this.skin = data.skin;
+    this.hair = data.hair;
+    this.shirt = data.shirt;
+    this.pants = data.pants;
+    this.hat = data.hat;
+    this.shoes = data.shoes;
+    this.eyes = data.eyes;
+    this.gender = data.gender;
+    this.backpack = data.backpack;
 
   }
 
@@ -131,30 +119,9 @@ class Player {
 
     if (!data) return void 0;
 
-    this.contact_settings.send_marketing_emails = data.send_marketing_emails;
-    this.contact_settings.send_push_notifications = data.send_push_notifications;
+    this.send_marketing_emails = data.send_marketing_emails;
+    this.send_push_notifications = data.send_push_notifications;
 
-  }
-
-  get username() {
-    return (this._username);
-  }
-  set username(name) {
-    this._username = name;
-  }
-
-  get latitude() {
-    return (this.position.latitude);
-  }
-  set latitude(lat) {
-    this.position.latitude = lat;
-  }
-
-  get longitude() {
-    return (this.position.longitude);
-  }
-  set longitude(lng) {
-    this.position.longitude = lng;
   }
 
 }
@@ -302,16 +269,14 @@ export function removeAllPlayers() {
  * @param {Player} player
  */
 export function savePlayer(player) {
-  if (player.authenticated) {
-    this.updateUser(player);
-  }
-  //this.print(`${player.remoteAddress} saved into database`, 34);
+  return new Promise((resolve) => {
+    if (player.authenticated) {
+      this.updateUser(player).then(resolve);
+    }
+  });
 }
 
-/**
- * @param {Object} doc
- */
-export function loginPlayer(doc) {
+export function loginPlayer() {
 
   let buffer = null;
   let player = this.player;
@@ -319,7 +284,7 @@ export function loginPlayer(doc) {
   return new Promise((resolve) => {
     this.getUserByEmail(player.email).then((doc) => {
       player.updateByObject(doc);
-      buffer = GetPlayer(doc).encode();
+      buffer = GetPlayer(player).encode();
       resolve(buffer);
     });
   });
@@ -335,13 +300,13 @@ export function forwardPlayer() {
       if (player.email.length) {
         this.print(`${player.email.replace("@gmail.com", "")} authenticated!`, 36);
       }
-      if (doc === void 0) {
-        this.registerPlayer(doc).then((res) => {
+      if (doc === void 0 || doc && !doc.length) {
+        this.registerPlayer().then((res) => {
           resolve(res);
         });
       }
       else {
-        this.loginPlayer(doc).then((res) => {
+        this.loginPlayer().then((res) => {
           resolve(res);
         });
       }
@@ -350,10 +315,7 @@ export function forwardPlayer() {
 
 }
 
-/**
- * @param {Object} doc
- */
-export function registerPlayer(doc) {
+export function registerPlayer() {
 
   let player = this.player;
 
@@ -361,7 +323,7 @@ export function registerPlayer(doc) {
     this.createUser(player).then(() => {
       this.print(`${this.player.email.replace("@gmail.com", "")} registered!`, 36);
       player.tutorial_state = [];
-      this.loginPlayer(doc).then((res) => {
+      this.loginPlayer().then((res) => {
         resolve(res);
       });
     });

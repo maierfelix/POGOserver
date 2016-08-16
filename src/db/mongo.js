@@ -2,10 +2,12 @@ import mongodb from "mongodb";
 
 import * as CFG from "../../cfg";
 
-export function setupMongo() {
+export function setupConnection() {
+
+  let url = `mongodb://${CFG.SERVER_MONGO_HOST_IP}:${CFG.SERVER_MONGO_PORT}/${CFG.SERVER_MONGO_DB_NAME}`;
 
   return new Promise((resolve) => {
-    mongodb.MongoClient.connect(CFG.SERVER_MONGO_URL, (error, db) => {
+    mongodb.MongoClient.connect(url, (error, db) => {
       if (error) {
         this.print(error, 31);
       } else {
@@ -19,6 +21,18 @@ export function setupMongo() {
 
 }
 
+/**
+ * @param {Function} resolve
+ */
+export function closeConnection(resolve) {
+  this.db.instance.close(() => {
+    resolve();
+  });
+}
+
+/**
+ * @param {String} name
+ */
 export function loadCollection(name) {
 
   return new Promise((resolve) => {
@@ -34,6 +48,9 @@ export function loadCollection(name) {
 
 }
 
+/**
+ * @param {String} name
+ */
 export function createCollection(name) {
   return new Promise((resolve) => {
     this.db.instance.createCollection(name, {}, (err, coll) => {
@@ -42,11 +59,14 @@ export function createCollection(name) {
   });
 }
 
+/**
+ * @param {String} email
+ */
 export function getUserByEmail(email) {
   return new Promise((resolve) => {
     let collection = this.getUserCollection();
     collection.find({email: email}).toArray((err, docs) => {
-      resolve(docs[0]);
+      resolve(docs);
     });
   });
 }
@@ -57,22 +77,14 @@ export function getUserCollection() {
   );
 }
 
+/**
+ * @param {Object} obj
+ */
 export function createUser(obj) {
 
   let collection = this.getUserCollection();
 
-  let user = {
-    username: obj.username,
-    email: obj.email,
-    position: obj.position,
-    exp: obj.exp,
-    stardust: obj.stardust,
-    pokecoins: obj.pokecoins,
-    avatar: obj.avatar,
-    team: obj.team,
-    contact_settings: obj.contact_settings,
-    tutorial_state: obj.tutorial_state
-  };
+  let user = this.getUserData(obj);
 
   return new Promise((resolve) => {
     collection.insert([user], (error, result) => {
@@ -82,27 +94,51 @@ export function createUser(obj) {
 
 }
 
+/**
+ * @param {Object} obj
+ */
 export function updateUser(obj) {
 
   let collection = this.getUserCollection();
 
-  let user = {
-    username: obj.username,
-    email: obj.email,
-    position: obj.position,
-    exp: obj.exp,
-    stardust: obj.stardust,
-    pokecoins: obj.pokecoins,
-    avatar: obj.avatar,
-    team: obj.team,
-    contact_settings: obj.contact_settings,
-    tutorial_state: obj.tutorial_state
-  };
+  let user = this.getUserData(obj);
 
   return new Promise((resolve) => {
-    collection.update({email: obj.email}, user, (error, result) => {
+    collection.update({email: user.email}, user, (error, result) => {
       resolve();
     });
   });
 
+}
+
+/**
+ * @param  {Object} obj
+ * @return {Object}
+ */
+export function getUserData(obj) {
+  return ({
+    username: obj.username,
+    email: obj.email,
+    exp: obj.exp,
+    stardust: obj.stardust,
+    pokecoins: obj.pokecoins,
+    team: obj.team,
+
+    skin: obj.skin,
+    hair: obj.skin,
+    shirt: obj.skin,
+    pants: obj.skin,
+    hat: obj.skin,
+    shoes: obj.skin,
+    eyes: obj.skin,
+    gender: obj.skin,
+    backpack: obj.skin,
+
+    latitude: obj.latitude,
+    longitude: obj.latitude,
+    altitude: obj.latitude,
+
+    send_marketing_emails: false,
+    send_push_notifications: false
+  });
 }

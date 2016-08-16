@@ -87,6 +87,7 @@ class GameServer {
         password: CFG.SERVER_POGO_CLIENT_PASSWORD,
         downloadModels: false
       }).then(() => {
+        this.print("Created asset download session");
         resolve();
       });
     });
@@ -134,6 +135,43 @@ class GameServer {
     return (server);
   }
 
+  setupDatabaseConnection() {
+
+    return new Promise((resolve) => {
+
+      let name = String(CFG.SERVER_USE_DATABASE).toUpperCase();
+
+      switch (name) {
+        case "MONGO":
+        case "MONGODB":
+          inherit(GameServer, _mongo);
+          this.setupConnection().then(resolve);
+        break;
+        case "MYSQL":
+          inherit(GameServer, _mysql);
+          this.setupConnection().then(resolve);
+        break;
+        default:
+          this.print("Invalid database connection type!", 31);
+          return void 0;
+        break;
+      };
+
+    });
+
+  }
+
+  shutdown() {
+    this.socket.close(() => {
+      this.print("Closed http server!", 33);
+      this.closeConnection(() => {
+        this.print("Closed database connection!", 33);
+        this.print("Server shutdown!", 31);
+        setTimeout(() => process.exit(1), 2e3);
+      });
+    });
+  }
+
   /**
    * @param {String} msg
    * @param {Number} color
@@ -155,8 +193,6 @@ inherit(GameServer, _player);
 inherit(GameServer, _request);
 inherit(GameServer, _response);
 inherit(GameServer, _process);
-inherit(GameServer, _mongo);
-inherit(GameServer, _mysql);
 
 let server = new GameServer();
 
