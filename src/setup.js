@@ -4,10 +4,7 @@ import * as CFG from "../cfg";
 
 export function setup() {
 
-  var package_json = require('../package.json');
-  this.print("Server version: "+package_json.version, 33);
-  
-  this.print("Booting server..", 33);
+  this.print(`Booting Server v${require("../package.json").version}...`, 33);
 
   let assetSessionLoaded = false;
 
