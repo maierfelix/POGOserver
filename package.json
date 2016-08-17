@@ -1,6 +1,6 @@
 {
   "name": "POGOServer",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "",
   "repository": {
     "type": "git",
@@ -29,10 +29,9 @@
     "pogo-asset-downloader": "^0.2.1",
     "node-pogo-protos": "^1.3.0",
     "path": "^0.12.7",
-    "rimraf": "^2.5.4",
     "directory-tree": "^1.1.0",
     "nodegit": "^0.14.1",
-    "fs-exists-sync": "^0.1.0"
+    "fs-extra": "^0.30.0"
   },
   "devDependencies": {}
 }

@@ -2,8 +2,6 @@ import fs from "fs";
 
 import * as CFG from "../cfg";
 
-import updater from "../updater";
-
 const helpMessage = fs.readFileSync(".help", "utf8");
 
 export function processCommand(cmd, data) {
@@ -41,9 +39,7 @@ export function processCommand(cmd, data) {
       this.print(`Saved ${length} player${length === 1 ? "": "s"} into database!`);
     break;
     case "/update":
-      updater().then(() => {
-        // bla
-      });
+      eval(fs.readFileSync("update.js", "utf8"));
     break;
     default:
       this.print(`${cmd} is not a valid command!`, 31);
