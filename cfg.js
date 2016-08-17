@@ -12,6 +12,8 @@ export const SERVER_PLAYER_CONNECTION_TIMEOUT = 1e3 * 60 * 30; // 30min
 
 export const SERVER_LOG_REQUESTS = true;
 
+export const SERVER_BOOT_TIMEOUT = 10e3;
+
 export const SERVER_DEFAULT_CONSOLE_COLOR = 32;
 
 // Either mongo or mysql
@@ -27,8 +29,8 @@ export const SERVER_MONGO_COLLECTION_USERS = "users";
 export const SERVER_MYSQL_PORT = 3306;
 export const SERVER_MYSQL_HOST_IP = "127.0.0.1";
 export const SERVER_MYSQL_DB_NAME = "pogosql";
-export const SERVER_MYSQL_USERNAME = "USERNAME";
-export const SERVER_MYSQL_PASSWORD = "PASSWORD";
+export const SERVER_MYSQL_USERNAME = "root";
+export const SERVER_MYSQL_PASSWORD = "";
 export const SERVER_MYSQL_TABLE = "users";
 
 // account used for pogo-asset-downloader lib

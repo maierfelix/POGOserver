@@ -1,6 +1,5 @@
 import Long from "long";
 import proto from "./proto";
-import { DownloadUrls } from "./res";
 
 import * as CFG from "../cfg";
 
@@ -55,61 +54,6 @@ export function decodeLong(long) {
   let value = Long.fromBits(long.high, long.low, !!long.unsigned);
 
   return (parseInt(value.toString()));
-
-}
-
-/**
- * @param  {String} pm
- * @return {Object}
- */
-export function getDownloadUrl(pm) {
-
-  let ii = 0;
-  let length = DownloadUrls.length;
-
-  let node = null;
-
-  for (; ii < length; ++ii) {
-    node = DownloadUrls[ii];
-    if (node.bundle_name === pm) {
-      return (node);
-    }
-  };
-
-  return (null);
-
-}
-
-/**
- * @param  {String} pm
- * @return {Object}
- */
-export function getDownloadUrlByAssetId(id) {
-
-  let ii = 0;
-  let length = DownloadUrls.length;
-
-  let node = null;
-  let index = 0;
-
-  for (; ii < length; ++ii) {
-    node = DownloadUrls[ii];
-    if (node.asset_id.substring(index) === id) {
-      return (node);
-    }
-  };
-
-  return (null);
-
-}
-
-export function getGenerationIdByAssetId(asset_id) {
-
-  let index = asset_id.lastIndexOf("/") + 1;
-  
-  return (
-    parseInt(asset_id.substring(index))
-  );
 
 }
 

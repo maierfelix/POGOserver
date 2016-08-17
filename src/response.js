@@ -57,16 +57,16 @@ export function processResponse(request) {
           buffer = CheckAwardedBadges();
         break;
         case REQUEST.DOWNLOAD_SETTINGS:
-          buffer = DownloadSettings();
+          buffer = DownloadSettings(request);
         break;
         case REQUEST.DOWNLOAD_ITEM_TEMPLATES:
           buffer = ItemTemplates();
         break;
         case REQUEST.DOWNLOAD_REMOTE_CONFIG_VERSION:
-          buffer = DownloadRemoteConfigVersion();
+          buffer = DownloadRemoteConfigVersion(request);
           break;
         case REQUEST.GET_ASSET_DIGEST:
-          buffer = GetAssetDigest(request);
+          buffer = GetAssetDigest(this.asset, request);
         break;
         case REQUEST.GET_PLAYER_PROFILE:
           buffer = GetPlayerProfile();
@@ -80,7 +80,7 @@ export function processResponse(request) {
           return void 0;
         break;
         case REQUEST.GET_DOWNLOAD_URLS:
-          GetDownloadUrls(request, this.generateDownloadUrlByAssetId).then((res) => {
+          GetDownloadUrls(this.asset, request, this.generateDownloadUrlByAssetId).then((res) => {
             resolve(res);
           });
           return void 0;

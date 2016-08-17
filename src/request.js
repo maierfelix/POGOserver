@@ -33,6 +33,8 @@ export function authenticatePlayer() {
 
   let token = request.auth_info;
 
+  // TODO: Support PTC server authentification
+
   if (token.provider === "google") {
     if (token.token !== null) {
       let decoded = jwtDecode(token.token.contents);
@@ -46,6 +48,11 @@ export function authenticatePlayer() {
       this.removePlayer(player);
       return void 0;
     }
+  }
+  else if (token.provider === "ptc") {
+    this.print("PTC auth isnt supported yet! Kicking..", 31);
+    this.removePlayer(player);
+    return void 0;
   }
 
   player.authenticated = true;
@@ -91,6 +98,11 @@ export function onRequest(req, res) {
   }
 
   let request = proto.Networking.Envelopes.RequestEnvelope.decode(req.body);
+
+  if (!request.requests.length) {
+    this.print("Received invalid request!", 31);
+    return void 0;
+  }
 
   if (CFG.SERVER_LOG_REQUESTS) {
     console.log("#####");

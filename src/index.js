@@ -86,9 +86,9 @@ class GameServer {
         username: CFG.SERVER_POGO_CLIENT_USERNAME,
         password: CFG.SERVER_POGO_CLIENT_PASSWORD,
         downloadModels: false
-      }).then(() => {
+      }).then((asset) => {
         this.print("Created asset download session");
-        resolve();
+        resolve(asset);
       });
     });
 

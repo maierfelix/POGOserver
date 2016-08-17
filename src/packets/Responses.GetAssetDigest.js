@@ -3,14 +3,34 @@ import proto from "../proto";
 
 import * as CFG from "../../cfg";
 
-let asset = fs.readFileSync(CFG.ASSET_DIGEST_PATH);
-
 /**
  * @param {Request} req
  * @return {Object}
  */
-export default function GetAssetDigest(req) {
+export default function GetAssetDigest(asset, req) {
 
-  return (asset);
+  let data = proto.Networking.Requests.Messages.GetAssetDigestMessage.decode(req.request_message.toBuffer());
+
+  let digests = [];
+
+  asset.digest.map((item) => {
+    digests.push(
+      new proto.Data.AssetDigestEntry({
+        asset_id: item.getAssetId(),
+        bundle_name: item.getBundleName(),
+        version: item.getVersion(),
+        checksum: item.getChecksum(),
+        size: item.getSize(),
+        key: item.getKey()
+      })
+    );
+  });
+
+  return (
+    new proto.Networking.Responses.GetAssetDigestResponse({
+      timestamp_ms: new Date().getTime() * 1e3,
+      digest: digests
+    }).encode()
+  );
 
 }

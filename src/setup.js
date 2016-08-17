@@ -6,7 +6,17 @@ export function setup() {
 
   this.print("Booting server..", 33);
 
-  this.createAssetDownloadSession().then(() => {
+  let assetSessionLoaded = false;
+
+  setTimeout(() => {
+    if (!assetSessionLoaded) {
+      this.print("Boot timeout, please check your login details!", 31);
+    }
+  }, CFG.SERVER_BOOT_TIMEOUT);
+
+  this.createAssetDownloadSession().then((asset) => {
+    assetSessionLoaded = true;
+    this.asset = asset;
     this.setupDatabaseConnection().then(() => {
 
       if (CFG.SERVER_PORT < 1) {

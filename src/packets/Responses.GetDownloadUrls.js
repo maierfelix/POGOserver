@@ -9,7 +9,7 @@ import {
 /**
  * @return {Object}
  */
-export default function GetDownloadUrls(req, download) {
+export default function GetDownloadUrls(asset, req, download) {
 
   let data = proto.Networking.Requests.Messages.GetDownloadUrlsMessage.decode(req.request_message.toBuffer());
 
@@ -17,17 +17,24 @@ export default function GetDownloadUrls(req, download) {
 
   let download_urls = [];
 
-  let obj = getDownloadUrlByAssetId(key);
+  let node = null;
+
+  for (node of asset.digest) {
+    if (node.asset_id === key) {
+      break;
+    }
+  };
 
   return new Promise((resolve) => {
 
     download(key).then((asset) => {
+      console.log(node);
       download_urls.push(
         new proto.Data.DownloadUrlEntry({
           url: asset[0].asset,
           asset_id: key,
-          size: obj.size,
-          checksum: obj.checksum
+          size: parseInt(node.size),
+          checksum: parseInt(node.checksum)
         })
       );
       let output = (
