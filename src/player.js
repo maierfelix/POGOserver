@@ -304,7 +304,7 @@ export function forwardPlayer() {
       if (player.email.length) {
         this.print(`${player.email.replace("@gmail.com", "")} authenticated!`, 36);
       }
-      if (doc === void 0 || doc && !doc.length) {
+      if (doc === void 0 || typeof doc.email === 'undefined') {
         this.registerPlayer().then((res) => {
           resolve(res);
         });
