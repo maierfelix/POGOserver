@@ -73,7 +73,8 @@ export function getUserByEmail(email) {
   return new Promise((resolve) => {
     let collection = this.getUserCollection();
     collection.find({email: email}).toArray((err, docs) => {
-      resolve(docs);
+      if (docs && docs.length) resolve(docs[0]);
+      else resolve(void 0);
     });
   });
 }
