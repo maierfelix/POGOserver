@@ -1,5 +1,3 @@
-export const ASSET_DIGEST_PATH = "asset_digest";
-
 export const MINIMUM_CLIENT_VERSION = "0.33.0";
 
 export const SERVER_PORT = 3000;

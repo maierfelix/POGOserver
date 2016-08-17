@@ -87,8 +87,14 @@ class GameServer {
         password: CFG.SERVER_POGO_CLIENT_PASSWORD,
         downloadModels: false
       }).then((asset) => {
-        this.print("Created asset download session");
-        resolve(asset);
+        if (asset && asset.digest && asset.digest.length) {
+          this.print("Created asset download session");
+          resolve(asset);
+        }
+        else {
+          this.print("Failed to download asset digest!", 31);
+          return void 0;
+        }
       });
     });
 
