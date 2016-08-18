@@ -1,4 +1,3 @@
-import fs from "fs";
 import proto from "./proto";
 
 import * as CFG from "../cfg";
@@ -35,12 +34,19 @@ export function authenticatePlayer() {
 
   // TODO: Support PTC server authentification
 
+  if (!token || !token.provider) {
+    this.print("Invalid authentication token! Kicking..", 31);
+    this.removePlayer(player);
+    return void 0;
+  }
+
   if (token.provider === "google") {
     if (token.token !== null) {
       let decoded = jwtDecode(token.token.contents);
       player.generateUid(decoded.email);
       player.email = decoded.email;
       player.email_verified = decoded.email_verified;
+      player.isGoogleAccount = true;
       this.print(`${player.email.replace("@gmail.com", "")} connected!`, 36);
     }
     else {
@@ -50,7 +56,14 @@ export function authenticatePlayer() {
     }
   }
   else if (token.provider === "ptc") {
+    let decoded = token.token.contents;
+    player.isPTCAccount = true;
     this.print("PTC auth isnt supported yet! Kicking..", 31);
+    this.removePlayer(player);
+    return void 0;
+  }
+  else {
+    this.print("Invalid provider! Kicking..", 31);
     this.removePlayer(player);
     return void 0;
   }
@@ -117,7 +130,10 @@ export function onRequest(req, res) {
   }
 
   this.processRequests(request.requests).then((answer) => {
-    let msg = this.envelopResponse(1, request.request_id, answer, request.hasOwnProperty("auth_ticket"));
+    let msg = this.envelopResponse(1, request.request_id, answer, !!request.auth_ticket);
+    if (CFG.SERVER_DUMP_TRAFFIC) {
+      this.dumpTraffic(req.body, msg);
+    }
     this.send(msg);
   });
 

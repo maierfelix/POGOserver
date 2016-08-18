@@ -1,6 +1,8 @@
 import fs from "fs";
+import fse from "fs-extra";
 import http from "http";
 import proto from "./proto";
+import decode from "pogo-decode";
 
 import {
   inherit
@@ -202,6 +204,23 @@ class GameServer {
       process.stdout.write("\n");
       func();
     }
+  }
+
+  dumpTraffic(req, res) {
+
+    // decode opts
+    let opts = {
+      removeNulls: true,
+      encodeBuffers: true
+    };
+
+    try {
+      let decoded = JSON.stringify(decode(req, res, opts), null, 2);
+      fse.outputFileSync(CFG.SERVER_DUMP_PATH + Date.now(), decoded);
+    } catch (e) {
+      this.print("Dump traffic: " + e, 31);
+    }
+
   }
 
   greet() {

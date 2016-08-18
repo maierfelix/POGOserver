@@ -15,7 +15,7 @@ export function setupConnection() {
   return new Promise((resolve) => {
     connection.connect((error) => {
       if (error) {
-        this.print(error, 31);
+        this.print("MySQL " + error, 31);
         this.retry("Retrying again in ", () => this.setupConnection().then(resolve), 5);
         return void 0;
       }
@@ -26,7 +26,7 @@ export function setupConnection() {
       });
     });
     connection.on("error", (error) => {
-      this.print(error, 31);
+      this.print("MySQL " + error, 31);
       this.retry("Trying to reconnect in ", () => this.setupConnection().then(resolve), 5);
     });
   });

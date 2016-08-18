@@ -52,6 +52,9 @@ class Player {
     this.pokedex = null;
     this.inventory = null;
 
+    this.isPTCAccount = false;
+    this.isGoogleAccount = false;
+
     this.response = obj.response;
     this.connection = obj.connection;
 
@@ -302,7 +305,8 @@ export function forwardPlayer() {
   return new Promise((resolve) => {
     this.getUserByEmail(player.email).then((doc) => {
       if (player.email.length) {
-        this.print(`${player.email.replace("@gmail.com", "")} authenticated!`, 36);
+        let provider = player.isGoogleAccount ? "Google" : "PTC";
+        this.print(`${player.email.replace("@gmail.com", "")} authenticated via ${provider}!`, 36);
       }
       if (doc) {
         this.loginPlayer().then((res) => {

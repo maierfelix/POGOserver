@@ -34,9 +34,9 @@ export default function GetMapObjects(player, request) {
   let latitude = player.latitude;
   let longitude = player.longitude;
 
-  let cell = cellsRes[cellsRes.length - 1];
+  let cell = cellsRes[0];
 
-  cellsRes[cellsRes.length - 2].forts = [
+  cell.forts = [
     new proto.Map.Fort.FortData({
       id: "roflcopter",
       last_modified_timestamp_ms: 1470787552992,
@@ -59,7 +59,7 @@ export default function GetMapObjects(player, request) {
       longitude: longitude,
       spawn_point_id: "87bdd289c69",
       pokemon_data: new proto.Data.PokemonData({
-        pokemon_id: 16,
+        pokemon_id: 145,
         cp: 277,
         stamina: 41,
         stamina_max: 41,
@@ -80,7 +80,7 @@ export default function GetMapObjects(player, request) {
     new proto.Map.Pokemon.MapPokemon({
       spawn_point_id: "87bdd289c69",
       encounter_id: 11810991820755313517,
-      pokemon_id: 16,
+      pokemon_id: 145,
       latitude: latitude,
       longitude: longitude,
       expiration_timestamp_ms: (new Date().getTime() + 1e6) * 1e3
@@ -90,7 +90,7 @@ export default function GetMapObjects(player, request) {
   cell.nearby_pokemons = [
     new proto.Map.Pokemon.NearbyPokemon({
       distance_in_meters: 200.0,
-      pokemon_id: 16
+      pokemon_id: 145
     })
   ];
 
