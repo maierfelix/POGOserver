@@ -1,4 +1,5 @@
 import fs from "fs";
+import os from "os";
 import fse from "fs-extra";
 import http from "http";
 import proto from "./proto";
@@ -8,7 +9,7 @@ import {
   inherit
 } from "./utils";
 
-import * as CFG from "../cfg";
+import CFG from "../cfg";
 
 import pogodown from "pogo-asset-downloader";
 
@@ -42,11 +43,7 @@ class GameServer {
       collections: {}
     };
 
-    this.proto = null;
     this.socket = null;
-    this.player = null;
-    this.request = null;
-    this.response = null;
     this.cycleInstance = null;
 
     // Timer things
@@ -84,9 +81,9 @@ class GameServer {
 
     return new Promise((resolve) => {
       pogodown.login({
-        provider: String(CFG.SERVER_POGO_CLIENT_PROVIDER).toLowerCase(),
-        username: CFG.SERVER_POGO_CLIENT_USERNAME,
-        password: CFG.SERVER_POGO_CLIENT_PASSWORD,
+        provider: String(CFG.DOWNLOAD_PROVIDER).toLowerCase(),
+        username: CFG.DOWNLOAD_USERNAME,
+        password: CFG.DOWNLOAD_PASSWORD,
         downloadModels: false
       }).then((asset) => {
         if (asset && asset.digest && asset.digest.length) {
@@ -119,15 +116,16 @@ class GameServer {
    */
   createHTTPServer() {
     let server = http.createServer((req, res) => {
-      if (this.clients.length >= CFG.SERVER_MAX_CONNECTIONS) {
+      if (this.clients.length >= CFG.MAX_CONNECTIONS) {
         this.print(`Server is full! Refused ${req.headers.host}`, 31);
         return void 0;
       }
-      this.response = res;
-      // client already connected
-      if (!this.clientAlreadyConnected(req)) {
-        this.addPlayer(req);
-      }
+
+      let player = null;
+
+      if (this.clientAlreadyConnected(req)) player = this.getPlayerByRequest(req);
+      else player = this.addPlayer(req, res);
+
       let chunks = [];
       req.on("data", (chunk) => {
         chunks.push(chunk);
@@ -135,11 +133,11 @@ class GameServer {
       req.on("end", () => {
         let buffer = Buffer.concat(chunks);
         req.body = buffer;
-        this.request = req;
-        this.routeRequest(req, res);
+        player.updateResponse(res);
+        this.routeRequest(req);
       });
     });
-    server.listen(CFG.SERVER_PORT);
+    server.listen(CFG.PORT);
     return (server);
   }
 
@@ -147,7 +145,7 @@ class GameServer {
 
     return new Promise((resolve) => {
 
-      let name = String(CFG.SERVER_USE_DATABASE).toUpperCase();
+      let name = String(CFG.DATABASE_TYPE).toUpperCase();
 
       switch (name) {
         case "MONGO":
@@ -186,7 +184,7 @@ class GameServer {
    * @param {Boolean} nl
    */
   print(msg, color, nl) {
-    color = Number.isInteger(color) ? color : CFG.SERVER_DEFAULT_CONSOLE_COLOR;
+    color = Number.isInteger(color) ? color : CFG.DEFAULT_CONSOLE_COLOR;
     process.stdout.write(`[Console] \x1b[${color};1m${msg}\x1b[0m${nl === void 0 ? "\n" : ""}`);
   }
 
@@ -216,11 +214,23 @@ class GameServer {
 
     try {
       let decoded = JSON.stringify(decode(req, res, opts), null, 2);
-      fse.outputFileSync(CFG.SERVER_DUMP_PATH + Date.now(), decoded);
+      fse.outputFileSync(CFG.DEBUG_DUMP_PATH + Date.now(), decoded);
     } catch (e) {
       this.print("Dump traffic: " + e, 31);
     }
 
+  }
+
+  getLocalIPv4() {
+
+    let address = null;
+    let interfaces = os.networkInterfaces();
+
+    for (var dev in interfaces) {
+      interfaces[dev].filter((details) => details.family === "IPv4" && details.internal === false ? address = details.address: void 0);
+    };
+
+    return (address);
   }
 
   greet() {

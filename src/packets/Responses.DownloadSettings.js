@@ -1,6 +1,6 @@
 import proto from "../proto";
 
-import * as CFG from "../../cfg";
+import CFG from "../../cfg";
 
 /**
  * @param {Request} req
@@ -30,7 +30,7 @@ export default function DownloadSettings(req) {
             "get_map_objects_min_refresh_seconds": 10.007843017578125,
             "get_map_objects_max_refresh_seconds": 30.01568603515625,
             "get_map_objects_min_distance_meters": 10.007843017578125,
-            "google_maps_api_key": CFG.SERVER_GMAPS_API_KEY
+            "google_maps_api_key": CFG.GMAPS_KEY
           }),
           inventory_settings: new proto.Settings.InventorySettings({
            "max_pokemon": 1000,

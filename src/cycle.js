@@ -1,7 +1,7 @@
-import * as CFG from "../cfg";
+import CFG from "../cfg";
 
 export function startCycle() {
-  this.cycleInstance = setTimeout(() => this.cycle(), CFG.SERVER_TICK_INTERVAL);
+  this.cycleInstance = setTimeout(() => this.cycle(), CFG.TICK_INTERVAL);
 }
 
 export function stopCycle() {
@@ -48,7 +48,7 @@ export function resetTimers() {
   }
   this.saveTick++;
   // Save interval
-  if (this.saveTick >= CFG.SERVER_SAVE_INTERVAL) {
+  if (this.saveTick >= CFG.SAVE_INTERVAL) {
     this.saveAllPlayers();
     this.saveTick = 0;
   }
@@ -58,7 +58,7 @@ export function resetTimers() {
 export function playerTimeoutTick() {
 
   let client = null;
-  let maxTimeout = CFG.SERVER_PLAYER_CONNECTION_TIMEOUT;
+  let maxTimeout = CFG.PLAYER_CONNECTION_TIMEOUT;
 
   let ii = 0, length = this.clients.length;
 

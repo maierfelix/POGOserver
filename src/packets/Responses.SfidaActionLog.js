@@ -1,6 +1,6 @@
 import proto from "../proto";
 
-import * as CFG from "../../cfg";
+import CFG from "../../cfg";
 
 /**
  * @param {Object} obj

@@ -1,4 +1,4 @@
-import * as CFG from "../../cfg";
+import CFG from "../../cfg";
 
 import proto from "../proto";
 
@@ -14,7 +14,7 @@ export default function FortSearch(obj) {
       items_awarded: [
         new proto.Inventory.Item.ItemAward({
           item_id: proto.Inventory.Item.ItemId.ITEM_MASTER_BALL,
-          item_count: 3
+          item_count: 10
         }),
         new proto.Inventory.Item.ItemAward({
           item_id: proto.Inventory.Item.ItemId.ITEM_ULTRA_BALL,

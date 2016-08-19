@@ -1,7 +1,7 @@
 import fs from "fs";
 import proto from "../proto";
 
-import * as CFG from "../../cfg";
+import CFG from "../../cfg";
 
 /**
  * @param {Request} req

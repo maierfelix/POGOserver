@@ -1,6 +1,4 @@
-import path from "path";
-
-import * as CFG from "../cfg";
+import CFG from "../cfg";
 
 export function setup() {
 
@@ -12,14 +10,14 @@ export function setup() {
     if (!assetSessionLoaded) {
       this.print("Boot timeout, please check your login details!", 31);
     }
-  }, CFG.SERVER_BOOT_TIMEOUT);
+  }, CFG.BOOT_TIMEOUT);
 
   this.createAssetDownloadSession().then((asset) => {
     assetSessionLoaded = true;
     this.asset = asset;
     this.setupDatabaseConnection().then(() => {
 
-      if (CFG.SERVER_PORT < 1) {
+      if (CFG.PORT < 1) {
         this.print("Invalid port!", 31);
         return void 0;
       }
@@ -28,7 +26,9 @@ export function setup() {
 
       setTimeout(this::this.cycle, 1);
 
-      this.print(`Server running at ${CFG.SERVER_HOST_IP}:${CFG.SERVER_PORT}`);
+      let localIPv4 = this.getLocalIPv4();
+
+      this.print(`Server running at ${localIPv4}:${CFG.PORT}`);
 
     });
   });

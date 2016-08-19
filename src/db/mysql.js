@@ -1,15 +1,15 @@
 import mysql from "mysql";
 
-import * as CFG from "../../cfg";
+import CFG from "../../cfg";
 
 export function setupConnection() {
 
   let connection = mysql.createConnection({
-    host     : CFG.SERVER_MYSQL_HOST_IP,
-    port     : CFG.SERVER_MYSQL_PORT,
-    database : CFG.SERVER_MYSQL_DB_NAME,
-    user     : CFG.SERVER_MYSQL_USERNAME,
-    password : CFG.SERVER_MYSQL_PASSWORD
+    host     : CFG.MYSQL_HOST_IP,
+    port     : CFG.MYSQL_PORT,
+    database : CFG.MYSQL_DB_NAME,
+    user     : CFG.MYSQL_USERNAME,
+    password : CFG.MYSQL_PASSWORD
   });
 
   return new Promise((resolve) => {
@@ -44,13 +44,13 @@ export function closeConnection(resolve) {
 
 export function createTableIfNoExists() {
   return new Promise((resolve) => {
-    this.db.instance.query(`SHOW TABLES LIKE '${CFG.SERVER_MYSQL_TABLE}';`, (e, rows, fields) => {
+    this.db.instance.query(`SHOW TABLES LIKE '${CFG.MYSQL_TABLE}';`, (e, rows, fields) => {
       if (e) console.log(e);
       else {
         // exists
         if (rows && rows.length) resolve();
         // create user table
-        else this.createTable(CFG.SERVER_MYSQL_TABLE).then(resolve);
+        else this.createTable(CFG.MYSQL_TABLE).then(resolve);
       }
     });
   });
@@ -60,7 +60,7 @@ export function createTableIfNoExists() {
  * @param {String} name
  */
 export function createTable(name) {
-  this.print(`Creating table ${CFG.SERVER_MYSQL_TABLE}`, 36);
+  this.print(`Creating table ${CFG.MYSQL_TABLE}`, 36);
   return new Promise((resolve) => {
     let query = `
       CREATE TABLE ${name} (
@@ -100,7 +100,7 @@ export function createTable(name) {
  */
 export function getUserByEmail(email) {
   return new Promise((resolve) => {
-    this.db.instance.query(`SELECT * FROM ${CFG.SERVER_MYSQL_TABLE} WHERE email=? LIMIT 1`, [email], (e, rows, fields) => {
+    this.db.instance.query(`SELECT * FROM ${CFG.MYSQL_TABLE} WHERE email=? LIMIT 1`, [email], (e, rows, fields) => {
       if (e) console.log(e);
       if (rows && rows.length) resolve(rows[0]);
       else resolve(void 0);
@@ -141,7 +141,7 @@ export function updateUser(obj) {
  */
 export function getUserQuery(cmd, after) {
   return (`
-    ${cmd} ${CFG.SERVER_MYSQL_TABLE}
+    ${cmd} ${CFG.MYSQL_TABLE}
     SET
       username=?,
       email=?,

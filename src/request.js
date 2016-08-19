@@ -1,78 +1,13 @@
 import proto from "./proto";
 
-import * as CFG from "../cfg";
-import { REQUEST } from "./requests";
+import CFG from "../cfg";
 
 import {
   ResponseEnvelope,
-  ResponseEnvelopeAuth,
-  AuthTicket,
-  GetInventory
+  AuthTicket
 } from "./packets";
 
-import {
-  decodeLong,
-  decodeRequestEnvelope
-} from "./utils";
-
-import jwtDecode from "jwt-decode";
-
-/**
- * @return {Buffer}
- */
-export function authenticatePlayer() {
-
-  let player = this.player;
-
-  let request = decodeRequestEnvelope(this.getRequestBody());
-
-  let msg = ResponseEnvelopeAuth({
-    id: request.request_id
-  });
-
-  let token = request.auth_info;
-
-  // TODO: Support PTC server authentification
-
-  if (!token || !token.provider) {
-    this.print("Invalid authentication token! Kicking..", 31);
-    this.removePlayer(player);
-    return void 0;
-  }
-
-  if (token.provider === "google") {
-    if (token.token !== null) {
-      let decoded = jwtDecode(token.token.contents);
-      player.generateUid(decoded.email);
-      player.email = decoded.email;
-      player.email_verified = decoded.email_verified;
-      player.isGoogleAccount = true;
-      this.print(`${player.email.replace("@gmail.com", "")} connected!`, 36);
-    }
-    else {
-      this.print("Invalid authentication token! Kicking..", 31);
-      this.removePlayer(player);
-      return void 0;
-    }
-  }
-  else if (token.provider === "ptc") {
-    let decoded = token.token.contents;
-    player.isPTCAccount = true;
-    this.print("PTC auth isnt supported yet! Kicking..", 31);
-    this.removePlayer(player);
-    return void 0;
-  }
-  else {
-    this.print("Invalid provider! Kicking..", 31);
-    this.removePlayer(player);
-    return void 0;
-  }
-
-  player.authenticated = true;
-
-  return (msg);
-
-}
+const REQUEST = proto.Networking.Requests.RequestType;
 
 /**
  * @param  {Request} req
@@ -92,14 +27,10 @@ export function getRequestType(req) {
 
 /**
  * @param {Request} req
- * @param {Response} res
  */
-export function onRequest(req, res) {
+export function onRequest(req) {
 
-  this.player = this.getPlayerByRequest(req);
-  this.player.response = res;
-
-  let player = this.player;
+  let player = this.getPlayerByRequest(req);
 
   // Validate email verification
   if (player.authenticated) {
@@ -117,7 +48,7 @@ export function onRequest(req, res) {
     return void 0;
   }
 
-  if (CFG.SERVER_LOG_REQUESTS) {
+  if (CFG.DEBUG_LOG_REQUESTS) {
     console.log("#####");
     request.requests.map((request) => {
       console.log("Got request:", this.getRequestType(request));
@@ -125,16 +56,16 @@ export function onRequest(req, res) {
   }
 
   if (!player.authenticated) {
-    this.send(this.authenticatePlayer());
+    player.sendResponse(this.authenticatePlayer(player));
     return void 0;
   }
 
-  this.processRequests(request.requests).then((answer) => {
+  this.processRequests(player, request.requests).then((answer) => {
     let msg = this.envelopResponse(1, request.request_id, answer, !!request.auth_ticket);
-    if (CFG.SERVER_DUMP_TRAFFIC) {
+    if (CFG.DEBUG_DUMP_TRAFFIC) {
       this.dumpTraffic(req.body, msg);
     }
-    this.send(msg);
+    player.sendResponse(msg);
   });
 
 }
@@ -161,10 +92,11 @@ export function envelopResponse(status, id, response, auth) {
 }
 
 /**
+ * @param  {Player} player
  * @param  {Array} requests
  * @return {Array}
  */
-export function processRequests(requests) {
+export function processRequests(player, requests) {
 
   return new Promise((resolve) => {
 
@@ -173,7 +105,7 @@ export function processRequests(requests) {
     let body = [];
 
     let loop = (index) => {
-      this.processResponse(requests[index]).then((request) => {
+      this.processResponse(player, requests[index]).then((request) => {
         body.push(request);
         if (++index >= length) resolve(body);
         else return loop(index);
@@ -188,9 +120,8 @@ export function processRequests(requests) {
 
 /**
  * @param {Request} req
- * @param {Response} res
  */
-export function routeRequest(req, res) {
+export function routeRequest(req) {
 
   let url = String(req.url);
   let route = url.substring(url.lastIndexOf("/") + 1);
@@ -198,17 +129,7 @@ export function routeRequest(req, res) {
 
   switch (route) {
     case "rpc":
-      this.onRequest(req, res);
-    break;
-    case "oauth":
-      let out = null;
-      let buffer = req.body.toString();
-      let signature = "321187995bc7cdc2b5fc91b11a96e2baa8602c62";
-      if (/Email.*com.nianticlabs.pokemongo/.test(buffer)) {
-        out = new Buffer(buffer.replace(/&client_sig=[^&]*&/, "&client_sig=" + signature + "&"));
-      }
-      console.log("OAUTH", out);
-      if (out instanceof Buffer) this.send(out);
+      this.onRequest(req);
     break;
     default:
       console.log(`Unknown request url: https://${req.headers.host}${req.url}`);
@@ -223,22 +144,4 @@ export function routeRequest(req, res) {
  */
 export function validRequest(req) {
   return (true);
-}
-
-/**
- * @return {Buffer}
- */
-export function getRequestBody() {
-  return (
-    this.request.body
-  );
-}
-
-/**
- * @param {Buffer} buffer
- */
-export function send(buffer) {
-
-  this.player.response.end(buffer);
-
 }

@@ -1,11 +1,18 @@
 import proto from "./proto";
 
-import * as CFG from "../cfg";
+import CFG from "../cfg";
 
 import {
   getHashCodeFrom,
   decodeRequestEnvelope
 } from "./utils";
+
+import {
+  ResponseEnvelope,
+  ResponseEnvelopeAuth
+} from "./packets";
+
+import jwtDecode from "jwt-decode";
 
 import { GetPlayer } from "./packets";
 
@@ -55,7 +62,9 @@ class Player {
     this.isPTCAccount = false;
     this.isGoogleAccount = false;
 
-    this.response = obj.response;
+    this.request = obj.request;
+    // gets updated after each chunk end event
+    this.response = null;
     this.connection = obj.connection;
 
     this.timeout = obj.timeout;
@@ -75,6 +84,20 @@ class Player {
    */
   generateUid(email) {
     this.uid = getHashCodeFrom(String(email));
+  }
+
+  /**
+   * @param {Buffer} buffer
+   */
+  sendResponse(buffer) {
+    this.response.end(buffer);
+  }
+
+  /**
+   * @param {Response} res
+   */
+  updateResponse(res) {
+    this.response = res;
   }
 
   updateByObject(obj) {
@@ -199,18 +222,23 @@ export function getPlayerByName(name) {
 
 /**
  * @param {Request} req
+ * @return {Player}
  */
 export function addPlayer(req) {
 
   let connection = req.connection;
 
-  this.clients.push(new Player({
+  let player = new Player({
     timeout: this.time,
     connection: connection,
-    response: this.response,
+    request: req,
     remotePort: connection.remotePort,
     remoteAddress: req.headers.host
-  }));
+  });
+
+  this.clients.push(player);
+
+  return (player);
 
 }
 
@@ -283,24 +311,10 @@ export function savePlayer(player) {
   });
 }
 
-export function loginPlayer() {
-
-  let buffer = null;
-  let player = this.player;
-
-  return new Promise((resolve) => {
-    this.getUserByEmail(player.email).then((doc) => {
-      player.updateByObject(doc);
-      buffer = GetPlayer(player).encode();
-      resolve(buffer);
-    });
-  });
-
-}
-
-export function forwardPlayer() {
-
-  let player = this.player;
+/**
+ * @param {Player} player
+ */
+export function forwardPlayer(player) {
 
   return new Promise((resolve) => {
     this.getUserByEmail(player.email).then((doc) => {
@@ -309,12 +323,12 @@ export function forwardPlayer() {
         this.print(`${player.email.replace("@gmail.com", "")} authenticated via ${provider}!`, 36);
       }
       if (doc) {
-        this.loginPlayer().then((res) => {
+        this.loginPlayer(player).then((res) => {
           resolve(res);
         });
       }
       else {
-        this.registerPlayer().then((res) => {
+        this.registerPlayer(player).then((res) => {
           resolve(res);
         });
       }
@@ -323,18 +337,90 @@ export function forwardPlayer() {
 
 }
 
-export function registerPlayer() {
+/**
+ * @param {Player} player
+ */
+export function loginPlayer(player) {
 
-  let player = this.player;
+  return new Promise((resolve) => {
+    this.getUserByEmail(player.email).then((doc) => {
+      player.updateByObject(doc);
+      let buffer = GetPlayer(player).encode();
+      resolve(buffer);
+    });
+  });
+
+}
+
+/**
+ * @param {Player} player
+ */
+export function registerPlayer(player) {
 
   return new Promise((resolve) => {
     this.createUser(player).then(() => {
-      this.print(`${this.player.email.replace("@gmail.com", "")} registered!`, 36);
+      this.print(`${player.email.replace("@gmail.com", "")} registered!`, 36);
       player.tutorial_state = [];
-      this.loginPlayer().then((res) => {
+      this.loginPlayer(player).then((res) => {
         resolve(res);
       });
     });
   });
+
+}
+
+/**
+ * @param {Player} player
+ * @return {Buffer}
+ */
+export function authenticatePlayer(player) {
+
+  let request = decodeRequestEnvelope(player.request.body);
+
+  let msg = ResponseEnvelopeAuth({
+    id: request.request_id
+  });
+
+  let token = request.auth_info;
+
+  // TODO: Support PTC server authentification
+
+  if (!token || !token.provider) {
+    this.print("Invalid authentication token! Kicking..", 31);
+    this.removePlayer(player);
+    return void 0;
+  }
+
+  if (token.provider === "google") {
+    if (token.token !== null) {
+      let decoded = jwtDecode(token.token.contents);
+      player.generateUid(decoded.email);
+      player.email = decoded.email;
+      player.email_verified = decoded.email_verified;
+      player.isGoogleAccount = true;
+      this.print(`${player.email.replace("@gmail.com", "")} connected!`, 36);
+    }
+    else {
+      this.print("Invalid authentication token! Kicking..", 31);
+      this.removePlayer(player);
+      return void 0;
+    }
+  }
+  else if (token.provider === "ptc") {
+    let decoded = token.token.contents;
+    player.isPTCAccount = true;
+    this.print("PTC auth isnt supported yet! Kicking..", 31);
+    this.removePlayer(player);
+    return void 0;
+  }
+  else {
+    this.print("Invalid provider! Kicking..", 31);
+    this.removePlayer(player);
+    return void 0;
+  }
+
+  player.authenticated = true;
+
+  return (msg);
 
 }

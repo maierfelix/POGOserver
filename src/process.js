@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import * as CFG from "../cfg";
+import CFG from "../cfg";
 
 const helpMessage = fs.readFileSync(".help", "utf8");
 
@@ -9,7 +9,7 @@ export function processCommand(cmd, data) {
     // How many active connections there are
     case "/clients":
       var length = this.clients.length;
-      this.print(`${length}:${CFG.SERVER_MAX_CONNECTIONS} connected players!`, 33);
+      this.print(`${length}:${CFG.MAX_CONNECTIONS} connected players!`, 33);
     break;
     // Exit the server
     case "/exit":
@@ -30,7 +30,7 @@ export function processCommand(cmd, data) {
     break;
     case "/help":
       console.log("\x1b[36;1m==================================== HELP =====================================\x1b[0m");
-      console.log(`\x1b[${CFG.SERVER_DEFAULT_CONSOLE_COLOR};1m${helpMessage}\x1b[0m`);
+      console.log(`\x1b[${CFG.DEFAULT_CONSOLE_COLOR};1m${helpMessage}\x1b[0m`);
       console.log("\x1b[36;1m===============================================================================\x1b[0m");
     break;
     case "/save":
@@ -58,7 +58,7 @@ export function stdinInput(data) {
 export function uncaughtException(excp) {
   switch (excp.errno) {
     case "EADDRINUSE":
-      this.print(`Port ${CFG.SERVER_PORT} is already in use!`, 31);
+      this.print(`Port ${CFG.PORT} is already in use!`, 31);
     break;
     case "EACCES":
       this.print("No root privileges!", 31);

@@ -1,10 +1,10 @@
 import mongodb from "mongodb";
 
-import * as CFG from "../../cfg";
+import CFG from "../../cfg";
 
 export function setupConnection() {
 
-  let url = `mongodb://${CFG.SERVER_MONGO_HOST_IP}:${CFG.SERVER_MONGO_PORT}/${CFG.SERVER_MONGO_DB_NAME}`;
+  let url = `mongodb://${CFG.MONGO_HOST_IP}:${CFG.MONGO_PORT}/${CFG.MONGO_DB_NAME}`;
 
   return new Promise((resolve) => {
     mongodb.MongoClient.connect(url, (error, db) => {
@@ -14,7 +14,7 @@ export function setupConnection() {
         return void 0;
       } else {
         this.db.instance = db;
-        this.loadCollection(CFG.SERVER_MONGO_COLLECTION_USERS).then(() => {
+        this.loadCollection(CFG.MONGO_COLLECTION_USERS).then(() => {
           this.print(`\x1b[36;1mMongoDB\x1b[0m\x1b[32;1m connection established\x1b[0m`);
           resolve();
         });
@@ -81,7 +81,7 @@ export function getUserByEmail(email) {
 
 export function getUserCollection() {
   return (
-    this.db.instance.collection(CFG.SERVER_MONGO_COLLECTION_USERS)
+    this.db.instance.collection(CFG.MONGO_COLLECTION_USERS)
   );
 }
 
@@ -133,14 +133,14 @@ export function getUserData(obj) {
     team: obj.team,
 
     skin: obj.skin,
-    hair: obj.skin,
-    shirt: obj.skin,
-    pants: obj.skin,
-    hat: obj.skin,
-    shoes: obj.skin,
-    eyes: obj.skin,
-    gender: obj.skin,
-    backpack: obj.skin,
+    hair: obj.hair,
+    shirt: obj.shirt,
+    pants: obj.pants,
+    hat: obj.hat,
+    shoes: obj.shoes,
+    eyes: obj.eyes,
+    gender: obj.gender,
+    backpack: obj.backpack,
 
     latitude: obj.latitude,
     longitude: obj.latitude,
