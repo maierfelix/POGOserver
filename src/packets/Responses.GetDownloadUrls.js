@@ -2,6 +2,8 @@ import proto from "../proto";
 
 import DownloadUrlEntry from "./Data.DownloadUrlEntry";
 
+import CFG from "../../cfg";
+
 import {
   getDownloadUrlByAssetId
 } from "../utils.js";
@@ -9,7 +11,7 @@ import {
 /**
  * @return {Object}
  */
-export default function GetDownloadUrls(asset, req, download) {
+export default function GetDownloadUrls(asset, ip, req) {
 
   let data = proto.Networking.Requests.Messages.GetDownloadUrlsMessage.decode(req.request_message.toBuffer());
 
@@ -26,25 +28,20 @@ export default function GetDownloadUrls(asset, req, download) {
   };
 
   return new Promise((resolve) => {
-
-    download(key).then((asset) => {
-      console.log(node);
-      download_urls.push(
-        new proto.Data.DownloadUrlEntry({
-          url: asset[0].asset,
-          asset_id: key,
-          size: parseInt(node.size),
-          checksum: parseInt(node.checksum)
-        })
-      );
-      let output = (
-        new proto.Networking.Responses.GetDownloadUrlsResponse({
-          download_urls: download_urls
-        }).encode()
-      );
-      resolve(output);
-    });
-
+    download_urls.push(
+      new proto.Data.DownloadUrlEntry({
+        asset_id: key,
+        url: `http://${ip}:${CFG.PORT}/model/${node.bundle_name}`,
+        size: node.size,
+        checksum: node.checksum
+      })
+    );
+    let output = (
+      new proto.Networking.Responses.GetDownloadUrlsResponse({
+        download_urls: download_urls
+      }).encode()
+    );
+    resolve(output);
   });
 
 }

@@ -1,3 +1,5 @@
+import fs from "fs";
+import url from "url";
 import proto from "./proto";
 
 import CFG from "../cfg";
@@ -8,6 +10,45 @@ import {
 } from "./packets";
 
 const REQUEST = proto.Networking.Requests.RequestType;
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+export function routeRequest(req, res) {
+
+  let player = this.getPlayerByRequest(req);
+
+  let parsed = url.parse(req.url).pathname;
+  let route = parsed.split("/");
+  let host = req.headers.host;
+
+  switch (route[1]) {
+    case "plfe":
+    case "custom":
+      if (route[2] === "rpc") this.onRequest(req);
+    break;
+    case "model":
+      // make sure no random dudes can access download
+      if (!player.authenticated || !player.email_verified) return void 0;
+      let name = route[2];
+      if (name && name.length > 1) {
+        fs.readFile("data/" + name, (error, data) => {
+          if (error) {
+            this.print(`Error file resolving model ${name}:` + error, 31);
+            return void 0;
+          }
+          this.print(`Sent ${name} to ${player.email}`, 36);
+          res.end(data);
+        });
+      }
+    break;
+    default:
+      console.log(`Unknown request url: https://${req.headers.host}${req.url}`);
+    break;
+  };
+
+}
 
 /**
  * @param  {Request} req
@@ -115,26 +156,6 @@ export function processRequests(player, requests) {
     loop(0);
 
   });
-
-}
-
-/**
- * @param {Request} req
- */
-export function routeRequest(req) {
-
-  let url = String(req.url);
-  let route = url.substring(url.lastIndexOf("/") + 1);
-  let host = req.headers.host;
-
-  switch (route) {
-    case "rpc":
-      this.onRequest(req);
-    break;
-    default:
-      console.log(`Unknown request url: https://${req.headers.host}${req.url}`);
-    break;
-  };
 
 }
 

@@ -53,7 +53,7 @@ class Player {
     this.gender = 0;
     this.backpack = 0;
 
-    this.tutorial_state = [32, 1, 3, 4, 7];
+    this.tutorial_state = [];
 
     this.badges = null;
     this.pokedex = null;

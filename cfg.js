@@ -4,10 +4,8 @@ export default {
   MAX_CONNECTIONS: 64,
   PORT: 3000,
   GAME_MODE: 0,
-  TICK_INTERVAL: 1,
   SAVE_INTERVAL: 60000,
   PLAYER_CONNECTION_TIMEOUT: 1800000,
-  BOOT_TIMEOUT: 10000,
   MINIMUM_CLIENT_VERSION: "0.33.0",
   DEFAULT_CONSOLE_COLOR: 32,
   TRANSFER_ACCOUNTS: false,
@@ -40,6 +38,12 @@ export default {
   // Server debug options
   DEBUG_DUMP_PATH: "./logs/",
   DEBUG_DUMP_TRAFFIC: true,
-  DEBUG_LOG_REQUESTS: true
+  DEBUG_LOG_REQUESTS: true,
+
+  // Better dont touch these
+  TICK_INTERVAL: 1,
+  BOOT_TIMEOUT: 10000,
+  // Currently supported pokemon
+  MAX_POKEMON_NATIONAL_ID: 151
 
 }

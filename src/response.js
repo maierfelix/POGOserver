@@ -67,7 +67,7 @@ export function processResponse(player, req) {
           buffer = DownloadRemoteConfigVersion(req);
           break;
         case REQUEST.GET_ASSET_DIGEST:
-          buffer = GetAssetDigest(this.asset, req);
+          buffer = GetAssetDigest(req);
         break;
         case REQUEST.GET_PLAYER_PROFILE:
           buffer = GetPlayerProfile();
@@ -81,7 +81,7 @@ export function processResponse(player, req) {
           return void 0;
         break;
         case REQUEST.GET_DOWNLOAD_URLS:
-          GetDownloadUrls(this.asset, req, this.generateDownloadUrlByAssetId).then((res) => {
+          GetDownloadUrls(this.asset, this.getLocalIPv4(), req).then((res) => {
             resolve(res);
           });
           return void 0;

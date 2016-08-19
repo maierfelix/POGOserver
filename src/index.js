@@ -43,6 +43,7 @@ class GameServer {
       collections: {}
     };
 
+    this.asset = null;
     this.socket = null;
     this.cycleInstance = null;
 
@@ -57,6 +58,9 @@ class GameServer {
     this.clients = [];
 
     this.greet();
+
+    this.print(`Booting Server v${require("../package.json").version}...`, 33);
+
     this.setup();
 
   }
@@ -75,40 +79,6 @@ class GameServer {
 
     return (false);
 
-  }
-
-  createAssetDownloadSession() {
-
-    return new Promise((resolve) => {
-      pogodown.login({
-        provider: String(CFG.DOWNLOAD_PROVIDER).toLowerCase(),
-        username: CFG.DOWNLOAD_USERNAME,
-        password: CFG.DOWNLOAD_PASSWORD,
-        downloadModels: false
-      }).then((asset) => {
-        if (asset && asset.digest && asset.digest.length) {
-          this.print("Created asset download session");
-          resolve(asset);
-        }
-        else {
-          this.print("Failed to download asset digest!", 31);
-          return void 0;
-        }
-      });
-    });
-
-  }
-
-  /**
-   * @param  {Array} assets
-   */
-  generateDownloadUrlByAssetId(assets) {
-    return new Promise((resolve) => {
-      pogodown.getAssetByAssetId(assets).then((response) => {
-        // maybe cache and provide own local download link?
-        resolve(response);
-      });
-    });
   }
 
   /**
@@ -134,7 +104,7 @@ class GameServer {
         let buffer = Buffer.concat(chunks);
         req.body = buffer;
         player.updateResponse(res);
-        this.routeRequest(req);
+        this.routeRequest(req, res);
       });
     });
     server.listen(CFG.PORT);
