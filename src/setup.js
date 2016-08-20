@@ -7,7 +7,7 @@ import CFG from "../cfg";
 
 export function setup() {
 
-  let isFirstRun = !!fse.ensureDirSync("data/");
+  let isFirstRun = !this.directoryExists(CFG.DUMP_ASSET_PATH);
 
   if (isFirstRun) {
     this.print("Preparing to dump required assets..", 36);
@@ -37,7 +37,7 @@ export function setup() {
 export function parseAssetDigest() {
   let asset = null;
   try {
-    asset = proto.Networking.Responses.GetAssetDigestResponse.decode(fs.readFileSync("data/asset_digest"));
+    asset = proto.Networking.Responses.GetAssetDigestResponse.decode(fs.readFileSync(CFG.DUMP_ASSET_PATH + "asset_digest"));
   } catch (e) {
     this.print(e, 31);
   }
@@ -51,7 +51,9 @@ export function onFirstRun(resolve) {
     password: CFG.DOWNLOAD_PASSWORD
   }).then((asset) => {
     this.print(`Dumping asset digest..`, 35);
-    fs.writeFileSync("data/asset_digest", asset.toBuffer());
+    // create data dir, if login successed
+    fse.ensureDirSync(CFG.DUMP_ASSET_PATH);
+    fs.writeFileSync(CFG.DUMP_ASSET_PATH + "asset_digest", asset.toBuffer());
     this.dumpPkmnModels(() => {
       resolve();
     });
@@ -71,7 +73,7 @@ export function dumpPkmnModels(resolve) {
       downloads.map((item) => {
         this.print(`Dumping model ${item.name}..`, 35);
         try {
-          fs.writeFileSync("data/" + item.name, item.body);
+          fs.writeFileSync(CFG.DUMP_ASSET_PATH + item.name, item.body);
         }
         catch (e) {
           this.print(`Error while dumping model ${item.name}:` + e, 31);

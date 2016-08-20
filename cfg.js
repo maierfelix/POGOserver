@@ -44,6 +44,7 @@ export default {
   TICK_INTERVAL: 1,
   BOOT_TIMEOUT: 10000,
   // Currently supported pokemon
-  MAX_POKEMON_NATIONAL_ID: 151
+  MAX_POKEMON_NATIONAL_ID: 151,
+  DUMP_ASSET_PATH: "data/"
 
 }

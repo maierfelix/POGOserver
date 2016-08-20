@@ -192,15 +192,21 @@ class GameServer {
   }
 
   getLocalIPv4() {
-
     let address = null;
     let interfaces = os.networkInterfaces();
-
     for (var dev in interfaces) {
       interfaces[dev].filter((details) => details.family === "IPv4" && details.internal === false ? address = details.address: void 0);
     };
-
     return (address);
+  }
+
+  directoryExists(directory) { 
+    try {
+      fs.statSync(directory);
+      return true;
+    } catch(e) {
+      return false;
+    }
   }
 
   greet() {
