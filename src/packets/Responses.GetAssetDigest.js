@@ -8,7 +8,5 @@ import CFG from "../../cfg";
  * @return {Object}
  */
 export default function GetAssetDigest(req) {
-
   return (fs.readFileSync("data/asset_digest"));
-
 }

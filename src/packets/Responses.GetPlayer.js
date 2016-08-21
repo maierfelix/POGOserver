@@ -1,4 +1,5 @@
 import proto from "../proto";
+import POGOProtos from "pokemongo-protobuf";
 
 /**
  * @param {Object} obj
@@ -7,20 +8,20 @@ import proto from "../proto";
 function getPlayerDataPacket(obj) {
 
   return (
-    new proto.Data.PlayerData({
+    {
       creation_timestamp_ms: 1467936859925,
       username: obj.username,
       team: proto.Enums.TeamColor.YELLOW,
       tutorial_state: obj.tutorial_state,
-      avatar: new proto.Data.Player.PlayerAvatar(obj.avatar),
+      avatar: obj.avatar,
       max_pokemon_storage: 250,
       max_item_storage: 350,
-      daily_bonus: new proto.Data.Player.DailyBonus({
+      daily_bonus: {
         next_defender_bonus_collect_timestamp_ms: 1470174535972
-      }),
-      contact_settings: new proto.Data.Player.ContactSettings(obj.contact_settings),
+      },
+      contact_settings: obj.contact_settings,
       currencies: obj.currencies
-    })
+    }
   );
 
 }
@@ -63,14 +64,14 @@ function buildPlayerData(obj) {
   ];
 
   let currencies = [
-    new proto.Data.Player.Currency({
+    {
       name: "POKECOIN",
       amount: pokecoins
-    }),
-    new proto.Data.Player.Currency({
+    },
+    {
       name: "STARDUST",
       amount: stardust
-    })
+    }
   ];
 
   return ({
@@ -91,14 +92,43 @@ function buildPlayerData(obj) {
 export default function GetPlayer(obj) {
 
   let data = buildPlayerData(obj);
-
   let packet = getPlayerDataPacket(data);
 
-  return (
-    new proto.Networking.Responses.GetPlayerResponse({
-      success: true,
-      player_data: packet
-    })
-  );
+  let buffer = {
+    "success": true,
+    "player_data": {
+      "creation_timestamp_ms": "1471096437979",
+      "username": "Administrator",
+      "team": "YELLOW",
+      "tutorial_state": [
+        "LEGAL_SCREEN",
+        "AVATAR_SELECTION",
+        "POKEMON_CAPTURE",
+        "NAME_SELECTION",
+        "FIRST_TIME_EXPERIENCE_COMPLETE"
+      ],
+      "avatar": {},
+      "max_pokemon_storage": 250,
+      "max_item_storage": 350,
+      "daily_bonus": {},
+      "equipped_badge": {},
+      "contact_settings": {
+        "send_marketing_emails": true
+      },
+      "currencies": [
+        {
+          "name": "POKECOIN",
+          "amount": 1339
+        },
+        {
+          "name": "STARDUST",
+          "amount": 7681
+        }
+      ]
+    },
+    "$unknownFields": []
+  };
+
+  return (POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetPlayerResponse"));
 
 }

@@ -1,4 +1,5 @@
 import proto from "../proto";
+import POGOProtos from "pokemongo-protobuf";
 
 import { GetPlayer } from "./";
 
@@ -8,12 +9,13 @@ import { GetPlayer } from "./";
  */
 export default function LevelUpRewards(obj) {
 
-  return (
-    new proto.Networking.Responses.LevelUpRewardsResponse({
-      result: 2,
-      items_awarded: [],
-      items_unlocked: []
-    }).encode()
-  );
+  let buffer = {
+    "result": "AWARDED_ALREADY",
+    "items_awarded": [],
+    "items_unlocked": [],
+    "$unknownFields": []
+  }
+
+  return POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.LevelUpRewardsResponse");
 
 }

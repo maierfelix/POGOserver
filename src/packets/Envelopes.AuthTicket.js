@@ -1,16 +1,17 @@
 import proto from "../proto";
+import POGOProtos from "pokemongo-protobuf";
 
 /**
  * @return {Object}
  */
 export default function AuthTicket() {
 
-  return (
-    new proto.Networking.Envelopes.AuthTicket({
-      start: new Buffer(""),
-      expire_timestamp_ms: 9999999999999,
-      end: new Buffer("")
-    })
-  );
+  let buffer = ({
+    start: new Buffer(""),
+    "expire_timestamp_ms": new Date.getTime(),
+    end: new Buffer("")
+  });
+
+  return (POGOProtos.serialize(buffer, "POGOProtos.Networking.Envelopes.AuthTicket"));
 
 }

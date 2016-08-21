@@ -33,6 +33,7 @@
     "directory-tree": "^1.1.0",
     "nodegit": "^0.14.1",
     "fs-extra": "^0.30.0",
+    "pokemongo-protobuf": "^1.10.0",
     "pcrypt": "git+https://github.com/laverdet/pcrypt.git"
   },
   "devDependencies": {}

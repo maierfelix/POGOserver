@@ -19,13 +19,8 @@ export default {
   MYSQL_DB_NAME: "pogosql",
   MYSQL_USERNAME: "root",
   MYSQL_PASSWORD: "",
-  MYSQL_TABLE: "users",
-
-  // MongoDB credentials
-  MONGO_PORT: 27017,
-  MONGO_HOST_IP: "127.0.0.1",
-  MONGO_DB_NAME: "pokemongo",
-  MONGO_COLLECTION_USERS: "users",
+  MYSQL_USERS_TABLE: "users",
+  MYSQL_OWNED_PKMN_TABLE: "owned_pkmn",
 
   // Used for asset download session
   DOWNLOAD_PROVIDER: "GOOGLE",
@@ -36,7 +31,7 @@ export default {
   GMAPS_KEY: "AIzaSyDF9rkP8lhcddBtvH9gVFzjnNo13WtmJIM",
 
   // Server debug options
-  DEBUG_DUMP_PATH: "./logs/",
+  DEBUG_DUMP_PATH: "logs/",
   DEBUG_DUMP_TRAFFIC: true,
   DEBUG_LOG_REQUESTS: true,
 

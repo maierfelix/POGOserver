@@ -1,6 +1,7 @@
 import CFG from "../../cfg";
 
 import proto from "../proto";
+import POGOProtos from "pokemongo-protobuf";
 
 /**
  * @param {Object} obj
@@ -8,12 +9,13 @@ import proto from "../proto";
  */
 export default function CheckAwardedBadges(obj) {
 
-  return (
-    new proto.Networking.Responses.CheckAwardedBadgesResponse({
-      success: true,
-      awarded_badges: [],
-      awarded_badge_levels: []
-    }).encode()
-  );
+  let buffer = {
+    "success": true,
+    "awarded_badges": [],
+    "awarded_badge_levels": [],
+    "$unknownFields": []
+  }
+
+  return POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.CheckAwardedBadgesResponse");
 
 }

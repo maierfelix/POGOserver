@@ -8,7 +8,6 @@ import {
   CheckAwardedBadges,
   DownloadSettings,
   DownloadRemoteConfigVersion,
-  GetPlayer,
   GetPlayerProfile,
   ItemTemplates,
   GetAssetDigest,
@@ -29,6 +28,8 @@ import {
   ClaimCodeName
 } from "./packets";
 
+import { _toCC } from "./utils";
+
 const REQUEST = proto.Networking.Requests.RequestType;
 
 /**
@@ -40,119 +41,127 @@ export function processResponse(player, req) {
 
   let buffer = null;
 
+  let cc = _toCC(req.request_type);
+  let msg = null;
+  let proto = `POGOProtos.Networking.Requests.Messages.${cc}Message`;
+
+  if (req.request_message) {
+    try {
+      msg = this.parseProtobuf(req.request_message, proto);
+    } catch (e) {
+      this.print(`Failed to parse ${cc}: ${e}`, 31);
+    }
+  }
+
   return new Promise((resolve) => {
 
     try {
       switch (req.request_type) {
-        case REQUEST.GET_PLAYER:
+        case "GET_PLAYER":
           this.forwardPlayer(player).then((res) => resolve(res));
           return void 0;
         break;
-        case REQUEST.GET_HATCHED_EGGS:
+        case "GET_HATCHED_EGGS":
           buffer = GetHatchedEggs();
         break;
-        case REQUEST.GET_INVENTORY:
-          buffer = GetInventory();
+        case "GET_INVENTORY":
+          buffer = GetInventory(msg);
         break;
-        case REQUEST.CHECK_AWARDED_BADGES:
+        case "CHECK_AWARDED_BADGES":
           buffer = CheckAwardedBadges();
         break;
-        case REQUEST.DOWNLOAD_SETTINGS:
-          buffer = DownloadSettings(req);
+        case "DOWNLOAD_SETTINGS":
+          buffer = DownloadSettings();
         break;
-        case REQUEST.DOWNLOAD_ITEM_TEMPLATES:
+        case "DOWNLOAD_ITEM_TEMPLATES":
           buffer = ItemTemplates();
         break;
-        case REQUEST.DOWNLOAD_REMOTE_CONFIG_VERSION:
-          buffer = DownloadRemoteConfigVersion(req);
+        case "DOWNLOAD_REMOTE_CONFIG_VERSION":
+          buffer = DownloadRemoteConfigVersion(msg);
           break;
-        case REQUEST.GET_ASSET_DIGEST:
-          buffer = GetAssetDigest(req);
+        case "GET_ASSET_DIGEST":
+          buffer = GetAssetDigest(msg);
         break;
-        case REQUEST.GET_PLAYER_PROFILE:
+        case "GET_PLAYER_PROFILE":
           buffer = GetPlayerProfile();
         break;
-        case REQUEST.GET_MAP_OBJECTS:
-          player.updatePosition(req);
-          buffer = GetMapObjects(player, req);
+        case "GET_MAP_OBJECTS":
+          player.updatePosition(msg);
+          buffer = GetMapObjects(player, msg);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
           return void 0;
         break;
-        case REQUEST.GET_DOWNLOAD_URLS:
-          GetDownloadUrls(this.asset, this.getLocalIPv4(), req).then((res) => {
+        case "GET_DOWNLOAD_URLS":
+          GetDownloadUrls(this.asset, this.getLocalIPv4(), msg).then((res) => {
             resolve(res);
           });
           return void 0;
         break;
-        case REQUEST.SET_AVATAR:
-          player.updateAvatar(req);
+        case "SET_AVATAR":
+          player.updateAvatar(msg);
           buffer = SetAvatar(player);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
           return void 0;
         break;
-        case REQUEST.SFIDA_ACTION_LOG:
+        case "SFIDA_ACTION_LOG":
           buffer = SfidaActionLog();
         break;
-        case REQUEST.MARK_TUTORIAL_COMPLETE:
+        case "MARK_TUTORIAL_COMPLETE":
           buffer = MarkTutorialComplete(player);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
           return void 0;
         break;
-        case REQUEST.CLAIM_CODENAME:
-          buffer = ClaimCodeName(req, player);
+        case "CLAIM_CODENAME":
+          buffer = ClaimCodeName(msg, player);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
           return void 0;
         break;
-        case REQUEST.LEVEL_UP_REWARDS:
+        case "LEVEL_UP_REWARDS":
           buffer = LevelUpRewards();
         break;
-        case REQUEST.FORT_DETAILS:
-          buffer = FortDetails(req);
+        case "FORT_DETAILS":
+          buffer = FortDetails(msg);
         break;
-        case REQUEST.FORT_SEARCH:
+        case "FORT_SEARCH":
           buffer = FortSearch();
         break;
-        case REQUEST.SET_CONTACT_SETTINGS:
-          player.updateContactSettings(req);
+        case "SET_CONTACT_SETTINGS":
+          player.updateContactSettings(msg);
           buffer = SetContactSettings(player);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
           return void 0;
         break;
-        case REQUEST.ENCOUNTER:
-          buffer = Encounter(req);
+        case "ENCOUNTER":
+          buffer = Encounter(msg);
         break;
-        case REQUEST.NICKNAME_POKEMON:
-          buffer = NicknamePokemon(req);
+        case "NICKNAME_POKEMON":
+          buffer = NicknamePokemon(msg);
         break;
-        case REQUEST.UPGRADE_POKEMON:
-          buffer = UpgradePokemon(req);
+        case "UPGRADE_POKEMON":
+          buffer = UpgradePokemon(msg);
         break;
-        case REQUEST.EVOLVE_POKEMON:
-          buffer = EvolvePokemon(req);
+        case "EVOLVE_POKEMON":
+          buffer = EvolvePokemon(msg);
         break;
-        case REQUEST.SET_FAVORITE_POKEMON:
-          buffer = SetFavoritePokemon(req);
-        break;
-        case REQUEST.CATCH_POKEMON:
-          let data = proto.Networking.Requests.Messages.CatchPokemonMessage.decode(req.request_message.toBuffer());
-          console.log(data);
+        case "SET_FAVORITE_POKEMON":
+          buffer = SetFavoritePokemon(msg);
         break;
         default:
-          this.print(`Unknown request: ${this.getRequestType(req)}`, 31);
+          this.print(`Unknown request: ${req.request_type}`, 31);
         break;
       };
     } catch (e) {
-      console.log(e);
+      this.print(`Response error: ${e}`, 31);
     };
 
     resolve(buffer);

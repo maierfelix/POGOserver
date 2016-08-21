@@ -1,6 +1,8 @@
 import fs from "fs";
 import url from "url";
 import proto from "./proto";
+import pcrypt from "pcrypt";
+import POGOProtos from "pokemongo-protobuf";
 
 import CFG from "../cfg";
 
@@ -66,6 +68,24 @@ export function getRequestType(req) {
 
 }
 
+export function parseProtobuf(buffer, path) {
+  try {
+    return POGOProtos.parseWithUnknown(buffer, path);
+  } catch (e) {
+    this.print(e, 31);
+  }
+}
+
+/**
+ * @param {Request} req
+ */
+export function parseSignature(req) {
+  let key = pcrypt.decrypt(req.unknown6.unknown2.encrypted_signature);
+  return (
+    POGOProtos.parseWithUnknown(key, "POGOProtos.Networking.Envelopes.Signature")
+  );
+}
+
 /**
  * @param {Request} req
  */
@@ -82,7 +102,7 @@ export function onRequest(req) {
     }
   }
 
-  let request = proto.Networking.Envelopes.RequestEnvelope.decode(req.body);
+  let request = this.parseProtobuf(req.body, "POGOProtos.Networking.Envelopes.RequestEnvelope");
 
   if (!request.requests.length) {
     this.print("Received invalid request!", 31);
@@ -92,7 +112,7 @@ export function onRequest(req) {
   if (CFG.DEBUG_LOG_REQUESTS) {
     console.log("#####");
     request.requests.map((request) => {
-      console.log("Got request:", this.getRequestType(request));
+      console.log("Got request:", request.request_type);
     }).join(",");
   }
 
@@ -102,7 +122,7 @@ export function onRequest(req) {
   }
 
   this.processRequests(player, request.requests).then((answer) => {
-    let msg = this.envelopResponse(1, request.request_id, answer, !!request.auth_ticket);
+    let msg = this.envelopResponse(1, request.request_id, answer, !!request.auth_ticket, request);
     if (CFG.DEBUG_DUMP_TRAFFIC) {
       this.dumpTraffic(req.body, msg);
     }
@@ -118,17 +138,19 @@ export function onRequest(req) {
  * @param  {Boolean} auth
  * @return {Buffer}
  */
-export function envelopResponse(status, id, response, auth) {
+export function envelopResponse(status, id, response, auth, req) {
 
-  let answer = ResponseEnvelope({
-    id: id,
-    status: status,
-    response: response
-  });
+  let buffer = req;
 
-  if (auth) answer.auth_ticket = AuthTicket();
+  delete buffer.requests;
 
-  return (answer);
+  buffer.returns = response;
+
+  buffer.status_code = 1;
+
+  return (
+    POGOProtos.serialize(buffer, "POGOProtos.Networking.Envelopes.ResponseEnvelope")
+  );
 
 }
 

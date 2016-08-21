@@ -57,8 +57,33 @@ export function decodeLong(long) {
 
 }
 
+/**
+ * @return {Number}
+ */
 export function randomRequestId() {
   return (
     1e18 - Math.floor(Math.random() * 1e18)
+  );
+}
+
+/**
+ * @param {String} key
+ * @return {String}
+ */
+export function _toCC(key) {
+  key = key.toLowerCase();
+  let res = key[0].toUpperCase() + key.substring(1, key.length).replace(/_\s*([a-z])/g, function(d, e) {
+    return e.toUpperCase();
+  });
+  return (res);
+}
+
+/**
+ * @param {Number} index
+ * @return {String}
+ */
+export function idToPkmnBundleName(index) {
+  return (
+    "pm" + (index >= 10 ? index >= 100 ? "0" : "00" : "000") + index
   );
 }

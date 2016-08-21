@@ -113,33 +113,28 @@ class Player {
   }
 
   /**
-   * @param {Request} req
+   * @param {Object} obj
    */
-  updatePosition(req) {
-
-    let data = decodeRequestEnvelope(req.request_message.buffer);
-
-    this.latitude = data.latitude;
-    this.longitude = data.longitude;
-    this.altitude = data.altitude;
-
+  updatePosition(obj) {
+    this.latitude = obj.latitude;
+    this.longitude = obj.longitude;
   }
 
   updateAvatar(req) {
 
-    let data = proto.Networking.Requests.Messages.SetAvatarMessage.decode(req.request_message.toBuffer()).player_avatar;
+    let node = null;
 
-    if (!data) return void 0;
-
-    this.skin = data.skin;
-    this.hair = data.hair;
-    this.shirt = data.shirt;
-    this.pants = data.pants;
-    this.hat = data.hat;
-    this.shoes = data.shoes;
-    this.eyes = data.eyes;
-    this.gender = data.gender;
-    this.backpack = data.backpack;
+    for (let key in req.player_avatar) {
+      node = req.player_avatar[key];
+      if (key === "gender") {
+        this.gender = node === "FEMALE" ? 1 : 0;
+      }
+      else {
+        if (this.hasOwnProperty(key)) {
+          this[key] = node;
+        }
+      }
+    };
 
   }
 
@@ -345,7 +340,7 @@ export function loginPlayer(player) {
   return new Promise((resolve) => {
     this.getUserByEmail(player.email).then((doc) => {
       player.updateByObject(doc);
-      let buffer = GetPlayer(player).encode();
+      let buffer = GetPlayer(player);
       resolve(buffer);
     });
   });
@@ -409,9 +404,13 @@ export function authenticatePlayer(player) {
   else if (token.provider === "ptc") {
     let decoded = token.token.contents;
     player.isPTCAccount = true;
-    this.print("PTC auth isnt supported yet! Kicking..", 31);
-    this.removePlayer(player);
-    return void 0;
+    player.email = decoded.split("-")[1];
+    player.email_verified = true;
+    player.isPTCAccount = true;
+    //console.log(decoded);
+    this.print("PTC auth isnt supported yet! Your progress wont get saved!", 33);
+    //this.removePlayer(player);
+    //return void 0;
   }
   else {
     this.print("Invalid provider! Kicking..", 31);

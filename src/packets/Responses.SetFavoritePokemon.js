@@ -1,6 +1,7 @@
 import CFG from "../../cfg";
 
 import proto from "../proto";
+import POGOProtos from "pokemongo-protobuf";
 
 /**
  * @param {Request} req
@@ -8,14 +9,12 @@ import proto from "../proto";
  */
 export default function SetFavoritePokemon(req) {
 
-  let data = proto.Networking.Requests.Messages.SetFavoritePokemonMessage.decode(req.request_message.toBuffer());
-console.log(data);
-  // TODO: save into db
+  buffer = ({
+    result: proto.Networking.Responses.SetFavoritePokemonResponse.Result.ERROR_POKEMON_NOT_FOUND
+  });
 
   return (
-    new proto.Networking.Responses.SetFavoritePokemonResponse({
-      result: proto.Networking.Responses.SetFavoritePokemonResponse.Result.ERROR_POKEMON_NOT_FOUND
-    }).encode()
+    POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.SetFavoritePokemonResponse")
   );
 
 }

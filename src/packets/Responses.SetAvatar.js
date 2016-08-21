@@ -1,4 +1,5 @@
 import proto from "../proto";
+import POGOProtos from "pokemongo-protobuf";
 
 import { GetPlayer } from "./";
 
@@ -8,11 +9,11 @@ import { GetPlayer } from "./";
  */
 export default function SetAvatar(player) {
 
-  return (
-    new proto.Networking.Responses.SetAvatarResponse({
-      status: proto.Networking.Responses.SetAvatarResponse.Status.SUCCESS,
-      player_data: GetPlayer(player).player_data
-    }).encode()
-  );
+  let buffer = ({
+    status: proto.Networking.Responses.SetAvatarResponse.Status.SUCCESS,
+    player_data: GetPlayer(player).player_data
+  });
+
+  return (POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.SetAvatarResponse"));
 
 }

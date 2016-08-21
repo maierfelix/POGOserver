@@ -19,8 +19,10 @@ import * as _player from "./player";
 import * as _request from "./request";
 import * as _response from "./response";
 import * as _process from "./process";
-import * as _mongo from "./db/mongo";
-import * as _mysql from "./db/mysql";
+import * as _mysql from "./db/index";
+import * as _mysql_get from "./db/get";
+import * as _mysql_query from "./db/query";
+import * as _mysql_create from "./db/create";
 
 const greetMessage = fs.readFileSync(".greet", "utf8");
 
@@ -44,6 +46,7 @@ class GameServer {
     };
 
     this.asset = null;
+    this.master = null;
     this.socket = null;
     this.cycleInstance = null;
 
@@ -118,11 +121,6 @@ class GameServer {
       let name = String(CFG.DATABASE_TYPE).toUpperCase();
 
       switch (name) {
-        case "MONGO":
-        case "MONGODB":
-          inherit(GameServer, _mongo);
-          this.setupConnection().then(resolve);
-        break;
         case "MYSQL":
           inherit(GameServer, _mysql);
           this.setupConnection().then(resolve);
@@ -209,6 +207,15 @@ class GameServer {
     }
   }
 
+  fileExists(path) {
+    try {
+      fs.statSync(path);
+    } catch (e) {
+      return (false);
+    }
+    return (true);
+  }
+
   greet() {
     console.log(greetMessage);
   }
@@ -221,6 +228,10 @@ inherit(GameServer, _player);
 inherit(GameServer, _request);
 inherit(GameServer, _response);
 inherit(GameServer, _process);
+inherit(GameServer, _mysql);
+inherit(GameServer, _mysql_get);
+inherit(GameServer, _mysql_query);
+inherit(GameServer, _mysql_create);
 
 let server = new GameServer();
 

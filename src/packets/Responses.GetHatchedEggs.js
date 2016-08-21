@@ -1,4 +1,5 @@
 import proto from "../proto";
+import POGOProtos from "pokemongo-protobuf";
 
 /**
  * @param {Object} obj
@@ -6,14 +7,15 @@ import proto from "../proto";
  */
 export default function GetHatchedEggs(obj) {
 
-  return (
-    new proto.Networking.Responses.GetHatchedEggsResponse({
-      success: true,
-      pokemon_id: [],
-      experience_awarded: [],
-      candy_awarded: [],
-      stardust_awarded: []
-    }).encode()
-  );
+  let buffer = {
+    "success": true,
+    "pokemon_id": [],
+    "experience_awarded": [],
+    "candy_awarded": [],
+    "stardust_awarded": [],
+    "$unknownFields": []
+  };
+
+  return POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetHatchedEggsResponse");
 
 }
