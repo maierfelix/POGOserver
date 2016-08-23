@@ -1,11 +1,15 @@
+import fs from "fs";
+
 export default {
+
+  VERSION: JSON.parse(fs.readFileSync("./package.json")).version,
 
   // Server settings
   MAX_CONNECTIONS: 64,
   PORT: 3000,
   GAME_MODE: 0,
-  SAVE_INTERVAL: 60000,
-  PLAYER_CONNECTION_TIMEOUT: 1800000,
+  SAVE_INTERVAL: 6e4,
+  PLAYER_CONNECTION_TIMEOUT: 1e3 * 60 * 30,
   MINIMUM_CLIENT_VERSION: "0.33.0",
   DEFAULT_CONSOLE_COLOR: 32,
   TRANSFER_ACCOUNTS: false,
@@ -37,7 +41,7 @@ export default {
 
   // Better dont touch these
   TICK_INTERVAL: 1,
-  BOOT_TIMEOUT: 10000,
+  BOOT_TIMEOUT: 1e4,
   // Currently supported pokemon
   MAX_POKEMON_NATIONAL_ID: 151,
   DUMP_ASSET_PATH: "data/"
