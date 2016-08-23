@@ -59,6 +59,7 @@ class GameServer {
     this.passedTicks = 0;
 
     this.clients = [];
+    this.wild_pokemons = [];
 
     this.greet();
 

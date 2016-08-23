@@ -2,6 +2,7 @@ import fs from "fs";
 import fse from "fs-extra";
 import pogo from "pogo-asset-downloader";
 import proto from "./proto";
+import POGOProtos from "pokemongo-protobuf";
 
 import CFG from "../cfg";
 
@@ -27,7 +28,7 @@ export function setup() {
     this.print(`Downloaded assets are valid! Proceeding..`);
 
     this.asset = this.parseAssetDigest();
-    this.master = this.parseGameMaster();
+    this.master = POGOProtos.serialize(this.parseGameMaster(), "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
 
     this.setupDatabaseConnection().then(() => {
       if (CFG.PORT < 1) {
@@ -58,7 +59,13 @@ export function validateAssets() {
 
   return new Promise((resolve, reject) => {
 
-    // validate asset digest
+    // validate asset digests
+    /*if (!this.fileExists(CFG.DUMP_ASSET_PATH + "asset_digest_ios")) {
+      return reject("File asset_digest_ios");
+    }
+    if (!this.fileExists(CFG.DUMP_ASSET_PATH + "asset_digest_android")) {
+      return reject("File asset_digest_android");
+    }*/
     if (!this.fileExists(CFG.DUMP_ASSET_PATH + "asset_digest")) {
       return reject("File asset_digest");
     }
@@ -110,18 +117,67 @@ export function onFirstRun(resolve) {
     username: CFG.DOWNLOAD_USERNAME,
     password: CFG.DOWNLOAD_PASSWORD
   }).then((res) => {
-    let asset = res.asset;
-    this.print(`Dumping asset digest..`, 35);
+    let client = res.client;
     // create data dir, if login successed
     fse.ensureDirSync(CFG.DUMP_ASSET_PATH);
-    fs.writeFileSync(CFG.DUMP_ASSET_PATH + "asset_digest", res.asset.toBuffer());
+    // write game master
     fs.writeFileSync(CFG.DUMP_ASSET_PATH + "game_master", res.master.toBuffer());
-    this.dumpPkmnModels(() => {
-      resolve();
+    // get and write asset digests
+    this.dumpAssetDigests(client).then(() => {
+      // dump pkmn models
+      this.dumpPkmnModels(() => {
+        resolve();
+      });
     });
   }).catch((e) => {
     this.print(e, 31);
   });
+}
+
+export function dumpAssetDigests(client) {
+
+  this.print(`Dumping asset digests..`, 35);
+
+  let platforms = [
+    {
+      name: "ios",
+      platform: 1,
+      manufacturer: "Apple",
+      model: "iPhone8,1",
+      locale: "",
+      version: 3300
+    },
+    {
+      name: "android",
+      platform: 2,
+      manufacturer: "LGE",
+      model: "Nexus 5",
+      locale: "",
+      version: 3300
+    }
+  ];
+
+  return new Promise((resolve, reject) => {
+    let ii = 0;
+    let index = 0;
+    for (; ii < platforms.length; ++ii) {
+      let key = platforms[ii];
+      client.getAssetDigest(
+        key.platform,
+        key.manufacturer,
+        key.model,
+        key.locale,
+        key.version
+      ).then((asset) => {
+        this.print(`Dumping ${key.name} asset digest..`, 35);
+        fs.writeFileSync(CFG.DUMP_ASSET_PATH + "asset_digest_" + key.name, asset.toBuffer());
+        if (++index >= platforms.length) {
+          resolve();
+        }
+      });
+    };
+  });
+
 }
 
 export function dumpPkmnModels(resolve) {

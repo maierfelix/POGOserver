@@ -26,11 +26,16 @@ export SetAvatar from "./Responses.SetAvatar";
 
 export SfidaActionLog from "./Responses.SfidaActionLog";
 
+export CheckChallenge from "./Responses.CheckChallenge";
+
 export Encounter from "./Responses.Encounter";
+export CatchPokemon from "./Responses.CatchPokemon";
 export NicknamePokemon from "./Responses.NicknamePokemon";
 export UpgradePokemon from "./Responses.UpgradePokemon";
 export EvolvePokemon from "./Responses.EvolvePokemon";
 export SetFavoritePokemon from "./Responses.SetFavoritePokemon";
+
+export ShopData from "./Responses.ShopData";
 
 export AuthTicket from "./Envelopes.AuthTicket";
 export ResponseEnvelope from "./Envelopes.ResponseEnvelope";

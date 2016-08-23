@@ -1,4 +1,5 @@
 import proto from "./proto";
+import POGOProtos from "pokemongo-protobuf";
 
 import CFG from "../cfg";
 
@@ -10,6 +11,7 @@ import {
   DownloadRemoteConfigVersion,
   GetPlayerProfile,
   ItemTemplates,
+  GetPlayer,
   GetAssetDigest,
   GetDownloadUrls,
   GetMapObjects,
@@ -21,11 +23,13 @@ import {
   MarkTutorialComplete,
   LevelUpRewards,
   Encounter,
+  CatchPokemon,
   NicknamePokemon,
   UpgradePokemon,
   EvolvePokemon,
   SetFavoritePokemon,
-  ClaimCodeName
+  ClaimCodeName,
+  CheckChallenge
 } from "./packets";
 
 import { _toCC } from "./utils";
@@ -58,14 +62,23 @@ export function processResponse(player, req) {
     try {
       switch (req.request_type) {
         case "GET_PLAYER":
+          player.authentications++;
+          if (player.authentications >= 2) {
+            buffer = GetPlayer(player);
+            resolve(buffer);
+            return void 0;
+          }
           this.forwardPlayer(player).then((res) => resolve(res));
           return void 0;
+        break;
+        case "CHECK_CHALLENGE":
+          buffer = CheckChallenge();
         break;
         case "GET_HATCHED_EGGS":
           buffer = GetHatchedEggs();
         break;
         case "GET_INVENTORY":
-          buffer = GetInventory(msg);
+          buffer = GetInventory(player);
         break;
         case "CHECK_AWARDED_BADGES":
           buffer = CheckAwardedBadges();
@@ -74,7 +87,7 @@ export function processResponse(player, req) {
           buffer = DownloadSettings();
         break;
         case "DOWNLOAD_ITEM_TEMPLATES":
-          buffer = ItemTemplates();
+          buffer = ItemTemplates(this.master);
         break;
         case "DOWNLOAD_REMOTE_CONFIG_VERSION":
           buffer = DownloadRemoteConfigVersion(msg);
@@ -87,7 +100,7 @@ export function processResponse(player, req) {
         break;
         case "GET_MAP_OBJECTS":
           player.updatePosition(msg);
-          buffer = GetMapObjects(player, msg);
+          buffer = GetMapObjects(player, this.wild_pokemons, msg);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
@@ -131,7 +144,11 @@ export function processResponse(player, req) {
           buffer = FortDetails(msg);
         break;
         case "FORT_SEARCH":
-          buffer = FortSearch();
+          buffer = FortSearch(player);
+          this.updateUserItems(player).then(() => {
+            resolve(buffer);
+          });
+          return void 0;
         break;
         case "SET_CONTACT_SETTINGS":
           player.updateContactSettings(msg);
@@ -142,7 +159,31 @@ export function processResponse(player, req) {
           return void 0;
         break;
         case "ENCOUNTER":
-          buffer = Encounter(msg);
+          buffer = Encounter(this.getEncounterPkmn(msg).pkmn, msg);
+        break;
+        case "CATCH_POKEMON":
+          let encounter = this.getEncounterPkmn(msg);
+          let result = CatchPokemon(encounter.pkmn, player, msg);
+          // save pkmn into player party
+          if (result.status !== "CATCH_MISSED") {
+            result.pkmn.owner_id = player.owner_id;
+            player.exp += 100;
+            player.stardust += 100;
+            this.wild_pokemons.splice(encounter.index, 1);
+            this.createOwnedPokemon(result.pkmn).then(() => {
+              // make sure it got saved, also get db id
+              this.getQueryByColumnFromTable("creation_time_ms", result.pkmn.creation_time_ms, CFG.MYSQL_OWNED_PKMN_TABLE).then((query) => {
+                player.party.push(query[0]);
+                result.buffer.captured_pokemon_id = query[0].id;
+                result = POGOProtos.serialize(result.buffer, "POGOProtos.Networking.Responses.CatchPokemonResponse");
+                resolve(result);
+              });
+            });
+          }
+          else {
+            resolve(POGOProtos.serialize(result, "POGOProtos.Networking.Responses.CatchPokemonResponse"));
+          }
+          return void 0;
         break;
         case "NICKNAME_POKEMON":
           buffer = NicknamePokemon(msg);
@@ -166,6 +207,27 @@ export function processResponse(player, req) {
 
     resolve(buffer);
 
+  });
+
+}
+
+export function getEncounterPkmn(req) {
+
+  let ii = 0;
+  let length = this.wild_pokemons.length;
+
+  let pkmn = null;
+
+  for (; ii < length; ++ii) {
+    pkmn = this.wild_pokemons[ii];
+    if (pkmn.encounter_id === parseInt(req.encounter_id)) {
+      break;
+    }
+  };
+
+  return ({
+    pkmn: pkmn,
+    index: ii
   });
 
 }

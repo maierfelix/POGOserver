@@ -38,6 +38,9 @@ export function processCommand(cmd, data) {
       var length = this.clients.length;
       this.print(`Saved ${length} player${length === 1 ? "": "s"} into database!`);
     break;
+    case "/spawn":
+      this.spawnPkmnAtPlayer(data[1], data[2], data[3] || 1);
+    break;
     case "/update":
       eval(fs.readFileSync("update.js", "utf8"));
     break;

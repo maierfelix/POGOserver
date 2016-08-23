@@ -85,48 +85,15 @@ function buildPlayerData(obj) {
 
 }
 
-/**
- * @param {Object} obj
- * @return {Object}
- */
 export default function GetPlayer(obj) {
 
   let data = buildPlayerData(obj);
+
   let packet = getPlayerDataPacket(data);
 
   let buffer = {
-    "success": true,
-    "player_data": {
-      "creation_timestamp_ms": "1471096437979",
-      "username": "Administrator",
-      "team": "YELLOW",
-      "tutorial_state": [
-        "LEGAL_SCREEN",
-        "AVATAR_SELECTION",
-        "POKEMON_CAPTURE",
-        "NAME_SELECTION",
-        "FIRST_TIME_EXPERIENCE_COMPLETE"
-      ],
-      "avatar": {},
-      "max_pokemon_storage": 250,
-      "max_item_storage": 350,
-      "daily_bonus": {},
-      "equipped_badge": {},
-      "contact_settings": {
-        "send_marketing_emails": true
-      },
-      "currencies": [
-        {
-          "name": "POKECOIN",
-          "amount": 1339
-        },
-        {
-          "name": "STARDUST",
-          "amount": 7681
-        }
-      ]
-    },
-    "$unknownFields": []
+    success: true,
+    player_data: packet
   };
 
   return (POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetPlayerResponse"));

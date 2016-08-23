@@ -8,10 +8,9 @@ import CFG from "../cfg";
 
 import {
   ResponseEnvelope,
-  AuthTicket
+  AuthTicket,
+  ShopData
 } from "./packets";
-
-const REQUEST = proto.Networking.Requests.RequestType;
 
 /**
  * @param {Request} req
@@ -52,22 +51,6 @@ export function routeRequest(req, res) {
 
 }
 
-/**
- * @param  {Request} req
- * @return {String}
- */
-export function getRequestType(req) {
-
-  for (let key in REQUEST) {
-    if (REQUEST[key] === req.request_type) {
-      return (key);
-    }
-  };
-
-  return ("INVALID");
-
-}
-
 export function parseProtobuf(buffer, path) {
   try {
     return POGOProtos.parseWithUnknown(buffer, path);
@@ -104,10 +87,7 @@ export function onRequest(req) {
 
   let request = this.parseProtobuf(req.body, "POGOProtos.Networking.Envelopes.RequestEnvelope");
 
-  if (!request.requests.length) {
-    this.print("Received invalid request!", 31);
-    return void 0;
-  }
+  request.requests = request.requests || [];
 
   if (CFG.DEBUG_LOG_REQUESTS) {
     console.log("#####");
@@ -121,8 +101,21 @@ export function onRequest(req) {
     return void 0;
   }
 
-  this.processRequests(player, request.requests).then((answer) => {
-    let msg = this.envelopResponse(1, request.request_id, answer, !!request.auth_ticket, request);
+  if (!request.requests.length) {
+    // send shop data
+    if (request.unknown6 && request.unknown6.request_type === 6) {
+      let msg = this.envelopResponse(1, [], request, !!request.auth_ticket, true);
+      player.sendResponse(msg);
+    }
+    // otherwise invalid
+    else {
+      this.print("Received invalid request!", 31);
+      return void 0;
+    }
+  }
+
+  this.processRequests(player, request.requests).then((returns) => {
+    let msg = this.envelopResponse(1, returns, request, !!request.auth_ticket, false);
     if (CFG.DEBUG_DUMP_TRAFFIC) {
       this.dumpTraffic(req.body, msg);
     }
@@ -133,18 +126,33 @@ export function onRequest(req) {
 
 /**
  * @param  {Number} status
- * @param  {Long} id
- * @param  {Array} response
+ * @param  {Array} returns
+ * @param  {Request} req
  * @param  {Boolean} auth
+ * @param  {Boolean} shop
  * @return {Buffer}
  */
-export function envelopResponse(status, id, response, auth, req) {
+export function envelopResponse(status, returns, req, auth, shop) {
 
   let buffer = req;
 
   delete buffer.requests;
 
-  buffer.returns = response;
+  buffer.returns = returns;
+
+  if (auth) buffer.auth_ticket = AuthTicket();
+  if (shop) buffer.unknown6 = [ShopData()];
+
+  if (buffer.unknown6 && !shop) {
+    buffer.unknown6 = [{
+      "response_type": 6,
+      "unknown2": {
+        "unknown1": "1",
+        "items": [],
+        "player_currencies": []
+      }
+    }];
+  }
 
   buffer.status_code = 1;
 

@@ -5,8 +5,9 @@ import proto from "../proto";
 import POGOProtos from "pokemongo-protobuf";
 
 /**
+ * @param {Buffer} master
  * @return {Object}
  */
-export default function ItemTemplates() {
-  return (fs.readFileSync("data/game_master"));
+export default function ItemTemplates(master) {
+  return (master);
 }

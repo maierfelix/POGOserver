@@ -11,7 +11,7 @@ export default function FortDetails(req) {
 
   let buffer = ({
     "fort_id": req.fort_id,
-    "name": "POGOserver v0.3.5",
+    "name": `POGOserver v${CFG.VERSION}`,
     "image_urls": [
       "http://thecatapi.com/api/images/get?format=src&type=png"
     ],

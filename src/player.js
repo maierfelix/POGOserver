@@ -25,9 +25,10 @@ class Player {
   constructor(obj) {
 
     this.uid = -1;
+    this.owner_id = -1;
 
     this.email = null;
-    this.username = "undefined";
+    this.username = null;
  
     this.latitude = 0;
     this.longitude = 0;
@@ -37,6 +38,7 @@ class Player {
     this.send_push_notifications = false;
 
     this.exp = 0;
+    this.level = 0;
 
     this.stardust = 0;
     this.pokecoins = 0;
@@ -52,6 +54,36 @@ class Player {
     this.eyes = 0;
     this.gender = 0;
     this.backpack = 0;
+
+    this.items = {
+      poke_ball: 0,
+      great_ball: 0,
+      ultra_ball: 0,
+      master_ball: 0,
+      potion: 0,
+      super_potion: 0,
+      hyper_potion: 0,
+      max_potion: 0,
+      revive: 0,
+      max_revive: 0,
+      lucky_egg: 0,
+      incense_ordinary: 0,
+      incense_spicy: 0,
+      incense_cool: 0,
+      incense_floral: 0,
+      troy_disk: 0,
+      razz_berry: 0,
+      bluk_berry: 0,
+      nanab_berry: 0,
+      wepar_berry: 0,
+      pinap_berry: 0,
+      incubator_basic: 0,
+      incubator_basic_unlimited: 0,
+      pokemon_storage_upgrade: 0,
+      storage_upgrade: 0
+    };
+
+    this.party = [];
 
     this.tutorial_state = [];
 
@@ -76,6 +108,8 @@ class Player {
 
     this.loggedIn = obj.loggedIn || false;
     this.authenticated = false;
+
+    this.authentications = 0;
 
   }
 
@@ -105,9 +139,17 @@ class Player {
       if (this.hasOwnProperty(key)) {
         if (key === "send_marketing_emails" || key === "send_push_notifications") {
           this[key] = !!obj[key];
-        } else {
+        }
+        else {
           this[key] = obj[key];
         }
+      }
+      else if (key.substring(0, 5) === "item_") {
+        let name = key.substring(5, key.length);
+        this.items[name] = obj[key];
+      }
+      else if (key === "id") {
+        this.owner_id = obj[key];
       }
     };
   }
@@ -149,6 +191,19 @@ class Player {
 
   }
 
+}
+
+/**
+ * @param {String} name
+ * @return {Boolean}
+ */
+export function validPlayerName(name) {
+  return !(
+    name === null ||
+    name === void 0 ||
+    typeof name === "string" &&
+    name.length <= 1
+  );
 }
 
 /**
@@ -256,15 +311,42 @@ export function removePlayer(player) {
 
 /**
  * @param {String} name
+ * @param {String} pkmn
+ */
+export function spawnPkmnAtPlayer(name, pkmn, amount) {
+
+  if (!this.validPlayerName(name)) {
+    this.print(`Invalid player name!`, 31);
+    return void 0;
+  }
+
+  let spawn = null;
+  let player = this.getPlayerByName(name);
+
+  if (player !== null) {
+    let index = 0;
+    while (++index < amount) {
+      spawn = {
+        pokemon_id: pkmn.toUpperCase(),
+        cp: Math.random() * 1e3 << 0,
+        encounter_id: Math.random() * 1e5 << 0,
+        latitude: player.latitude + parseFloat((Math.random() / 1e3).toFixed(5)),
+        longitude: player.longitude + parseFloat((Math.random() / 1e3).toFixed(5))
+      };
+      this.wild_pokemons.push(spawn);
+    };
+    this.print(`Spawned ${amount}x ${pkmn}'s to ${name} at ${spawn.latitude.toFixed(7)}:${spawn.longitude.toFixed(7)}!`);
+  }
+  else this.print(`Failed to spawn ${pkmn} to player ${name}!`, 31);
+
+}
+
+/**
+ * @param {String} name
  */
 export function kickPlayer(name) {
 
-  if (
-    name === null ||
-    name === void 0 ||
-    typeof name === "string" &&
-    name.length <= 1
-  ) {
+  if (!this.validPlayerName(name)) {
     this.print(`Invalid player name!`, 31);
     return void 0;
   }
@@ -301,7 +383,9 @@ export function removeAllPlayers() {
 export function savePlayer(player) {
   return new Promise((resolve) => {
     if (player.authenticated) {
-      this.updateUser(player).then(resolve);
+      this.updateUser(player).then(() => {
+        this.updateUserItems(player).then(resolve);
+      });
     }
   });
 }
@@ -338,10 +422,14 @@ export function forwardPlayer(player) {
 export function loginPlayer(player) {
 
   return new Promise((resolve) => {
-    this.getUserByEmail(player.email).then((doc) => {
-      player.updateByObject(doc);
-      let buffer = GetPlayer(player);
-      resolve(buffer);
+    this.getUserByEmail(player.email).then((user) => {
+      user = user[0];
+      this.getPkmnByColumn("owner_id", user.id).then((party) => {
+        player.updateByObject(user);
+        player.party = party || [];
+        let buffer = GetPlayer(player);
+        resolve(buffer);
+      });
     });
   });
 

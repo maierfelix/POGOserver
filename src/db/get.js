@@ -7,9 +7,9 @@ import CFG from "../../cfg";
  */
 export function getQueryByColumnFromTable(column, value, table) {
   return new Promise((resolve) => {
-    this.db.instance.query(`SELECT * FROM ${table} WHERE ${column}=? LIMIT 1`, [value], (e, rows) => {
+    this.db.instance.query(`SELECT * FROM ${table} WHERE ${column}=?`, [value], (e, rows) => {
       if (e) console.log(e);
-      if (rows && rows.length) resolve(rows[0]);
+      if (rows && rows.length) resolve(rows);
       else resolve(void 0);
     });
   });

@@ -62,10 +62,38 @@ export function createUser(obj) {
 /**
  * @param {Object} obj
  */
+export function createOwnedPokemon(obj) {
+
+  let query = this.getOwnedPkmnQuery("INSERT INTO", "");
+  let data = this.getOwnedPkmnQueryData(obj);
+
+  return new Promise((resolve) => {
+    this.db.instance.query(query, data, resolve);
+  });
+
+}
+
+/**
+ * @param {Object} obj
+ */
 export function updateUser(obj) {
 
   let query = this.getUserQuery("UPDATE", "WHERE email=? LIMIT 1");
   let data = this.getUserQueryData(obj);
+
+  return new Promise((resolve) => {
+    this.db.instance.query(query, data, resolve);
+  });
+
+}
+
+/**
+ * @param {Object} obj
+ */
+export function updateUserItems(obj) {
+
+  let query = this.getUserItemQuery("UPDATE", "WHERE email=? LIMIT 1");
+  let data = this.getUserItemQueryData(obj);
 
   return new Promise((resolve) => {
     this.db.instance.query(query, data, resolve);
