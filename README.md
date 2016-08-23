@@ -26,9 +26,9 @@ Copy and rename ``cfg.js.example`` to ``cfg.js``.
 Open ``cfg.js`` and fill the following fields:
 
 ````js
-export const SERVER_POGO_CLIENT_PROVIDER = "GOOGLE";
-export const SERVER_POGO_CLIENT_USERNAME = "USERNAME";
-export const SERVER_POGO_CLIENT_PASSWORD = "PASSWORD";
+DOWNLOAD_PROVIDER: "GOOGLE";
+DOWNLOAD_USERNAME: "USERNAME";
+DOWNLOAD_PASSWORD: "PASSWORD";
 ````
 
 ## Tunneling setup
@@ -36,23 +36,14 @@ For now, the pokemon go app traffic has to get forwarded manually to this custom
 
 ## Database setup
 
-You can choose between using MySQL or MongoDB.
-
-To setup a database connection, open ``cfg.js`` and set the database type (MySQL in this case):
+To setup a database connection, open ``cfg.js`` and change the database login credentials:
 
 ````js
-export const SERVER_USE_DATABASE = "MYSQL";
-````
-
-Make sure to enter your database login credentials as well.
-
-````js
-export const SERVER_MYSQL_PORT = 3306;
-export const SERVER_MYSQL_HOST_IP = "127.0.0.1";
-export const SERVER_MYSQL_DB_NAME = "pogosql";
-export const SERVER_MYSQL_USERNAME = "root";
-export const SERVER_MYSQL_PASSWORD = "";
-export const SERVER_MYSQL_TABLE = "users";
+MYSQL_PORT: 3306,
+MYSQL_HOST_IP: "127.0.0.1",
+MYSQL_DB_NAME: "pogosql",
+MYSQL_USERNAME: "root",
+MYSQL_PASSWORD: "",
 ````
 
 ## Server setup
