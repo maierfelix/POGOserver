@@ -34,7 +34,8 @@ export function routeRequest(req, res) {
       if (!player.authenticated || !player.email_verified) return void 0;
       let name = route[2];
       if (name && name.length > 1) {
-        fs.readFile("data/" + name, (error, data) => {
+        let folder = player.isAndroid ? "android/" : "ios/";
+        fs.readFile("data/" + folder + name, (error, data) => {
           if (error) {
             this.print(`Error file resolving model ${name}:` + error, 31);
             return void 0;
@@ -42,6 +43,14 @@ export function routeRequest(req, res) {
           this.print(`Sent ${name} to ${player.email}`, 36);
           res.end(data);
         });
+      }
+    break;
+    case "om":
+      if (
+        route[2] === "glm" &&
+        route[3] === "mmap"
+      ) {
+        this.print(`Received gmaps request!`, 33);
       }
     break;
     default:
@@ -79,7 +88,7 @@ export function onRequest(req) {
   // Validate email verification
   if (player.authenticated) {
     if (!player.email_verified) {
-      this.print(`${player.email.replace("@gmail.com", "")}'s email isnt verified, kicking..`, 31);
+      this.print(`${player.email}'s email isnt verified, kicking..`, 31);
       this.removePlayer(player);
       return void 0;
     }
@@ -115,10 +124,10 @@ export function onRequest(req) {
   }
 
   this.processRequests(player, request.requests).then((returns) => {
-    let msg = this.envelopResponse(1, returns, request, !!request.auth_ticket, false);
     if (CFG.DEBUG_DUMP_TRAFFIC) {
-      this.dumpTraffic(req.body, msg);
+      this.dumpTraffic(request, returns);
     }
+    let msg = this.envelopResponse(1, returns, request, player, !!request.auth_ticket, false);
     player.sendResponse(msg);
   });
 
@@ -128,17 +137,30 @@ export function onRequest(req) {
  * @param  {Number} status
  * @param  {Array} returns
  * @param  {Request} req
+ * @param  {Player} player
  * @param  {Boolean} auth
  * @param  {Boolean} shop
  * @return {Buffer}
  */
-export function envelopResponse(status, returns, req, auth, shop) {
+export function envelopResponse(status, returns, req, player, auth, shop) {
 
   let buffer = req;
 
   delete buffer.requests;
 
   buffer.returns = returns;
+
+  // get players device platform one time
+  if (player.hasSignature === false && buffer.unknown6 && buffer.unknown6.unknown2) {
+    let sig = this.parseSignature(buffer);
+    if (sig.device_info !== void 0) {
+      player.isIOS = sig.device_info.device_brand === "Apple";
+      player.isAndroid = !player.isIOS;
+      player.hasSignature = true;
+      player.asset_digest = this.assets[player.isAndroid ? "android" : "ios"];
+      this.print(`${player.email} is playing with an ${player.isIOS ? "Apple" : "Android"} device!`, 36);
+    }
+  }
 
   if (auth) buffer.auth_ticket = AuthTicket();
   if (shop) buffer.unknown6 = [ShopData()];
@@ -154,7 +176,7 @@ export function envelopResponse(status, returns, req, auth, shop) {
     }];
   }
 
-  buffer.status_code = 1;
+  buffer.status_code = status;
 
   return (
     POGOProtos.serialize(buffer, "POGOProtos.Networking.Envelopes.ResponseEnvelope")

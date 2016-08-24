@@ -93,7 +93,7 @@ export function processResponse(player, req) {
           buffer = DownloadRemoteConfigVersion(msg);
           break;
         case "GET_ASSET_DIGEST":
-          buffer = GetAssetDigest(msg);
+          buffer = GetAssetDigest(player);
         break;
         case "GET_PLAYER_PROFILE":
           buffer = GetPlayerProfile();
@@ -107,7 +107,7 @@ export function processResponse(player, req) {
           return void 0;
         break;
         case "GET_DOWNLOAD_URLS":
-          GetDownloadUrls(this.asset, this.getLocalIPv4(), msg).then((res) => {
+          GetDownloadUrls(player.asset_digest.decode, CFG.LOCAL_IP || this.getLocalIPv4(), msg).then((res) => {
             resolve(res);
           });
           return void 0;
@@ -195,7 +195,20 @@ export function processResponse(player, req) {
           buffer = EvolvePokemon(msg);
         break;
         case "SET_FAVORITE_POKEMON":
-          buffer = SetFavoritePokemon(msg);
+          buffer = SetFavoritePokemon(player, msg);
+        break;
+        case "RELEASE_POKEMON":
+          buffer = {
+            result: "SUCCESS",
+            candy_awarded: 5
+          };
+          let id = msg.pokemon_id << 0;
+          this.deleteOwnedPokemon(id).then(() => {
+            player.deletePkmnFromParty(id);
+            buffer = POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.ReleasePokemonResponse");
+            resolve(buffer);
+          });
+          return void 0;
         break;
         default:
           this.print(`Unknown request: ${req.request_type}`, 31);

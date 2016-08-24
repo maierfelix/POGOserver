@@ -92,7 +92,8 @@ export default function GetInventoryData(player) {
           "cp_multiplier": pkmn.cp_multiplier,
           "pokeball": pkmn.pokeball,
           "captured_cell_id": pkmn.captured_cell_id,
-          "creation_time_ms": pkmn.creation_time_ms
+          "creation_time_ms": pkmn.creation_time_ms,
+          "favorite": pkmn.favorite
         }
       }
     });

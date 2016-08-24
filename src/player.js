@@ -27,7 +27,7 @@ class Player {
     this.uid = -1;
     this.owner_id = -1;
 
-    this.email = null;
+    this._email = null;
     this.username = null;
  
     this.latitude = 0;
@@ -91,11 +91,17 @@ class Player {
     this.pokedex = null;
     this.inventory = null;
 
+    this.asset_digest = null;
+
+    this.hasSignature = false;
+
+    this.isIOS = false;
+    this.isAndroid = false;
+
     this.isPTCAccount = false;
     this.isGoogleAccount = false;
 
     this.request = obj.request;
-    // gets updated after each chunk end event
     this.response = null;
     this.connection = obj.connection;
 
@@ -111,6 +117,13 @@ class Player {
 
     this.authentications = 0;
 
+  }
+
+  get email() {
+    return (this._email);
+  }
+  set email(value) {
+    this._email = value.replace("@gmail.com", "");
   }
 
   /**
@@ -189,6 +202,29 @@ class Player {
     this.send_marketing_emails = data.send_marketing_emails;
     this.send_push_notifications = data.send_push_notifications;
 
+  }
+
+  getPkmnIndexFromPartyById(id) {
+    for (let ii = 0; ii < this.party.length; ++ii) {
+      if (this.party[ii].id === id) return (ii);
+    };
+    return (-1);
+  }
+
+  getPkmnFromPartyById(id) {
+    let index = this.getPkmnIndexFromPartyById(id);
+    return (this.party[index]);
+  }
+
+  deletePkmnFromParty(id) {
+    let index = this.getPkmnIndexFromPartyById(id);
+    let pkmn = this.party[index];
+    if (pkmn) this.party.splice(index, 1);
+  }
+
+  setFavoritePkmn(id, favorite) {
+    let pkmn = this.getPkmnFromPartyById(id);
+    if (pkmn) pkmn.favorite = favorite;
   }
 
 }
@@ -325,7 +361,7 @@ export function spawnPkmnAtPlayer(name, pkmn, amount) {
 
   if (player !== null) {
     let index = 0;
-    while (++index < amount) {
+    while (++index <= amount) {
       spawn = {
         pokemon_id: pkmn.toUpperCase(),
         cp: Math.random() * 1e3 << 0,
@@ -384,7 +420,12 @@ export function savePlayer(player) {
   return new Promise((resolve) => {
     if (player.authenticated) {
       this.updateUser(player).then(() => {
-        this.updateUserItems(player).then(resolve);
+        this.updateUserItems(player).then(() => {
+          this.updateUserParty(player).then(() => {
+            // refresh player data by database
+            this.loginPlayer(player).then(resolve);
+          });
+        });
       });
     }
   });
@@ -399,7 +440,7 @@ export function forwardPlayer(player) {
     this.getUserByEmail(player.email).then((doc) => {
       if (player.email.length) {
         let provider = player.isGoogleAccount ? "Google" : "PTC";
-        this.print(`${player.email.replace("@gmail.com", "")} authenticated via ${provider}!`, 36);
+        this.print(`${player.email} authenticated via ${provider}!`, 36);
       }
       if (doc) {
         this.loginPlayer(player).then((res) => {
@@ -442,7 +483,7 @@ export function registerPlayer(player) {
 
   return new Promise((resolve) => {
     this.createUser(player).then(() => {
-      this.print(`${player.email.replace("@gmail.com", "")} registered!`, 36);
+      this.print(`${player.email} registered!`, 36);
       player.tutorial_state = [];
       this.loginPlayer(player).then((res) => {
         resolve(res);
@@ -481,7 +522,7 @@ export function authenticatePlayer(player) {
       player.email = decoded.email;
       player.email_verified = decoded.email_verified;
       player.isGoogleAccount = true;
-      this.print(`${player.email.replace("@gmail.com", "")} connected!`, 36);
+      this.print(`${player.email} connected!`, 36);
     }
     else {
       this.print("Invalid authentication token! Kicking..", 31);

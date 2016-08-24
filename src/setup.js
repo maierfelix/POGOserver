@@ -6,14 +6,17 @@ import POGOProtos from "pokemongo-protobuf";
 
 import CFG from "../cfg";
 
-import { idToPkmnBundleName } from "./utils";
+import {
+  capitalize,
+  idToPkmnBundleName
+} from "./utils";
 
 export function setup() {
 
   let isFirstRun = !this.directoryExists(CFG.DUMP_ASSET_PATH);
 
   if (isFirstRun) {
-    this.print("Preparing to dump required assets..", 36);
+    this.print("Required assets are missing! Preparing dump session..", 31);
     setTimeout(() => {
       this.onFirstRun(() => {
         this.setup();
@@ -27,7 +30,6 @@ export function setup() {
 
     this.print(`Downloaded assets are valid! Proceeding..`);
 
-    this.asset = this.parseAssetDigest();
     this.master = POGOProtos.serialize(this.parseGameMaster(), "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
 
     this.setupDatabaseConnection().then(() => {
@@ -54,43 +56,65 @@ export function setup() {
  */
 export function validateAssets() {
 
-  let index = 0;
-  let max = CFG.MAX_POKEMON_NATIONAL_ID;
-
   return new Promise((resolve, reject) => {
-
-    if (!this.fileExists(CFG.DUMP_ASSET_PATH + "asset_digest")) {
-      return reject("File asset_digest");
-    }
 
     // validate game master
     if (!this.fileExists(CFG.DUMP_ASSET_PATH + "game_master")) {
       return reject("File game_master");
     }
 
-    // validate models
-    while (++index <= max) {
-      let id = idToPkmnBundleName(index);
-      if (!this.fileExists(CFG.DUMP_ASSET_PATH + id)) {
-        return reject("Model " + id);
-      }
-    };
-
-    resolve();
+    this.validateModels().then(() => {
+      resolve();
+    }).catch((e) => {
+      reject(e);
+    });
 
   });
 
 }
 
-export function parseAssetDigest() {
-  let asset = null;
-  try {
-    let data = fs.readFileSync(CFG.DUMP_ASSET_PATH + "asset_digest");
-    asset = this.parseProtobuf(data, "POGOProtos.Networking.Responses.GetAssetDigestResponse");
-  } catch (e) {
-    this.print(e, 31);
-  }
-  return (asset);
+export function validateModels() {
+
+  let max = CFG.MAX_POKEMON_NATIONAL_ID;
+  let limit = pogo.platforms.length;
+
+  return new Promise((resolve, reject) => {
+    const validate = (index) => {
+      let platform = pogo.platforms[index];
+      let name = platform.name;
+      let path = CFG.DUMP_ASSET_PATH + name + "/";
+
+      // ups, validate asset_digest's too
+      if (!this.fileExists(path + "asset_digest")) {
+        return reject(`${path}asset_digest`);
+      }
+      else {
+        let buffer = fs.readFileSync(path + "asset_digest");
+        this.assets[name] = {
+          buffer: buffer,
+          decode: this.parseProtobuf(buffer, "POGOProtos.Networking.Responses.GetAssetDigestResponse")
+        }
+      }
+
+      // validate models inside folder
+      let ii = 0;
+      while (++ii <= max) {
+        let id = idToPkmnBundleName(ii);
+        if (!this.fileExists(path + id)) {
+          return reject("Model " + id);
+        }
+      };
+
+      if (++index >= limit) {
+        resolve();
+        return void 0;
+      }
+      validate(index);
+    };
+
+    validate(0);
+  });
+
 }
 
 export function parseGameMaster() {
@@ -105,66 +129,75 @@ export function parseGameMaster() {
 }
 
 export function onFirstRun(resolve) {
+  // make sure to login first!
   pogo.login({
     provider: CFG.DOWNLOAD_PROVIDER, // google or ptc
     username: CFG.DOWNLOAD_USERNAME,
     password: CFG.DOWNLOAD_PASSWORD
-  }).then((res) => {
-    // create data dir, if login successed
-    fse.ensureDirSync(CFG.DUMP_ASSET_PATH);
-    // write game master
-    fs.writeFileSync(CFG.DUMP_ASSET_PATH + "game_master", res.master.toBuffer());
-    // get and write asset digests
-    this.dumpAssetDigests(res.client).then(() => {
-      // dump pkmn models
-      this.dumpPkmnModels(() => {
-        resolve();
-      });
+  }).then(() => {
+    this.downloadAssetDigests().then(() => {
+      this.downloadAssets().then(resolve);
     });
   }).catch((e) => {
     this.print(e, 31);
   });
 }
 
-export function dumpAssetDigests(client) {
-
-  this.print(`Dumping asset digests..`, 35);
-
-  let platforms = [
-    {
-      name: "android",
-      platform: 2,
-      manufacturer: "LGE",
-      model: "Nexus 5",
-      locale: "",
-      version: 3300
-    }
-  ];
-
+export function downloadAssetDigests(assets) {
   return new Promise((resolve, reject) => {
-    let ii = 0;
+    // create data folder for each support platform
+    // and download each asset digest and related models
     let index = 0;
-    for (; ii < platforms.length; ++ii) {
-      let key = platforms[ii];
-      client.getAssetDigest(
-        key.platform,
-        key.manufacturer,
-        key.model,
-        key.locale,
-        key.version
-      ).then((asset) => {
-        this.print(`Dumping ${key.name} asset digest..`, 35);
-        fs.writeFileSync(CFG.DUMP_ASSET_PATH + "asset_digest", asset.toBuffer());
-        if (++index >= platforms.length) {
-          resolve();
-        }
+    let length = pogo.platforms.length;
+    for (let platform of pogo.platforms) {
+      fse.ensureDirSync(CFG.DUMP_ASSET_PATH + platform.name);
+      pogo.getAssetDigest(platform).then((asset) => {
+        fs.writeFileSync(CFG.DUMP_ASSET_PATH + platform.name + "/asset_digest", asset.toBuffer());
+        if (++index >= length) resolve();
       });
     };
+  });
+}
+
+export function downloadAssets() {
+  return new Promise((resolve, reject) => {
+    pogo.getGameMaster().then((master) => {
+      fs.writeFileSync(CFG.DUMP_ASSET_PATH + "game_master", master.toBuffer());
+      this.downloadModels().then(() => {
+        resolve();
+      });
+    });
+  });
+}
+
+export function downloadModels() {
+
+  let limit = pogo.platforms.length;
+
+  return new Promise((resolve, reject) => {
+    const dump = (index) => {
+      let platform = pogo.platforms[index];
+      let name = platform.name;
+      let caps = capitalize(name);
+      caps = name === "ios" ? "iOS" : caps;
+      pogo.setPlatform(name);
+      this.print(`Preparing to dump ${caps} assets..`, 36);
+      this.dumpPkmnModels(CFG.DUMP_ASSET_PATH + name + "/", () => {
+        this.print(`Dumped ${CFG.MAX_POKEMON_NATIONAL_ID} ${caps} assets successfully!`);
+        if (++index >= limit) {
+          this.print("Dumped all assets successfully!");
+          resolve();
+          return void 0;
+        }
+        dump(index);
+      });
+    };
+    dump(0);
   });
 
 }
 
-export function dumpPkmnModels(resolve) {
+export function dumpPkmnModels(path, resolve) {
 
   let limit = CFG.MAX_POKEMON_NATIONAL_ID;
 
@@ -177,18 +210,18 @@ export function dumpPkmnModels(resolve) {
       downloads.map((item) => {
         this.print(`Dumping model ${item.name}..`, 35);
         try {
-          fs.writeFileSync(CFG.DUMP_ASSET_PATH + item.name, item.body);
+          fs.writeFileSync(path + item.name, item.body);
         }
         catch (e) {
           this.print(`Error while dumping model ${item.name}:` + e, 31);
         }
       });
       if (index >= limit) {
-        this.print(`Dumped ${limit} assets successfully!`);
+        //this.print(`Dumped ${limit} assets successfully!`);
         resolve();
         return void 0;
       }
-      setTimeout(() => dump(index), 2e3);
+      setTimeout(() => dump(index), 1e3);
     });
   };
 

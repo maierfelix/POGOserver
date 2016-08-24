@@ -18,6 +18,20 @@ export function getQueryByColumnFromTable(column, value, table) {
 /**
  * @param {String} column
  * @param {String} value
+ * @param {String} table
+ */
+export function deleteQueryByColumnFromTable(column, value, table) {
+  return new Promise((resolve) => {
+    this.db.instance.query(`DELETE FROM ${table} WHERE ${column}=?`, [value], (e, rows) => {
+      if (e) console.log(e);
+      else resolve(void 0);
+    });
+  });
+}
+
+/**
+ * @param {String} column
+ * @param {String} value
  */
 export function getPkmnByColumn(column, value) {
   return new Promise((resolve) => {

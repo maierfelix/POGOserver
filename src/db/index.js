@@ -76,10 +76,23 @@ export function createOwnedPokemon(obj) {
 /**
  * @param {Object} obj
  */
-export function updateUser(obj) {
+export function deleteOwnedPokemon(id) {
+
+  return new Promise((resolve) => {
+    this.deleteQueryByColumnFromTable("id", id, CFG.MYSQL_OWNED_PKMN_TABLE).then(() => {
+      resolve();
+    });
+  });
+
+}
+
+/**
+ * @param {Player} player
+ */
+export function updateUser(player) {
 
   let query = this.getUserQuery("UPDATE", "WHERE email=? LIMIT 1");
-  let data = this.getUserQueryData(obj);
+  let data = this.getUserQueryData(player);
 
   return new Promise((resolve) => {
     this.db.instance.query(query, data, resolve);
@@ -88,15 +101,40 @@ export function updateUser(obj) {
 }
 
 /**
- * @param {Object} obj
+ * @param {Player} player
  */
-export function updateUserItems(obj) {
+export function updateUserItems(player) {
 
   let query = this.getUserItemQuery("UPDATE", "WHERE email=? LIMIT 1");
-  let data = this.getUserItemQueryData(obj);
+  let data = this.getUserItemQueryData(player);
 
   return new Promise((resolve) => {
     this.db.instance.query(query, data, resolve);
+  });
+
+}
+
+/**
+ * @param {Player} player
+ */
+export function updateUserParty(player) {
+
+  let pkmn = null;
+  let data = null;
+  let query = this.getOwnedPkmnQuery("UPDATE", "WHERE id=? AND owner_id=? LIMIT 1");
+
+  return new Promise((resolve) => {
+    let ii = 0;
+    let index = 0;
+    let length = player.party.length;
+    for (; ii < length; ++ii) {
+      pkmn = player.party[ii];
+      data = this.getOwnedPkmnQueryData(pkmn);
+      data.push(pkmn.id, player.owner_id);
+      this.db.instance.query(query, data, () => {
+        if (++index >= length) resolve();
+      });
+    };
   });
 
 }

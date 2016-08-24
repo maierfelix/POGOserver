@@ -4,9 +4,9 @@ import proto from "../proto";
 import CFG from "../../cfg";
 
 /**
- * @param {Request} req
+ * @param {Player} player
  * @return {Object}
  */
-export default function GetAssetDigest(req) {
-  return (fs.readFileSync("data/asset_digest"));
+export default function GetAssetDigest(player) {
+  return (player.asset_digest.buffer);
 }
