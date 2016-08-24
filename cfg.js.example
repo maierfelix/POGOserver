@@ -7,10 +7,13 @@ export default {
   // Server settings
   MAX_CONNECTIONS: 64,
   PORT: 3000,
+  // If using vmware, vps or multiple network adapters, set the related ip here
+  // otherwise leave it blank
+  LOCAL_IP: "",
   GAME_MODE: 0,
   SAVE_INTERVAL: 6e4,
   PLAYER_CONNECTION_TIMEOUT: 1e3 * 60 * 30,
-  MINIMUM_CLIENT_VERSION: "0.33.0",
+  MINIMUM_CLIENT_VERSION: "0.35.0",
   DEFAULT_CONSOLE_COLOR: 32,
   TRANSFER_ACCOUNTS: false,
 
