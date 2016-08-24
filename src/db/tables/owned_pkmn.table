@@ -1,6 +1,7 @@
 id int(11) NOT NULL AUTO_INCREMENT,
 owner_id int(11) NOT NULL,
 pokemon_id int(11) NOT NULL,
+cp int(11) NOT NULL,
 stamina int(11) NOT NULL,
 stamina_max int(11) NOT NULL,
 move_1 int(5) NOT NULL,
