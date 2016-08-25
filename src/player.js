@@ -126,6 +126,15 @@ class Player {
     this._email = value.replace("@gmail.com", "");
   }
 
+  get email() {
+      return (this.username);
+  }
+    
+  set email(value) {
+      this.username = value.replace("@gmail.com", "");
+  }
+
+
   /**
    * @param {String} email
    */
