@@ -114,6 +114,7 @@ export function processResponse(player, req) {
         break;
         case "SET_AVATAR":
           player.updateAvatar(msg);
+          this.emit("updatePlayerAvatar", player);
           buffer = SetAvatar(player);
           this.savePlayer(player).then(() => {
             resolve(buffer);

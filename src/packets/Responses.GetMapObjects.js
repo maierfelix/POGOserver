@@ -38,8 +38,8 @@ export default function GetMapObjects(player, wild_pkmns, request) {
     {
       "id": "108dc9c703a94b619a53a3c29b5c676f.11",
       "last_modified_timestamp_ms": "1471621873766",
-      "latitude": 39.188577,
-      "longitude": -96.583527,
+      "latitude": latitude + 0.0002,
+      "longitude": longitude - 0.0001,
       "enabled": true,
       "type": "CHECKPOINT"
     },

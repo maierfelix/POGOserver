@@ -54,7 +54,10 @@ export function createUser(obj) {
   let data = this.getUserQueryData(obj);
 
   return new Promise((resolve) => {
-    this.db.instance.query(query, data, resolve);
+    this.db.instance.query(query, data, (e) => {
+      if (e) this.print(e, 31);
+      else resolve();
+    });
   });
 
 }
@@ -127,6 +130,8 @@ export function updateUserParty(player) {
     let ii = 0;
     let index = 0;
     let length = player.party.length;
+    // dont go on if party empty
+    if (!length) return resolve();
     for (; ii < length; ++ii) {
       pkmn = player.party[ii];
       data = this.getOwnedPkmnQueryData(pkmn);

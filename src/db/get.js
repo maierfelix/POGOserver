@@ -36,7 +36,7 @@ export function deleteQueryByColumnFromTable(column, value, table) {
 export function getPkmnByColumn(column, value) {
   return new Promise((resolve) => {
     this.getQueryByColumnFromTable(column, value, CFG.MYSQL_OWNED_PKMN_TABLE).then((query) => {
-      resolve(query);
+      resolve(query || []);
     });
   });
 }
