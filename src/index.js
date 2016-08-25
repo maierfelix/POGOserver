@@ -3,6 +3,7 @@ import os from "os";
 import fse from "fs-extra";
 import http from "http";
 import proto from "./proto";
+import EventEmitter from "events";
 
 import {
   inherit,
@@ -11,8 +12,7 @@ import {
 
 import CFG from "../cfg";
 
-import pogodown from "pogo-asset-downloader";
-
+import * as _api from "./api";
 import * as _setup from "./setup";
 import * as _cycle from "./cycle";
 import * as _player from "./player";
@@ -29,10 +29,12 @@ const greetMessage = fs.readFileSync(".greet", "utf8");
 /**
  * @class GameServer
  */
-class GameServer {
+export default class GameServer extends EventEmitter {
 
   /** @constructor */
   constructor() {
+
+    super(null);
 
     this.STATES = {
       PAUSE: false,
@@ -61,12 +63,26 @@ class GameServer {
     this.clients = [];
     this.wild_pokemons = [];
 
-    this.greet();
+    this.initAPI();
+
+    if (CFG.GREET) this.greet();
 
     this.print(`Booting Server v${require("../package.json").version}...`, 33);
 
     this.setup();
 
+  }
+
+  initAPI() {
+    if (CFG.ENABLE_API) {
+      for (let key in _api) {
+        this.on(key, _api[key]);
+      };
+    }
+    // make sure we still have our print fn
+    else {
+      this.on("print", _api["print"]);
+    }
   }
 
   clientAlreadyConnected(client) {
@@ -153,8 +169,7 @@ class GameServer {
    * @param {Boolean} nl
    */
   print(msg, color, nl) {
-    color = Number.isInteger(color) ? color : CFG.DEFAULT_CONSOLE_COLOR;
-    process.stdout.write(`[Console] \x1b[${color};1m${msg}\x1b[0m${nl === void 0 ? "\n" : ""}`);
+    this.emit("print", msg, color, nl);
   }
 
   /**
@@ -284,12 +299,17 @@ inherit(GameServer, _mysql_get);
 inherit(GameServer, _mysql_query);
 inherit(GameServer, _mysql_create);
 
-let server = new GameServer();
 
-process.openStdin().addListener("data", function(data) {
-  server.stdinInput(data);
-});
+((Server) => {
 
-process.on("uncaughtException", function(data) {
-  server.uncaughtException(data);
-});
+  const server = new Server();
+
+  process.openStdin().addListener("data", (data) => {
+    server.stdinInput(data);
+  });
+
+  process.on("uncaughtException", (data) => {
+    server.uncaughtException(data);
+  });
+
+})(GameServer);

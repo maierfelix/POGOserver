@@ -41,11 +41,13 @@ export function setup() {
       setTimeout(this::this.cycle, 1);
       let localIPv4 = this.getLocalIPv4();
       this.print(`Server running at ${localIPv4}:${CFG.PORT}`);
+      this.emit("ready", void 0);
     });
 
   }).catch((e) => {
     //fse.removeSync(CFG.DUMP_ASSET_PATH);
     this.print("Error: " + e + " was not found!", 31);
+    this.emit("ready", e);
   });
 
 }

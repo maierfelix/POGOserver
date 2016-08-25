@@ -28,7 +28,7 @@ class Player {
     this.owner_id = -1;
 
     this._email = null;
-    this.username = null;
+    this.username = "unknown";
  
     this.latitude = 0;
     this.longitude = 0;
@@ -38,7 +38,7 @@ class Player {
     this.send_push_notifications = false;
 
     this.exp = 0;
-    this.level = 0;
+    this.level = 1;
 
     this.stardust = 0;
     this.pokecoins = 0;
@@ -338,6 +338,7 @@ export function removePlayer(player) {
   if (index >= 0) {
     this.clients.splice(index, 1);
     this.print(`${player.remoteAddress} disconnected!`, 36);
+    this.emit("killPlayer", player);
   }
   else {
     this.print("Failed at removing player", 33);
@@ -444,11 +445,13 @@ export function forwardPlayer(player) {
       }
       if (doc) {
         this.loginPlayer(player).then((res) => {
+          this.emit("loginPlayer", player);
           resolve(res);
         });
       }
       else {
         this.registerPlayer(player).then((res) => {
+          this.emit("registerPlayer", player);
           resolve(res);
         });
       }
@@ -467,7 +470,7 @@ export function loginPlayer(player) {
       user = user[0];
       this.getPkmnByColumn("owner_id", user.id).then((party) => {
         player.updateByObject(user);
-        player.party = party || [];
+        player.party = party;
         let buffer = GetPlayer(player);
         resolve(buffer);
       });
@@ -484,7 +487,6 @@ export function registerPlayer(player) {
   return new Promise((resolve) => {
     this.createUser(player).then(() => {
       this.print(`${player.email} registered!`, 36);
-      player.tutorial_state = [];
       this.loginPlayer(player).then((res) => {
         resolve(res);
       });

@@ -1,4 +1,4 @@
-id int(11) NOT NULL,
+id int(11) NOT NULL AUTO_INCREMENT,
 username longtext NOT NULL,
 email longtext NOT NULL,
 exp int(255) NOT NULL,

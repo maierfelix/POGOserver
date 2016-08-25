@@ -114,6 +114,7 @@ export function processResponse(player, req) {
         break;
         case "SET_AVATAR":
           player.updateAvatar(msg);
+          this.emit("updatePlayerAvatar", player);
           buffer = SetAvatar(player);
           this.savePlayer(player).then(() => {
             resolve(buffer);
@@ -124,11 +125,36 @@ export function processResponse(player, req) {
           buffer = SfidaActionLog();
         break;
         case "MARK_TUTORIAL_COMPLETE":
-          buffer = MarkTutorialComplete(player);
+          buffer = MarkTutorialComplete(player, msg);
           this.savePlayer(player).then(() => {
             resolve(buffer);
           });
           return void 0;
+        break;
+        case "ENCOUNTER_TUTORIAL_COMPLETE":
+          let starters = ["BULBASAUR", "CHARMANDER", "SQUIRTLE"];
+          // Make sure the catched pokemon is valid
+          if (starters.indexOf(msg.pokemon_id) === -1) {
+            if (player.tutorial_state.indexOf("POKEMON_CAPTURE") === -1) {
+              player.tutorial_state.push("POKEMON_CAPTURE");
+            }
+            let pkmn = {
+              pokemon_id: msg.pokemon_id,
+              cp: 15,
+              stamina: 10,
+              stamina_max: 10,
+              move_1: "TACKLE",
+              move_2: "TACKLE",
+              height_m: 0.20962005257606506,
+              weight_kg: 0.3212273120880127,
+              individual_attack: 7,
+              individual_defense: 7,
+              individual_stamina: 3,
+              cp_multiplier: 0.16639786958694458
+            };
+            player.party.push(pkmn);
+            buffer = POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.EncounterTutorialCompleteResponse");
+          }
         break;
         case "CLAIM_CODENAME":
           buffer = ClaimCodeName(msg, player);

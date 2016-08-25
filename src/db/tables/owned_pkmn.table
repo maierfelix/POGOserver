@@ -1,4 +1,4 @@
-id int(11) NOT NULL,
+id int(11) NOT NULL AUTO_INCREMENT,
 owner_id int(11) NOT NULL,
 pokemon_id varchar(32) NOT NULL,
 cp int(32) NOT NULL,

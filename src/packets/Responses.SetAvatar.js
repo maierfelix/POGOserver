@@ -11,8 +11,12 @@ export default function SetAvatar(player) {
 
   let buffer = ({
     status: proto.Networking.Responses.SetAvatarResponse.Status.SUCCESS,
-    player_data: GetPlayer(player).player_data
+    player_data: GetPlayer(player)
   });
+
+  if (player.tutorial_state.indexOf("AVATAR_SELECTION") === -1) {
+    player.tutorial_state.push("AVATAR_SELECTION");
+  }
 
   return (POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.SetAvatarResponse"));
 
