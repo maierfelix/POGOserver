@@ -488,7 +488,6 @@ export function registerPlayer(player) {
     this.createUser(player).then(() => {
       this.print(`${player.email} registered!`, 36);
       this.loginPlayer(player).then((res) => {
-        this.print("Registered and logged in!", 31);
         resolve(res);
       });
     });
