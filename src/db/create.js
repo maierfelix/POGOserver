@@ -1,7 +1,7 @@
 import fs from "fs";
 import CFG from "../../cfg";
 
-export function createTableIfNoExists(name) {
+export function createTableIfNotExists(name) {
   return new Promise((resolve) => {
     this.db.instance.query(`SHOW TABLES LIKE '${name}';`, (e, rows, fields) => {
       if (e) console.log(e);
@@ -33,7 +33,7 @@ export function createTable(name) {
   this.print(`Creating table ${name}`, 36);
 
   let query = `
-    CREATE TABLE ${name} (
+    CREATE TABLE IF NOT EXISTS ${name} (
       ${fs.readFileSync(__dirname + "/tables/" + name + ".table", "utf8")}
     ) ENGINE=InnoDB;
   `;

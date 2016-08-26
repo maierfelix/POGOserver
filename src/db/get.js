@@ -28,38 +28,3 @@ export function deleteQueryByColumnFromTable(column, value, table) {
     });
   });
 }
-
-/**
- * @param {String} column
- * @param {String} value
- */
-export function getPkmnByColumn(column, value) {
-  return new Promise((resolve) => {
-    this.getQueryByColumnFromTable(column, value, CFG.MYSQL_OWNED_PKMN_TABLE).then((query) => {
-      resolve(query || []);
-    });
-  });
-}
-
-/**
- * @param {String} column
- * @param {String} value
- */
-export function getUserByColumn(column, value) {
-  return new Promise((resolve) => {
-    this.getQueryByColumnFromTable(column, value, CFG.MYSQL_USERS_TABLE).then((query) => {
-      resolve(query);
-    });
-  });
-}
-
-/**
- * @param {String} email
- */
-export function getUserByEmail(email) {
-  return new Promise((resolve) => {
-    this.getQueryByColumnFromTable("email", email, CFG.MYSQL_USERS_TABLE).then((query) => {
-      resolve(query);
-    });
-  });
-}

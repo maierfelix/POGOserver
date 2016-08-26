@@ -5,10 +5,11 @@ import CFG from "../cfg";
 const helpMessage = fs.readFileSync(".help", "utf8");
 
 export function processCommand(cmd, data) {
+  let players = this.world.players;
   switch (cmd) {
     // How many active connections there are
-    case "/clients":
-      var length = this.clients.length;
+    case "/players":
+      var length = players.length;
       this.print(`${length}:${CFG.MAX_CONNECTIONS} connected players!`, 33);
     break;
     // Exit the server
@@ -19,9 +20,9 @@ export function processCommand(cmd, data) {
       this.kickPlayer(data[1]);
     break;
     case "/killall":
-      var length = this.clients.length;
+      var length = players.length;
       this.removeAllPlayers();
-      var result = length - this.clients.length;
+      var result = length - players.length;
       this.print(`Removed ${result} player${result === 1 ? "": "s"}!`);
     break;
     case "/clear":
@@ -35,7 +36,7 @@ export function processCommand(cmd, data) {
     break;
     case "/save":
       this.saveAllPlayers();
-      var length = this.clients.length;
+      var length = players.length;
       this.print(`Saved ${length} player${length === 1 ? "": "s"} into database!`);
     break;
     case "/spawn":

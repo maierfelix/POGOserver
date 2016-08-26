@@ -1,10 +1,13 @@
 import fs from "fs";
 import fse from "fs-extra";
 import pogo from "pogo-asset-downloader";
-import proto from "./proto";
 import POGOProtos from "pokemongo-protobuf";
 
 import CFG from "../cfg";
+
+import * as master from "./master";
+
+import GameMaster from "./models/GameMaster";
 
 import {
   capitalize,
@@ -13,7 +16,7 @@ import {
 
 export function setup() {
 
-  let isFirstRun = !this.directoryExists(CFG.DUMP_ASSET_PATH);
+  let isFirstRun = !this.fileExists(CFG.DUMP_ASSET_PATH);
 
   if (isFirstRun) {
     this.print("Required assets are missing! Preparing dump session..", 31);
@@ -30,7 +33,9 @@ export function setup() {
 
     this.print(`Downloaded assets are valid! Proceeding..`);
 
-    this.master = POGOProtos.serialize(this.parseGameMaster(), "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
+    master.GAME_MASTER = this.parseGameMaster();
+
+    this.master = POGOProtos.serialize(fs.readFileSync(CFG.DUMP_ASSET_PATH + "game_master"), "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
 
     this.setupDatabaseConnection().then(() => {
       if (CFG.PORT < 1) {
@@ -40,7 +45,7 @@ export function setup() {
       this.socket = this.createHTTPServer();
       setTimeout(this::this.cycle, 1);
       let localIPv4 = this.getLocalIPv4();
-      this.print(`Server running at ${localIPv4}:${CFG.PORT}`);
+      this.print(`Server listening at ${localIPv4}:${CFG.PORT}`, 33);
       this.emit("ready", void 0);
     });
 
@@ -124,6 +129,7 @@ export function parseGameMaster() {
   try {
     let data = fs.readFileSync(CFG.DUMP_ASSET_PATH + "game_master");
     master = this.parseProtobuf(data, "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
+    let Master = new GameMaster(master);
   } catch (e) {
     this.print(e, 31);
   }

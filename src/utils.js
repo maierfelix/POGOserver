@@ -1,6 +1,3 @@
-import Long from "long";
-import proto from "./proto";
-
 import CFG from "../cfg";
 
 /**
@@ -21,15 +18,6 @@ export function inherit(cls, prot) {
 }
 
 /**
- * @param {Buffer} body
- */
-export function decodeRequestEnvelope(body) {
-  return (
-    proto.Networking.Envelopes.RequestEnvelope.decode(body)
-  );
-}
-
-/**
  * http://stackoverflow.com/a/7616484/3367904
  * @param {String} str
  * @return {String}
@@ -44,18 +32,6 @@ export function getHashCodeFrom(str) {
   }
   return hash;
 };
-
-/**
- * @param {Long} long
- * @return {Number}
- */
-export function decodeLong(long) {
-
-  let value = Long.fromBits(long.high, long.low, !!long.unsigned);
-
-  return (parseInt(value.toString()));
-
-}
 
 /**
  * @return {Number}
@@ -95,5 +71,12 @@ export function idToPkmnBundleName(index) {
 export function capitalize(str) {
   return (
     str[0].toUpperCase() + str.slice(1)
+  );
+}
+
+let rx_username = /[^a-z\d]/i;
+export function validUsername(str) {
+  return (
+    !!(rx_username.test(str))
   );
 }

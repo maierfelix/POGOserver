@@ -1,9 +1,7 @@
 import fs from "fs";
 import os from "os";
-import fse from "fs-extra";
-import http from "http";
-import proto from "./proto";
 import EventEmitter from "events";
+import POGOProtos from "pokemongo-protobuf";
 
 import {
   inherit,
@@ -12,10 +10,13 @@ import {
 
 import CFG from "../cfg";
 
+import World from "./models/World";
+
 import * as _api from "./api";
+import * as _dump from "./dump";
+import * as _http from "./http";
 import * as _setup from "./setup";
 import * as _cycle from "./cycle";
-import * as _player from "./player";
 import * as _request from "./request";
 import * as _response from "./response";
 import * as _process from "./process";
@@ -60,14 +61,13 @@ export default class GameServer extends EventEmitter {
     this.timeoutTick = 0;
     this.passedTicks = 0;
 
-    this.clients = [];
-    this.wild_pokemons = [];
-
     this.initAPI();
 
     if (CFG.GREET) this.greet();
 
-    this.print(`Booting Server v${require("../package.json").version}...`, 33);
+    this.print(`Booting Server v${require("../package.json").version}-dev`, 33);
+
+    this.world = new World(this);
 
     this.setup();
 
@@ -85,84 +85,6 @@ export default class GameServer extends EventEmitter {
     }
   }
 
-  clientAlreadyConnected(client) {
-
-    let remoteAddress = client.headers.host;
-
-    let ii = 0, length = this.clients.length;
-
-    for (; ii < length; ++ii) {
-      if (this.clients[ii].remoteAddress === remoteAddress) {
-        return (true);
-      }
-    };
-
-    return (false);
-
-  }
-
-  /**
-   * @return {HTTP}
-   */
-  createHTTPServer() {
-    let server = http.createServer((req, res) => {
-      if (this.clients.length >= CFG.MAX_CONNECTIONS) {
-        this.print(`Server is full! Refused ${req.headers.host}`, 31);
-        return void 0;
-      }
-
-      let player = null;
-
-      if (this.clientAlreadyConnected(req)) player = this.getPlayerByRequest(req);
-      else player = this.addPlayer(req, res);
-
-      let chunks = [];
-      req.on("data", (chunk) => {
-        chunks.push(chunk);
-      });
-      req.on("end", () => {
-        let buffer = Buffer.concat(chunks);
-        req.body = buffer;
-        player.updateResponse(res);
-        this.routeRequest(req, res);
-      });
-    });
-    server.listen(CFG.PORT);
-    return (server);
-  }
-
-  setupDatabaseConnection() {
-
-    return new Promise((resolve) => {
-
-      let name = String(CFG.DATABASE_TYPE).toUpperCase();
-
-      switch (name) {
-        case "MYSQL":
-          inherit(GameServer, _mysql);
-          this.setupConnection().then(resolve);
-        break;
-        default:
-          this.print("Invalid database connection type!", 31);
-          return void 0;
-        break;
-      };
-
-    });
-
-  }
-
-  shutdown() {
-    this.socket.close(() => {
-      this.print("Closed http server!", 33);
-      this.closeConnection(() => {
-        this.print("Closed database connection!", 33);
-        this.print("Server shutdown!", 31);
-        setTimeout(() => process.exit(1), 2e3);
-      });
-    });
-  }
-
   /**
    * @param {String} msg
    * @param {Number} color
@@ -174,87 +96,23 @@ export default class GameServer extends EventEmitter {
 
   /**
    * @param {String} msg
-   * @param {Function} func
+   * @param {Function} fn
    * @param {Number} timer
    */
-  retry(msg, func, timer) {
+  retry(msg, fn, timer) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
     this.print(`${msg}${timer}s`, 33, true);
-    if (timer >= 1) setTimeout(() => this.retry(msg, func, --timer), 1e3);
+    if (timer >= 1) setTimeout(() => this.retry(msg, fn, --timer), 1e3);
     else {
       process.stdout.write("\n");
-      func();
+      fn();
     }
   }
 
   /**
-   * @param  {Request} req
-   * @param  {Array} res
-   * @return {Object}
+   * @return {String}
    */
-  decode(req, res) {
-
-    // clone
-    req = JSON.parse(JSON.stringify(req));
-    res = JSON.parse(JSON.stringify(res));
-
-    // dont decode unknown6, since it bloats the file size
-    delete req.unknown6;
-
-    // decode requests
-    for (let request of req.requests) {
-      let key = _toCC(request.request_type);
-      let msg = request.request_message;
-      if (msg) {
-        let proto = `POGOProtos.Networking.Requests.Messages.${key}Message`;
-        request.request_message = this.parseProtobuf(new Buffer(msg.data), proto);
-      }
-    };
-
-    // decode responses
-    let index = 0;
-    for (let resp of res) {
-      let key = _toCC(req.requests[index].request_type);
-      let msg = new Buffer(resp);
-      let proto = `POGOProtos.Networking.Responses.${key}Response`;
-      res[index] = this.parseProtobuf(msg, proto);
-      index++;
-    };
-
-    // clone again to build response out of it
-    let req2 = JSON.parse(JSON.stringify(req));
-
-    // build res base out of req
-    delete req2.requests;
-    req2.returns = res;
-    req2.status_code = 1;
-
-    return ({
-      req: req,
-      res: res
-    });
-
-  }
-
-  dumpTraffic(req, res) {
-
-    let decoded = this.decode(req, res);
-
-    let out = {
-      Request: decoded.req,
-      Response: decoded.res
-    };
-
-    try {
-      let decoded = JSON.stringify(out, null, 2);
-      fse.outputFileSync(CFG.DEBUG_DUMP_PATH + Date.now(), decoded);
-    } catch (e) {
-      this.print("Dump traffic: " + e, 31);
-    }
-
-  }
-
   getLocalIPv4() {
     let address = null;
     let interfaces = os.networkInterfaces();
@@ -264,15 +122,32 @@ export default class GameServer extends EventEmitter {
     return (address);
   }
 
-  directoryExists(directory) { 
+  /**
+   * @param {Buffer} buffer
+   * @param {String} schema
+   */
+  parseProtobuf(buffer, schema) {
     try {
-      fs.statSync(directory);
-      return true;
-    } catch(e) {
-      return false;
+      return POGOProtos.parseWithUnknown(buffer, schema);
+    } catch (e) {
+      this.print(e, 31);
     }
   }
 
+  /**
+   * @param {Request} req
+   */
+  parseSignature(req) {
+    let key = pcrypt.decrypt(req.unknown6.unknown2.encrypted_signature);
+    return (
+      POGOProtos.parseWithUnknown(key, "POGOProtos.Networking.Envelopes.Signature")
+    );
+  }
+
+  /**
+   * @param {String} path
+   * @return {Boolean}
+   */
   fileExists(path) {
     try {
       fs.statSync(path);
@@ -288,9 +163,10 @@ export default class GameServer extends EventEmitter {
 
 }
 
+inherit(GameServer, _dump);
+inherit(GameServer, _http);
 inherit(GameServer, _setup);
 inherit(GameServer, _cycle);
-inherit(GameServer, _player);
 inherit(GameServer, _request);
 inherit(GameServer, _response);
 inherit(GameServer, _process);
@@ -299,10 +175,9 @@ inherit(GameServer, _mysql_get);
 inherit(GameServer, _mysql_query);
 inherit(GameServer, _mysql_create);
 
+(() => {
 
-((Server) => {
-
-  const server = new Server();
+  const server = new GameServer();
 
   process.openStdin().addListener("data", (data) => {
     server.stdinInput(data);
@@ -312,4 +187,4 @@ inherit(GameServer, _mysql_create);
     server.uncaughtException(data);
   });
 
-})(GameServer);
+})();
