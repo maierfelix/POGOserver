@@ -50,5 +50,5 @@ tutorial_avatar_selection tinyint(1) NOT NULL DEFAULT '0',
 tutorial_pokemon_capture tinyint(1) NOT NULL DEFAULT '0',
 tutorial_name_selection tinyint(1) NOT NULL DEFAULT '0',
 tutorial_first_time_exp tinyint(1) NOT NULL DEFAULT '0',
-candies text(11) NOT NULL DEFAULT '0',
+candies text(11),
 PRIMARY KEY (id)
