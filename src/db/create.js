@@ -33,7 +33,7 @@ export function createTable(name) {
   this.print(`Creating table ${name}`, 36);
 
   let query = `
-    CREATE TABLE ${name} (
+    CREATE TABLE IF NOT EXISTS ${name} (
       ${fs.readFileSync(__dirname + "/tables/" + name + ".table", "utf8")}
     ) ENGINE=InnoDB;
   `;
