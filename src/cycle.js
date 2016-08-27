@@ -1,3 +1,4 @@
+import print from "./print";
 import CFG from "../cfg";
 
 export function startCycle() {
@@ -61,12 +62,12 @@ export function playerTimeoutTick() {
   let players = this.world.players;
 
   let ii = 0;
-  let length = players.length;
+  let length = this.world.connectedPlayers;
 
   for (; ii < length; ++ii) {
     player = players[ii];
     if (this.time - player.timeout >= maxTimeout) {
-      this.print(`${player.remoteAddress} timed out`, 34);
+      print(`${player.remoteAddress} timed out`, 34);
       this.savePlayer(player);
       this.removePlayer(player);
     }

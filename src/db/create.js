@@ -1,4 +1,6 @@
 import fs from "fs";
+
+import print from "../print";
 import CFG from "../../cfg";
 
 export function createTableIfNotExists(name) {
@@ -30,7 +32,7 @@ export function createTables() {
 
 export function createTable(name) {
 
-  this.print(`Creating table ${name}`, 36);
+  print(`Creating table ${name}`, 36);
 
   let query = `
     CREATE TABLE IF NOT EXISTS ${name} (

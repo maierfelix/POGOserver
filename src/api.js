@@ -2,6 +2,7 @@ import fs from "fs";
 import url from "url";
 import prompt from "prompt";
 
+import print from "./print";
 import CFG from "../cfg";
 
 prompt.start({
@@ -27,7 +28,7 @@ export function processApiCall(req, res, route) {
   try {
     json = JSON.parse(raw);
   } catch (e) {
-    this.print(e, 31);
+    print(e, 31);
     this.answerApiCall(res, "");
     return void 0;
   }
@@ -44,7 +45,7 @@ export function processApiCall(req, res, route) {
         this.answerApiCall(res, JSON.stringify(result));
       }
       else {
-        this.print(`${hoster} isnt logged in! Kicking..`, 31);
+        print(`${hoster} isnt logged in! Kicking..`, 31);
       }
     }
   }
@@ -68,11 +69,11 @@ export function grantApiAccess(req, res, route) {
     if (result.grant === "y" || result.grant === "yes") {
       save.allowedApiHosts.push(hoster);
       fs.writeFileSync(".save", JSON.stringify(save), "utf8");
-      this.print(`Successfully added ${hoster} to allowed API hosts!`);
+      print(`Successfully added ${hoster} to allowed API hosts!`);
       this.processApiCall(req, res, route);
     }
     else {
-      this.print(`Denied API access for ${hoster}`, 31);
+      print(`Denied API access for ${hoster}`, 31);
       this.answerApiCall(res, "");
     }
   });
@@ -104,9 +105,9 @@ export function api_login(data) {
   ) {
     success = true;
     if (!this.apiClients[data.host]) {
-      this.print(`API access for ${data.host} granted!`);
+      print(`API access for ${data.host} granted!`);
     }
-    this.print(`${data.host} logged in!`, 36);
+    print(`${data.host} logged in!`, 36);
     this.apiClients[data.host] = {
       timestamp: +new Date()
     };
@@ -116,9 +117,15 @@ export function api_login(data) {
   });
 }
 
+export function api_heartBeat() {
+  return ({
+    timestamp: +new Date()
+  });
+}
+
 export function api_getConnectedPlayers() {
   return ({
-    connected_players: this.world.players.length
+    connected_players: this.world.connectedPlayers
   });
 }
 
@@ -131,7 +138,7 @@ export function api_getServerVersion() {
 export function api_spawnPkmnToPlayer(data) {
   let name = String(data.player);
   let pkmn = String(data.pkmn).toUpperCase();
-  this.print(`Spawned 1x ${pkmn}'s to ${name}!`);
+  print(`Spawned 1x ${pkmn}'s to ${name}!`);
   return ({
     success: true
   });

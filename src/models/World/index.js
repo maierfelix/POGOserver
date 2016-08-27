@@ -18,12 +18,16 @@ export default class World {
 
   }
 
+  get connectedPlayers() {
+    return (this.players.length);
+  }
+
   /**
    * @return {Boolean}
    */
   isFull() {
     return (
-      this.players.length >= CFG.MAX_CONNECTIONS
+      this.connectedPlayers >= CFG.MAX_CONNECTIONS
     );
   }
 
@@ -40,27 +44,25 @@ export default class World {
       return (player);
     }
     else {
-      this.addPlayer(req, res);
+      player = this.addPlayer(req, res);
       return (player);
     }
 
   }
 
   /**
-   * @param  {Object} client
+   * @param {Request} req
    * @return {Boolean}
    */
-  playerAlreadyConnected(client) {
-
-    let players = this.players;
+  playerAlreadyConnected(req) {
 
     let ii = 0;
-    let length = players.length;
+    let length = this.connectedPlayers;
 
-    let remoteAddress = client.headers.host;
+    let remoteAddress = req.headers.host;
 
     for (; ii < length; ++ii) {
-      if (players[ii].remoteAddress === remoteAddress) {
+      if (this.players[ii].remoteAddress === remoteAddress) {
         return (true);
       }
     };
@@ -77,7 +79,7 @@ export default class World {
     let players = this.players;
 
     let ii = 0;
-    let length = players.length;
+    let length = this.connectedPlayers;
 
     for (; ii < length; ++ii) {
       if (players[ii].remoteAddress === ip) {
@@ -92,15 +94,21 @@ export default class World {
   /**
    * @param {Request} req
    * @param {Response} res
+   * @return {Player}
    */
   addPlayer(req, res) {
 
     let player = new Player({
+      world: this,
       request: req,
       response: res
     });
 
+    player.remoteAddress = req.headers.host;
+
     this.players.push(player);
+
+    return (player);
 
   }
 
@@ -108,7 +116,7 @@ export default class World {
    * @param {Player} player
    */
   removePlayer(player) {
-    console.log(player);
+    console.log("Remove:", player.email);
   }
 
   spawnFort() {
@@ -121,6 +129,20 @@ export default class World {
 
   spawnEncounter() {
     
+  }
+
+  /**
+   * @param {String} type
+   * @param {Object} msg
+   */
+  getPacket(type, msg) {
+    return new Promise((resolve) => {
+      switch (type) {
+        case "CHECK_CHALLENGE":
+          console.log(type, msg);
+        break;
+      };
+    });
   }
 
 }

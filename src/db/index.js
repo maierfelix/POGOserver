@@ -1,5 +1,6 @@
 import mysql from "mysql";
 
+import print from "../print";
 import CFG from "../../cfg";
 
 export function setupDatabaseConnection() {
@@ -15,20 +16,20 @@ export function setupDatabaseConnection() {
   return new Promise((resolve) => {
     connection.connect((error) => {
       if (error) {
-        this.print("MySQL " + error, 31);
+        print("MySQL " + error, 31);
         this.retry("Retrying again in ", () => this.setupDatabaseConnection().then(resolve), 5);
         return void 0;
       }
       this.db = connection;
       this.createTableIfNotExists(CFG.MYSQL_USERS_TABLE).then(() => {
         this.createTableIfNotExists(CFG.MYSQL_OWNED_PKMN_TABLE).then(() => {
-          this.print(`\x1b[36;1mMySQL\x1b[0m\x1b[32;1m connection established\x1b[0m`);
+          print(`\x1b[36;1mMySQL\x1b[0m\x1b[32;1m connection established\x1b[0m`);
           resolve();
         });
       });
     });
     connection.on("error", (error) => {
-      this.print("MySQL " + error, 31);
+      print("MySQL " + error, 31);
       this.retry("Trying to reconnect in ", () => this.setupDatabaseConnection().then(resolve), 5);
     });
   });

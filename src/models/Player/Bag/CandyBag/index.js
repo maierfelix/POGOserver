@@ -51,7 +51,7 @@ export default class CandyBag {
   /**
    * @return {String}
    */
-  serializeCandies() {
+  serialize() {
 
     let str = "";
     let candies = this.candies;

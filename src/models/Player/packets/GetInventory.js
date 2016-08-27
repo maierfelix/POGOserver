@@ -1,6 +1,6 @@
 import POGOProtos from "pokemongo-protobuf";
 
-export function GetInventory() {
+export default function GetInventory() {
 
   let stats = this.GetInventoryPlayer();
   let items = this.GetInventoryItems();

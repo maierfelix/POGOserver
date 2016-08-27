@@ -1,6 +1,7 @@
 import fse from "fs-extra";
 import POGOProtos from "pokemongo-protobuf";
 
+import print from "./print";
 import CFG from "../cfg";
 
 /**
@@ -69,7 +70,7 @@ export function dumpTraffic(req, res) {
     let decoded = JSON.stringify(out, null, 2);
     fse.outputFileSync(CFG.DEBUG_DUMP_PATH + Date.now(), decoded);
   } catch (e) {
-    this.print("Dump traffic: " + e, 31);
+    print("Dump traffic: " + e, 31);
   }
 
 }

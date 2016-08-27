@@ -120,4 +120,18 @@ export default class Avatar {
     }
   }
 
+  serialize() {
+    return ({
+      skin: this.skin,
+      hair: this.hair,
+      shirt: this.shirt,
+      pants: this.pants,
+      hat: this.hat,
+      shoes: this.shoes,
+      eyes: this.eyes,
+      gender: this.gender,
+      backpack: this.backpack
+    });
+  }
+
 }

@@ -7,6 +7,7 @@ import {
   _toCC
 } from "./utils";
 
+import print from "./print";
 import CFG from "../cfg";
 
 import World from "./models/World";
@@ -59,22 +60,12 @@ export default class GameServer {
 
     if (CFG.GREET) this.greet();
 
-    this.print(`Booting Server v${require("../package.json").version}-dev`, 33);
+    print(`Booting Server v${require("../package.json").version}-dev`, 33);
 
     this.world = new World(this);
 
     this.setup();
 
-  }
-
-  /**
-   * @param {String} msg
-   * @param {Number} color
-   * @param {Boolean} nl
-   */
-  print(msg, color, newline) {
-    color = Number.isInteger(color) ? color : CFG.DEFAULT_CONSOLE_COLOR;
-    process.stdout.write(`[Console] \x1b[${color};1m${msg}\x1b[0m${newline === void 0 ? "\n" : ""}`);
   }
 
   /**
@@ -96,7 +87,7 @@ export default class GameServer {
   retry(msg, fn, timer) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    this.print(`${msg}${timer}s`, 33, true);
+    print(`${msg}${timer}s`, 33, true);
     if (timer >= 1) setTimeout(() => this.retry(msg, fn, --timer), 1e3);
     else {
       process.stdout.write("\n");
@@ -124,7 +115,7 @@ export default class GameServer {
     try {
       return POGOProtos.parseWithUnknown(buffer, schema);
     } catch (e) {
-      this.print(e, 31);
+      print(e, 31);
     }
   }
 

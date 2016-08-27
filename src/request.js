@@ -3,6 +3,7 @@ import url from "url";
 import pcrypt from "pcrypt";
 import POGOProtos from "pokemongo-protobuf";
 
+import print from "./print";
 import CFG from "../cfg";
 
 /**
@@ -41,16 +42,6 @@ export function routeRequest(req, res) {
  * @param {Response} res
  * @param {Array} route
  */
-export function processRpcRequest(req, res, route) {
-  let player = this.world.getPlayerByRequest(req, res);
-  if (route[2] === "rpc") this.onRequest(player, req);
-}
-
-/**
- * @param {Request} req
- * @param {Response} res
- * @param {Array} route
- */
 export function processModelRequest(req, res, route) {
 
   let player = this.world.getPlayerByRequest(req, res);
@@ -62,14 +53,27 @@ export function processModelRequest(req, res, route) {
     let folder = player.isAndroid ? "android/" : "ios/";
     fs.readFile("data/" + folder + name, (error, data) => {
       if (error) {
-        this.print(`Error file resolving model ${name}:` + error, 31);
+        print(`Error file resolving model ${name}:` + error, 31);
         return void 0;
       }
-      this.print(`Sent ${name} to ${player.email}`, 36);
+      print(`Sent ${name} to ${player.email}`, 36);
       res.end(data);
     });
   }
 
+}
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ * @param {Array} route
+ */
+export function processRpcRequest(req, res, route) {
+  let player = this.world.getPlayerByRequest(req, res);
+  if (route[2] === "rpc") {
+    player.refreshSocket(req, res);
+    this.onRequest(player, req);
+  }
 }
 
 /**
@@ -89,12 +93,12 @@ export function onRequest(player, req) {
   }
 
   if (!player.authenticated) {
-    player.sendResponse(this.authenticatePlayer(player));
+    player.authenticate();
     return void 0;
   }
 
   if (!request.requests.length) {
-    this.print("Received invalid request!", 31);
+    print("Received invalid request!", 31);
     return void 0;
   }
 
@@ -132,7 +136,7 @@ export function envelopResponse(status, returns, req, player, auth) {
       player.isAndroid = !player.isIOS;
       player.hasSignature = true;
       player.asset_digest = this.assets[player.isAndroid ? "android" : "ios"];
-      this.print(`${player.email} is playing with an ${player.isIOS ? "Apple" : "Android"} device!`, 36);
+      print(`${player.email} is playing with an ${player.isIOS ? "Apple" : "Android"} device!`, 36);
     }
   }
 
