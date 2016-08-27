@@ -62,5 +62,5 @@ Depending on your OS, you need to run either ``run-linux.sh`` or ``run-windows.b
 
 ## Docker setup
 
-Once you have installed docker you can build the container with the included Dockerfile. All that's left to do is change the Credentials in the cfg.js and to do "./run-linux.sh" in the folder.
+Once you have installed docker you can build the container with the included Dockerfile. All that's left to do is change the Credentials in the cfg.js, create a basic database named pogosql with mysel and to do "./run-linux.sh" in the folder.
 An additional step is to mount the ports to a static port instead of automatic so it stays after a reboot.
