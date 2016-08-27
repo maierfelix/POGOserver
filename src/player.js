@@ -45,15 +45,15 @@ class Player {
 
     this.team = 0;
 
-    this.skin = 0;
-    this.hair = 0;
-    this.shirt = 0;
-    this.pants = 0;
-    this.hat = 0;
-    this.shoes = 0;
-    this.eyes = 0;
-    this.gender = 0;
-    this.backpack = 0;
+    this.avatar.skin = 0;
+    this.avatar.hair = 0;
+    this.avatar.shirt = 0;
+    this.avatar.pants = 0;
+    this.avatar.hat = 0;
+    this.avatar.shoes = 0;
+    this.avatar.eyes = 0;
+    this.avatar.gender = 0;
+    this.avatar.backpack = 0;
 
     this.items = {
       poke_ball: 0,
