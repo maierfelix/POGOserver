@@ -3,7 +3,7 @@ import CFG from "../../cfg";
 
 export function createTableIfNotExists(name) {
   return new Promise((resolve) => {
-    this.db.instance.query(`SHOW TABLES LIKE '${name}';`, (e, rows, fields) => {
+    this.db.query(`SHOW TABLES LIKE '${name}';`, (e, rows, fields) => {
       if (e) console.log(e);
       else {
         // exists
@@ -39,7 +39,7 @@ export function createTable(name) {
   `;
 
   return new Promise((resolve) => {
-    this.db.instance.query(query, (e, rows) => {
+    this.db.query(query, (e, rows) => {
       if (e) console.log(e);
       else resolve();
     });

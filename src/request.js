@@ -6,11 +6,10 @@ import POGOProtos from "pokemongo-protobuf";
 import CFG from "../cfg";
 
 /**
- * @param {Player} player
  * @param {Request} req
  * @param {Response} res
  */
-export function routeRequest(player, req, res) {
+export function routeRequest(req, res) {
 
   let parsed = url.parse(req.url).pathname;
   let route = parsed.split("/");
@@ -19,28 +18,57 @@ export function routeRequest(player, req, res) {
   switch (route[1]) {
     case "plfe":
     case "custom":
-      if (route[2] === "rpc") this.onRequest(player, req);
+      this.processRpcRequest(req, res, route);
     break;
     case "model":
-      // make sure no random dudes can access download
-      if (!player.authenticated) return void 0;
-      let name = route[2];
-      if (name && name.length > 1) {
-        let folder = player.isAndroid ? "android/" : "ios/";
-        fs.readFile("data/" + folder + name, (error, data) => {
-          if (error) {
-            this.print(`Error file resolving model ${name}:` + error, 31);
-            return void 0;
-          }
-          this.print(`Sent ${name} to ${player.email}`, 36);
-          res.end(data);
-        });
+      this.processModelRequest(req, res, route);
+    break;
+    case "api":
+      if (!CFG.ENABLE_API) return void 0;
+      if (req.method === "POST") {
+        this.processApiCall(req, res, route);
       }
     break;
     default:
-      console.log(`Unknown request url: https://${req.headers.host}${req.url}`);
+      console.log(`Unknown request url: https://${host}${req.url}`);
     break;
   };
+
+}
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ * @param {Array} route
+ */
+export function processRpcRequest(req, res, route) {
+  let player = this.world.getPlayerByRequest(req, res);
+  if (route[2] === "rpc") this.onRequest(player, req);
+}
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ * @param {Array} route
+ */
+export function processModelRequest(req, res, route) {
+
+  let player = this.world.getPlayerByRequest(req, res);
+
+  // make sure no random dudes can access download
+  if (!player.authenticated) return void 0;
+  let name = route[2];
+  if (name && name.length > 1) {
+    let folder = player.isAndroid ? "android/" : "ios/";
+    fs.readFile("data/" + folder + name, (error, data) => {
+      if (error) {
+        this.print(`Error file resolving model ${name}:` + error, 31);
+        return void 0;
+      }
+      this.print(`Sent ${name} to ${player.email}`, 36);
+      res.end(data);
+    });
+  }
 
 }
 

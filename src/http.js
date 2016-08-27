@@ -18,9 +18,7 @@ export function createHTTPServer() {
     req.on("end", () => {
       let buffer = Buffer.concat(chunks);
       req.body = buffer;
-      this.world.getPlayerByRequest(req, res).then((player) => {
-        this.routeRequest(player, req, res);
-      });
+      this.routeRequest(req, res);
     });
   });
   server.listen(CFG.PORT);

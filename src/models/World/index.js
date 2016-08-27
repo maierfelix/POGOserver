@@ -8,7 +8,11 @@ import CFG from "../../../cfg";
 export default class World {
 
   /** @constructor */
-  constructor() {
+  constructor(instance) {
+
+    this.instance = instance;
+
+    this.db = this.instance.db;
 
     this.players = [];
 
@@ -31,16 +35,14 @@ export default class World {
 
     let player = null;
 
-    return new Promise((resolve) => {
-      if (this.playerAlreadyConnected(req)) {
-        player = this.getPlayerByIP(req.headers.host);
-        resolve(player);
-      }
-      else {
-        this.addPlayer(req, res);
-        resolve(player);
-      }
-    });
+    if (this.playerAlreadyConnected(req)) {
+      player = this.getPlayerByIP(req.headers.host);
+      return (player);
+    }
+    else {
+      this.addPlayer(req, res);
+      return (player);
+    }
 
   }
 

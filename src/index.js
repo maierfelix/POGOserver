@@ -1,6 +1,5 @@
 import fs from "fs";
 import os from "os";
-import EventEmitter from "events";
 import POGOProtos from "pokemongo-protobuf";
 
 import {
@@ -30,12 +29,10 @@ const greetMessage = fs.readFileSync(".greet", "utf8");
 /**
  * @class GameServer
  */
-export default class GameServer extends EventEmitter {
+export default class GameServer {
 
   /** @constructor */
   constructor() {
-
-    super(null);
 
     this.STATES = {
       PAUSE: false,
@@ -43,10 +40,9 @@ export default class GameServer extends EventEmitter {
       CRASH: false
     };
 
-    this.db = {
-      instance: null,
-      collections: {}
-    };
+    this.db = null;
+
+    this.apiClients = {};
 
     this.assets = {};
     this.master = null;
@@ -61,8 +57,6 @@ export default class GameServer extends EventEmitter {
     this.timeoutTick = 0;
     this.passedTicks = 0;
 
-    this.initAPI();
-
     if (CFG.GREET) this.greet();
 
     this.print(`Booting Server v${require("../package.json").version}-dev`, 33);
@@ -73,25 +67,25 @@ export default class GameServer extends EventEmitter {
 
   }
 
-  initAPI() {
-    if (CFG.ENABLE_API) {
-      for (let key in _api) {
-        this.on(key, _api[key]);
-      };
-    }
-    // make sure we still have our print fn
-    else {
-      this.on("print", _api["print"]);
-    }
-  }
-
   /**
    * @param {String} msg
    * @param {Number} color
    * @param {Boolean} nl
    */
-  print(msg, color, nl) {
-    this.emit("print", msg, color, nl);
+  print(msg, color, newline) {
+    color = Number.isInteger(color) ? color : CFG.DEFAULT_CONSOLE_COLOR;
+    process.stdout.write(`[Console] \x1b[${color};1m${msg}\x1b[0m${newline === void 0 ? "\n" : ""}`);
+  }
+
+  /**
+   * @param {Object} obj
+   * @return {Boolean}
+   */
+  isApiCall(call) {
+    let action = String(call.action);
+    return (
+      "api_" + action in _api
+    );
   }
 
   /**
@@ -163,6 +157,7 @@ export default class GameServer extends EventEmitter {
 
 }
 
+inherit(GameServer, _api);
 inherit(GameServer, _dump);
 inherit(GameServer, _http);
 inherit(GameServer, _setup);

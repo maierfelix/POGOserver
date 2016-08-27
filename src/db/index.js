@@ -19,7 +19,7 @@ export function setupDatabaseConnection() {
         this.retry("Retrying again in ", () => this.setupDatabaseConnection().then(resolve), 5);
         return void 0;
       }
-      this.db.instance = connection;
+      this.db = connection;
       this.createTableIfNotExists(CFG.MYSQL_USERS_TABLE).then(() => {
         this.createTableIfNotExists(CFG.MYSQL_OWNED_PKMN_TABLE).then(() => {
           this.print(`\x1b[36;1mMySQL\x1b[0m\x1b[32;1m connection established\x1b[0m`);
@@ -39,7 +39,7 @@ export function setupDatabaseConnection() {
  * @param {Function} resolve
  */
 export function closeConnection(resolve) {
-  this.db.instance.end(() => {
+  this.db.end(() => {
     resolve();
   });
 }

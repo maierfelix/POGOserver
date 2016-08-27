@@ -16,12 +16,14 @@ import {
 
 export function setup() {
 
-  let isFirstRun = !this.fileExists(CFG.DUMP_ASSET_PATH);
+  let save = JSON.parse(fs.readFileSync(".save", "utf8"));
 
-  if (isFirstRun) {
-    this.print("Required assets are missing! Preparing dump session..", 31);
+  if (save.isFirstRun) {
+    this.print("Required assets are missing! Preparing dump session..", 33);
     setTimeout(() => {
       this.onFirstRun(() => {
+        save.isFirstRun = false;
+        fs.writeFileSync(".save", JSON.stringify(save), "utf8");
         this.setup();
       });
     }, 1e3);
@@ -46,13 +48,11 @@ export function setup() {
       setTimeout(this::this.cycle, 1);
       let localIPv4 = this.getLocalIPv4();
       this.print(`Server listening at ${localIPv4}:${CFG.PORT}`, 33);
-      this.emit("ready", void 0);
     });
 
   }).catch((e) => {
     //fse.removeSync(CFG.DUMP_ASSET_PATH);
     this.print("Error: " + e + " was not found!", 31);
-    this.emit("ready", e);
   });
 
 }
