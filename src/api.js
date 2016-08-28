@@ -1,9 +1,12 @@
 import fs from "fs";
 import url from "url";
 import prompt from "prompt";
+import s2 from "s2-geometry";
 
 import print from "./print";
 import CFG from "../cfg";
+
+const S2Geo = s2.S2;
 
 prompt.start({
   message: " ",
@@ -36,13 +39,15 @@ export function processApiCall(req, res, route) {
   if (this.isApiCall(json)) {
     json.host = hoster;
     if (json.action === "login") {
-      let result = this["api_login"](json);
-      this.answerApiCall(res, JSON.stringify(result));
+      this["api_login"](json).then((result) => {
+        this.answerApiCall(res, JSON.stringify(result));
+      });
     }
     else {
       if (this.apiClients[hoster]) {
-        let result = this["api_" + json.action](json);
-        this.answerApiCall(res, JSON.stringify(result));
+        this["api_" + json.action](json).then((result) => {
+          this.answerApiCall(res, JSON.stringify(result));
+        });
       }
       else {
         print(`${hoster} isnt logged in! Kicking..`, 31);
@@ -112,26 +117,36 @@ export function api_login(data) {
       timestamp: +new Date()
     };
   }
-  return ({
-    success: success
+
+  return new Promise((resolve) => {
+    resolve({
+      success: success
+    });
   });
+
 }
 
 export function api_heartBeat() {
-  return ({
-    timestamp: +new Date()
+  return new Promise((resolve) => {
+    resolve({
+      timestamp: +new Date()
+    });
   });
 }
 
 export function api_getConnectedPlayers() {
-  return ({
-    connected_players: this.world.connectedPlayers
+  return new Promise((resolve) => {
+    resolve({
+      connected_players: this.world.connectedPlayers
+    });
   });
 }
 
 export function api_getServerVersion() {
-  return ({
-    version: CFG.VERSION
+  return new Promise((resolve) => {
+    resolve({
+      version: CFG.VERSION
+    });
   });
 }
 
@@ -139,7 +154,59 @@ export function api_spawnPkmnToPlayer(data) {
   let name = String(data.player);
   let pkmn = String(data.pkmn).toUpperCase();
   print(`Spawned 1x ${pkmn}'s to ${name}!`);
-  return ({
-    success: true
+  return new Promise((resolve) => {
+    resolve({
+      success: true
+    });
   });
+}
+
+export function api_addFortToPosition(data) {
+
+  let latitude = data.lat;
+  let longitude = data.lng;
+
+  let name = data.name;
+  let description = data.desc;
+
+  let cellId = S2Geo.keyToId(S2Geo.latLngToKey(latitude, longitude, data.zoom));
+
+  let query = `
+    INSERT INTO forts
+    SET
+      cell_id=?,
+      latitude=?,
+      longitude=?,
+      enabled=?,
+      name=?,
+      description=?,
+      image_url=?,
+      rewards=?
+  `;
+
+  let queryData = [
+    cellId,
+    latitude,
+    longitude,
+    true,
+    name,
+    description,
+    "http://thecatapi.com/api/images/get?format=src&type=png",
+    ""
+  ];
+
+  return new Promise((resolve) => {
+    this.db.query(query, queryData, (res) => {
+      resolve({
+        result: res,
+        cellId: cellId,
+        success: true
+      });
+    });
+  });
+
+}
+
+export function api_getFortsByCellIds(data) {
+  console.log(data);
 }

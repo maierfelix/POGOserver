@@ -142,8 +142,20 @@ export default class World {
   getPacket(type, msg) {
     return new Promise((resolve) => {
       switch (type) {
+        case "FORT_SEARCH":
+          this.FortSearch(msg).then((result) => {
+            resolve(result);
+          });
+        break;
+        case "FORT_DETAILS":
+          this.FortDetails(msg).then((result) => {
+            resolve(result);
+          });
+        break;
         case "GET_MAP_OBJECTS":
-          resolve(this.GetMapObjects(msg));
+          this.GetMapObjects(msg).then((result) => {
+            resolve(result);
+          });
         break;
         case "CHECK_CHALLENGE":
           resolve(this.CheckChallenge(msg));
