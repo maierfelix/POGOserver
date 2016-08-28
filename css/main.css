@@ -10,6 +10,13 @@ body {
   overflow-x: hidden;
 }
 
+#map {
+  position: absolute;
+  left: calc(50% - 400px);
+  width: 800px;
+  height: 400px;
+}
+
 .view {
   letter-spacing: 0px;
   padding: 5px 25px !important;
@@ -32,6 +39,14 @@ body {
 
 .Codemirror {
   text-align: left;
+}
+
+.ping {
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  font-size: 18px;
+  letter-spacing: 0px;
 }
 
 .version {
