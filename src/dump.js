@@ -4,6 +4,8 @@ import POGOProtos from "pokemongo-protobuf";
 import print from "./print";
 import CFG from "../cfg";
 
+import { _toCC } from "./utils";
+
 /**
  * @param  {Request} req
  * @param  {Array} res

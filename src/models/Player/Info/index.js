@@ -1,7 +1,7 @@
 /**
  * @class Info
  */
-class Info {
+export default class Info {
 
   /** @constructor */
   constructor() {
@@ -68,23 +68,21 @@ class Info {
     }
   }
 
-  getPlayerInfo() {
+  serialize() {
     return ({
-      player_stats: {
-        level: this.lvl,
-        experience: this.exp,
-        prev_level_xp: this.prevLvlExp,
-        next_level_xp: this.nextLvlExp,
-        km_walked: this.kmWalked,
-        pokemons_encountered: this.pkmnEncountered,
-        unique_pokedex_entries: this.uniquePokedexEntries,
-        pokemons_captured: this.pkmnCaptured,
-        poke_stop_visits: this.pokeStopVisits,
-        pokeballs_thrown: this.pokeballsThrown,
-        eggs_hatched: this.eggsHatched,
-        big_magikarp_caught: this.bigMagikarpCaught,
-        pokemon_deployed: this.pkmnDeployed
-      }
+      level: this.lvl,
+      experience: this.exp,
+      prev_level_xp: this.prevLvlExp,
+      next_level_xp: this.nextLvlExp,
+      km_walked: this.kmWalked,
+      pokemons_encountered: this.pkmnEncountered,
+      unique_pokedex_entries: this.uniquePokedexEntries,
+      pokemons_captured: this.pkmnCaptured,
+      poke_stop_visits: this.pokeStopVisits,
+      pokeballs_thrown: this.pokeballsThrown,
+      eggs_hatched: this.eggsHatched,
+      big_magikarp_caught: this.bigMagikarpCaught,
+      pokemon_deployed: this.pkmnDeployed
     });
   }
 

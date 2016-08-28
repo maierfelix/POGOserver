@@ -1,47 +1,33 @@
 import POGOProtos from "pokemongo-protobuf";
 
-export default function GetInventory() {
-
-  let stats = this.GetInventoryPlayer();
+/**
+ * @param {Object} msg
+ * @return {Buffer}
+ */
+export default function GetInventory(msg) {
+/*
   let items = this.GetInventoryItems();
   let party = this.GetInventoryParty();
+*/
 
-  let buffer = ({
+  let stats = {
+    modified_timestamp_ms: +new Date(),
+    inventory_item_data: {
+      player_stats: this.info.serialize()
+    }
+  };
+
+  let buffer = {
     success: true,
     inventory_delta: {
       new_timestamp_ms: new Date().getTime(),
-      inventory_items: stats.concat(items).concat(party)
+      inventory_items: [stats]
     }
-  });
+  };
 
-  return (POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetInventoryResponse"));
-
-}
-
-export function GetInventoryPlayer() {
-
-  let player = this.player;
-
-  return ({
-    modified_timestamp_ms: new Date().getTime(),
-    inventory_item_data: {
-      player_stats: {
-        level: player.level,
-        experience: player.exp,
-        prev_level_xp: "21000",
-        next_level_xp: "36000",
-        km_walked: 3.921541213989258,
-        pokemons_encountered: 75,
-        unique_pokedex_entries: 25,
-        pokemons_captured: 71,
-        poke_stop_visits: 123,
-        pokeballs_thrown: 74,
-        eggs_hatched: 1,
-        big_magikarp_caught: 1,
-        pokemon_deployed: 1
-      }
-    }
-  });
+  return (
+    POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetInventoryResponse")
+  );
 
 }
 

@@ -32,8 +32,6 @@ export function parseMessage(req, type) {
  */
 export function processResponse(player, req) {
 
-  let buffer = null;
-
   let cc = _toCC(req.request_type);
   let msg = this.parseMessage(req, cc);
 
@@ -41,14 +39,26 @@ export function processResponse(player, req) {
 
     try {
       switch (req.request_type) {
+        // Player
         case "GET_PLAYER":
-          player.getPacket("GET_PLAYER", msg).then((result) => {
+        case "GET_INVENTORY":
+        case "GET_ASSET_DIGEST":
+        case "GET_HATCHED_EGGS":
+        case "CHECK_AWARDED_BADGES":
+          player.getPacket(req.request_type, msg).then((result) => {
+            print(`Success: ${req.request_type} => ${result.toString().length}`);
             resolve(result);
           });
           return void 0;
         break;
+        // Global
+        case "GET_MAP_OBJECTS":
         case "CHECK_CHALLENGE":
-          player.world.getPacket("CHECK_CHALLENGE", msg).then((result) => {
+        case "DOWNLOAD_SETTINGS":
+        case "DOWNLOAD_REMOTE_CONFIG_VERSION":
+        case "DOWNLOAD_ITEM_TEMPLATES":
+          player.world.getPacket(req.request_type, msg).then((result) => {
+            print(`Success: ${req.request_type} => ${result.toString().length}`);
             resolve(result);
           });
           return void 0;
@@ -60,8 +70,6 @@ export function processResponse(player, req) {
     } catch (e) {
       print(`Response error: ${e}`, 31);
     };
-
-    resolve(buffer);
 
   });
 

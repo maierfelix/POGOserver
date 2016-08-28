@@ -1,6 +1,5 @@
 import fs from "fs";
 import url from "url";
-import pcrypt from "pcrypt";
 import POGOProtos from "pokemongo-protobuf";
 
 import print from "./print";
@@ -72,29 +71,32 @@ export function processRpcRequest(req, res, route) {
   let player = this.world.getPlayerByRequest(req, res);
   if (route[2] === "rpc") {
     player.refreshSocket(req, res);
-    this.onRequest(player, req);
+    this.onRequest(player);
   }
 }
 
 /**
  * @param {Player} player
- * @param {Request} req
  */
-export function onRequest(player, req) {
+export function onRequest(player) {
 
-  let request = this.parseProtobuf(req.body, "POGOProtos.Networking.Envelopes.RequestEnvelope");
+  let request = player.request;
       request.requests = request.requests || [];
 
   if (CFG.DEBUG_LOG_REQUESTS) {
-    console.log("#####");
+    print("#####");
     request.requests.map((request) => {
-      console.log("Got request:", request.request_type);
+      print(request.request_type, 35);
     }).join(",");
   }
 
   if (!player.authenticated) {
     player.authenticate();
     return void 0;
+  }
+
+  if (player.hasSignature === false) {
+    player.getDevicePlatform();
   }
 
   if (!request.requests.length) {
@@ -106,41 +108,30 @@ export function onRequest(player, req) {
     if (CFG.DEBUG_DUMP_TRAFFIC) {
       this.dumpTraffic(request, returns);
     }
-    let msg = this.envelopResponse(1, returns, request, player, !!request.auth_ticket);
+    let msg = this.envelopResponse(returns, request, player);
     player.sendResponse(msg);
   });
 
 }
 
 /**
- * @param  {Number} status
  * @param  {Array} returns
- * @param  {Request} req
+ * @param  {Request} request
  * @param  {Player} player
- * @param  {Boolean} auth
  * @return {Buffer}
  */
-export function envelopResponse(status, returns, req, player, auth) {
+export function envelopResponse(returns, request, player) {
 
-  let buffer = req;
+  let buffer = request;
 
   delete buffer.requests;
 
   buffer.returns = returns;
 
-  // get players device platform one time
-  if (player.hasSignature === false && buffer.unknown6 && buffer.unknown6.unknown2) {
-    let sig = this.parseSignature(buffer);
-    if (sig.device_info !== void 0) {
-      player.isIOS = sig.device_info.device_brand === "Apple";
-      player.isAndroid = !player.isIOS;
-      player.hasSignature = true;
-      player.asset_digest = this.assets[player.isAndroid ? "android" : "ios"];
-      print(`${player.email} is playing with an ${player.isIOS ? "Apple" : "Android"} device!`, 36);
-    }
+  if (request.auth_ticket) {
+    print("Authenticate!", 31);
+    buffer.auth_ticket = AuthTicket();
   }
-
-  if (auth) buffer.auth_ticket = AuthTicket();
 
   if (buffer.unknown6) {
     buffer.unknown6 = [{
@@ -153,7 +144,7 @@ export function envelopResponse(status, returns, req, player, auth) {
     }];
   }
 
-  buffer.status_code = status;
+  buffer.status_code = 1;
 
   return (
     POGOProtos.serialize(buffer, "POGOProtos.Networking.Envelopes.ResponseEnvelope")

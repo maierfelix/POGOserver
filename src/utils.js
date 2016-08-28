@@ -1,3 +1,6 @@
+import POGOProtos from "pokemongo-protobuf";
+import pcrypt from "pcrypt";
+
 import CFG from "../cfg";
 
 /**
@@ -78,5 +81,15 @@ let rx_username = /[^a-z\d]/i;
 export function validUsername(str) {
   return (
     !!(rx_username.test(str))
+  );
+}
+
+/**
+ * @param {Request} req
+ */
+export function parseSignature(req) {
+  let key = pcrypt.decrypt(req.unknown6[0].unknown2.encrypted_signature);
+  return (
+    POGOProtos.parseWithUnknown(key, "POGOProtos.Networking.Envelopes.Signature")
   );
 }

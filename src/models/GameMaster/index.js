@@ -1,20 +1,32 @@
+import POGOProtos from "pokemongo-protobuf";
+
 /**
  * @class GameMaster
  */
 export default class GameMaster {
 
   /**
-   * @param {Buffer} buffer
+   * @param {Object} decode
    * @constructor
    */
-  constructor(buffer) {
+  constructor(decode) {
 
     this.settings = this.buildSettings();
 
-    this.buffer = buffer;
+    this.decode = decode;
+    this.buffer = this.encode();
 
     this.parse();
 
+  }
+
+  /**
+   * @return {Buffer}
+   */
+  encode() {
+    return (
+      POGOProtos.serialize(this.decode, "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse")
+    );
   }
 
   parse() {
@@ -23,7 +35,7 @@ export default class GameMaster {
     let length = 0;
 
     let item = null;
-    let items = this.buffer.item_templates;
+    let items = this.decode.item_templates;
 
     length = items.length;
 
@@ -57,6 +69,15 @@ export default class GameMaster {
   getPlayerSettings() {
     return (
       this.settings["PLAYER_LEVEL_SETTINGS"].player_level
+    );
+  }
+
+  /**
+   * @return {Buffer}
+   */
+  serialize() {
+    return (
+      this.buffer
     );
   }
 

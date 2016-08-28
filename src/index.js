@@ -45,8 +45,6 @@ export default class GameServer {
 
     this.apiClients = {};
 
-    this.assets = {};
-    this.master = null;
     this.socket = null;
     this.cycleInstance = null;
 
@@ -117,16 +115,6 @@ export default class GameServer {
     } catch (e) {
       print(e, 31);
     }
-  }
-
-  /**
-   * @param {Request} req
-   */
-  parseSignature(req) {
-    let key = pcrypt.decrypt(req.unknown6.unknown2.encrypted_signature);
-    return (
-      POGOProtos.parseWithUnknown(key, "POGOProtos.Networking.Envelopes.Signature")
-    );
   }
 
   /**

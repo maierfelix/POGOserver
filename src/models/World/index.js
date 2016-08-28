@@ -2,6 +2,10 @@ import Player from "../Player";
 
 import CFG from "../../../cfg";
 
+import * as _packets from "./packets";
+
+import { inherit } from "../../utils";
+
 /**
  * @class World
  */
@@ -138,11 +142,25 @@ export default class World {
   getPacket(type, msg) {
     return new Promise((resolve) => {
       switch (type) {
+        case "GET_MAP_OBJECTS":
+          resolve(this.GetMapObjects(msg));
+        break;
         case "CHECK_CHALLENGE":
-          console.log(type, msg);
+          resolve(this.CheckChallenge(msg));
+        break;
+        case "DOWNLOAD_SETTINGS":
+          resolve(this.DownloadSettings(msg));
+        break;
+        case "DOWNLOAD_REMOTE_CONFIG_VERSION":
+          resolve(this.DownloadRemoteConfigVersion(msg));
+        break;
+        case "DOWNLOAD_ITEM_TEMPLATES":
+          resolve(this.DownloadItemTemplates(msg));
         break;
       };
     });
   }
 
 }
+
+inherit(World, _packets);

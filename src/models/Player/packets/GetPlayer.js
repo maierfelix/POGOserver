@@ -2,6 +2,7 @@ import POGOProtos from "pokemongo-protobuf";
 
 /**
  * @param {Object} msg
+ * @return {Buffer}
  */
 export default function GetPlayer(msg) {
 
@@ -17,9 +18,11 @@ export default function GetPlayer(msg) {
       next_defender_bonus_collect_timestamp_ms: +new Date()
     },
     contact_settings: this.contact.serialize(),
-    currencies: this.currencies.serialize()
-  }
+    currencies: this.currency.serialize()
+  };
 
-  return (POGOProtos.serialize({ success: true, player_data: buffer }, "POGOProtos.Networking.Responses.GetPlayerResponse"));
+  return (
+    POGOProtos.serialize({ success: true, player_data: buffer }, "POGOProtos.Networking.Responses.GetPlayerResponse")
+  );
 
 }

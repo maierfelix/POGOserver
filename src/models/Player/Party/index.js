@@ -1,7 +1,9 @@
+import Pokemon from "../../Pokemon";
+
 /**
  * @class Party
  */
-class Party {
+export default class Party {
 
   /** @constructor */
   constructor() {

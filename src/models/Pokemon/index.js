@@ -17,6 +17,8 @@ export default class Pokemon extends MapObject {
    */
   constructor(obj) {
 
+    super(null);
+
     this.id = 0;
     this.dexNumber = 0;
 

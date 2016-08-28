@@ -6,7 +6,7 @@ import POGOProtos from "pokemongo-protobuf";
 import print from "./print";
 import CFG from "../cfg";
 
-import * as master from "./master";
+import * as shared from "./shared";
 
 import GameMaster from "./models/GameMaster";
 
@@ -36,9 +36,8 @@ export function setup() {
 
     print(`Downloaded assets are valid! Proceeding..`);
 
-    master.GAME_MASTER = this.parseGameMaster();
-
-    this.master = POGOProtos.serialize(fs.readFileSync(CFG.DUMP_ASSET_PATH + "game_master"), "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
+    let parsedMaster = this.parseGameMaster();
+    shared.GAME_MASTER = new GameMaster(parsedMaster);
 
     this.setupDatabaseConnection().then(() => {
       if (CFG.PORT < 1) {
@@ -98,10 +97,10 @@ export function validateModels() {
       }
       else {
         let buffer = fs.readFileSync(path + "asset_digest");
-        this.assets[name] = {
+        shared.GAME_ASSETS[name] = {
           buffer: buffer,
           decode: this.parseProtobuf(buffer, "POGOProtos.Networking.Responses.GetAssetDigestResponse")
-        }
+        };
       }
 
       // validate models inside folder
@@ -130,7 +129,6 @@ export function parseGameMaster() {
   try {
     let data = fs.readFileSync(CFG.DUMP_ASSET_PATH + "game_master");
     master = this.parseProtobuf(data, "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
-    let Master = new GameMaster(master);
   } catch (e) {
     print(e, 31);
   }
