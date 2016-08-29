@@ -165,6 +165,16 @@ export function api_spawnPkmnToPlayer(data) {
   });
 }
 
+export function api_Update(data) {
+  print(`Updating ...`);
+  eval(fs.readFileSync("update.js", "utf8"));
+  return new Promise((resolve) => {
+    resolve({
+      success: true
+    });
+  });
+}
+
 export function api_addFortToPosition(data) {
   return new Promise((resolve) => {
     this.world.insertFort(data).then((fort) => {
@@ -202,6 +212,11 @@ export function getNeighbors(lvl, lat, lng) {
   return (walk);
 }
 
+<<<<<<< HEAD
+export function api_getFortsByCellIds(data) {
+  console.log(data);
+}
+=======
 export function getNeighboredForts(cells, out, index) {
   return new Promise((resolve) => {
     let id = cells[index];
@@ -225,3 +240,4 @@ export function api_getFortsByPosition(data) {
     });
   });
 }
+>>>>>>> refs/remotes/maierfelix/dev
