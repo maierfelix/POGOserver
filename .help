@@ -1,4 +1,4 @@
-clients                          : How many players are connected
+players                          : How many players are connected
 exit                             : Exit the server
 update                           : Update the server
 kick  [Username]                 : Kick player by username
