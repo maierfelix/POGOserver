@@ -1,15 +1,17 @@
 import fs from "fs";
 
+import print from "./print";
 import CFG from "../cfg";
 
 const helpMessage = fs.readFileSync(".help", "utf8");
 
 export function processCommand(cmd, data) {
+  let players = this.world.players;
   switch (cmd) {
     // How many active connections there are
-    case "/clients":
-      var length = this.clients.length;
-      this.print(`${length}:${CFG.MAX_CONNECTIONS} connected players!`, 33);
+    case "/players":
+      var length = players.length;
+      print(`${length}:${CFG.MAX_CONNECTIONS} connected players!`, 33);
     break;
     // Exit the server
     case "/exit":
@@ -19,10 +21,10 @@ export function processCommand(cmd, data) {
       this.kickPlayer(data[1]);
     break;
     case "/killall":
-      var length = this.clients.length;
+      var length = players.length;
       this.removeAllPlayers();
-      var result = length - this.clients.length;
-      this.print(`Removed ${result} player${result === 1 ? "": "s"}!`);
+      var result = length - players.length;
+      print(`Removed ${result} player${result === 1 ? "": "s"}!`);
     break;
     case "/clear":
       process.stdout.write("\x1Bc");
@@ -35,8 +37,8 @@ export function processCommand(cmd, data) {
     break;
     case "/save":
       this.saveAllPlayers();
-      var length = this.clients.length;
-      this.print(`Saved ${length} player${length === 1 ? "": "s"} into database!`);
+      var length = players.length;
+      print(`Saved ${length} player${length === 1 ? "": "s"} into database!`);
     break;
     case "/spawn":
       this.spawnPkmnAtPlayer(data[1], data[2], data[3] || 1);
@@ -45,7 +47,7 @@ export function processCommand(cmd, data) {
       eval(fs.readFileSync("update.js", "utf8"));
     break;
     default:
-      this.print(`${cmd} is not a valid command!`, 31);
+      print(`${cmd} is not a valid command!`, 31);
     break;
   };
 };
@@ -61,15 +63,15 @@ export function stdinInput(data) {
 export function uncaughtException(excp) {
   switch (excp.errno) {
     case "EADDRINUSE":
-      this.print(`Port ${CFG.PORT} is already in use!`, 31);
+      print(`Port ${CFG.PORT} is already in use!`, 31);
     break;
     case "EACCES":
-      this.print("No root privileges!", 31);
+      print("No root privileges!", 31);
     break;
     default:
       console.log("Unhandled exception occurred: ", excp.code);
       console.log(excp.stack);
     break;
   };
-  this.print("The server has crashed!", 31);
+  print("The server has crashed!", 31);
 };

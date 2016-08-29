@@ -1,10 +1,14 @@
 import fs from "fs";
 import fse from "fs-extra";
 import pogo from "pogo-asset-downloader";
-import proto from "./proto";
 import POGOProtos from "pokemongo-protobuf";
 
+import print from "./print";
 import CFG from "../cfg";
+
+import * as shared from "./shared";
+
+import GameMaster from "./models/GameMaster";
 
 import {
   capitalize,
@@ -13,12 +17,14 @@ import {
 
 export function setup() {
 
-  let isFirstRun = !this.directoryExists(CFG.DUMP_ASSET_PATH);
+  let save = JSON.parse(fs.readFileSync(".save", "utf8"));
 
-  if (isFirstRun) {
-    this.print("Required assets are missing! Preparing dump session..", 31);
+  if (save.isFirstRun) {
+    print("Required assets are missing! Preparing dump session..", 33);
     setTimeout(() => {
       this.onFirstRun(() => {
+        save.isFirstRun = false;
+        fs.writeFileSync(".save", JSON.stringify(save), "utf8");
         this.setup();
       });
     }, 1e3);
@@ -28,26 +34,25 @@ export function setup() {
   // make sure all assets got loaded properly
   this.validateAssets().then(() => {
 
-    this.print(`Downloaded assets are valid! Proceeding..`);
+    print(`Downloaded assets are valid! Proceeding..`);
 
-    this.master = POGOProtos.serialize(this.parseGameMaster(), "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
+    let parsedMaster = this.parseGameMaster();
+    shared.GAME_MASTER = new GameMaster(parsedMaster);
 
     this.setupDatabaseConnection().then(() => {
       if (CFG.PORT < 1) {
-        this.print("Invalid port!", 31);
+        print("Invalid port!", 31);
         return void 0;
       }
       this.socket = this.createHTTPServer();
       setTimeout(this::this.cycle, 1);
       let localIPv4 = this.getLocalIPv4();
-      this.print(`Server running at ${localIPv4}:${CFG.PORT}`);
-      this.emit("ready", void 0);
+      print(`Server listening at ${localIPv4}:${CFG.PORT}`, 33);
     });
 
   }).catch((e) => {
     //fse.removeSync(CFG.DUMP_ASSET_PATH);
-    this.print("Error: " + e + " was not found!", 31);
-    this.emit("ready", e);
+    print("Error: " + e + " was not found!", 31);
   });
 
 }
@@ -92,10 +97,10 @@ export function validateModels() {
       }
       else {
         let buffer = fs.readFileSync(path + "asset_digest");
-        this.assets[name] = {
+        shared.GAME_ASSETS[name] = {
           buffer: buffer,
           decode: this.parseProtobuf(buffer, "POGOProtos.Networking.Responses.GetAssetDigestResponse")
-        }
+        };
       }
 
       // validate models inside folder
@@ -125,7 +130,7 @@ export function parseGameMaster() {
     let data = fs.readFileSync(CFG.DUMP_ASSET_PATH + "game_master");
     master = this.parseProtobuf(data, "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
   } catch (e) {
-    this.print(e, 31);
+    print(e, 31);
   }
   return (master);
 }
@@ -141,7 +146,7 @@ export function onFirstRun(resolve) {
       this.downloadAssets().then(resolve);
     });
   }).catch((e) => {
-    this.print(e, 31);
+    print(e, 31);
   });
 }
 
@@ -183,11 +188,11 @@ export function downloadModels() {
       let caps = capitalize(name);
       caps = name === "ios" ? "iOS" : caps;
       pogo.setPlatform(name);
-      this.print(`Preparing to dump ${caps} assets..`, 36);
+      print(`Preparing to dump ${caps} assets..`, 36);
       this.dumpPkmnModels(CFG.DUMP_ASSET_PATH + name + "/", () => {
-        this.print(`Dumped ${CFG.MAX_POKEMON_NATIONAL_ID} ${caps} assets successfully!`);
+        print(`Dumped ${CFG.MAX_POKEMON_NATIONAL_ID} ${caps} assets successfully!`);
         if (++index >= limit) {
-          this.print("Dumped all assets successfully!");
+          print("Dumped all assets successfully!");
           resolve();
           return void 0;
         }
@@ -210,16 +215,16 @@ export function dumpPkmnModels(path, resolve) {
     if (++index <= limit) ids.push(index);
     pogo.getAssetByPokemonId(ids).then((downloads) => {
       downloads.map((item) => {
-        this.print(`Dumping model ${item.name}..`, 35);
+        print(`Dumping model ${item.name}..`, 35);
         try {
           fs.writeFileSync(path + item.name, item.body);
         }
         catch (e) {
-          this.print(`Error while dumping model ${item.name}:` + e, 31);
+          print(`Error while dumping model ${item.name}:` + e, 31);
         }
       });
       if (index >= limit) {
-        //this.print(`Dumped ${limit} assets successfully!`);
+        //print(`Dumped ${limit} assets successfully!`);
         resolve();
         return void 0;
       }

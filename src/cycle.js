@@ -1,3 +1,4 @@
+import print from "./print";
 import CFG from "../cfg";
 
 export function startCycle() {
@@ -19,8 +20,6 @@ export function cycle() {
   this.updateTimers();
 
   if (this.passedTicks <= 0) return void 0;
-
-  this.updatePlayers();
 
   this.resetTimers();
 
@@ -49,7 +48,7 @@ export function resetTimers() {
   this.saveTick++;
   // Save interval
   if (this.saveTick >= CFG.SAVE_INTERVAL) {
-    this.saveAllPlayers();
+    //this.saveAllPlayers();
     this.saveTick = 0;
   }
   return void 0;
@@ -57,17 +56,20 @@ export function resetTimers() {
 
 export function playerTimeoutTick() {
 
-  let client = null;
+  let player = null;
   let maxTimeout = CFG.PLAYER_CONNECTION_TIMEOUT;
 
-  let ii = 0, length = this.clients.length;
+  let players = this.world.players;
+
+  let ii = 0;
+  let length = this.world.connectedPlayers;
 
   for (; ii < length; ++ii) {
-    client = this.clients[ii];
-    if (this.time - client.timeout >= maxTimeout) {
-      this.print(`${client.remoteAddress} timed out`, 34);
-      this.savePlayer(client);
-      this.removePlayer(client);
+    player = players[ii];
+    if (this.time - player.timeout >= maxTimeout) {
+      print(`${player.remoteAddress} timed out`, 34);
+      this.savePlayer(player);
+      this.removePlayer(player);
     }
   };
 
