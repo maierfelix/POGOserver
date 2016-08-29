@@ -109,7 +109,7 @@ export default class Pokemon extends MapObject {
   /**
    * @return {Object}
    */
-  getPokemonData() {
+  serialize() {
     return ({
       pokemon_id: this.dexNumber,
       cp: this.cp,

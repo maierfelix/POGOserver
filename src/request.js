@@ -1,5 +1,6 @@
 import fs from "fs";
 import url from "url";
+import jwtDecode from "jwt-decode";
 import POGOProtos from "pokemongo-protobuf";
 
 import print from "./print";
@@ -91,7 +92,7 @@ export function onRequest(player) {
   }
 
   if (!player.authenticated) {
-    player.authenticate();
+    this.authenticatePlayer(player);
     return void 0;
   }
 
@@ -111,6 +112,46 @@ export function onRequest(player) {
     let msg = this.envelopResponse(returns, request, player);
     player.sendResponse(msg);
   });
+
+}
+
+/**
+ * @param {Player} player
+ */
+export function authenticatePlayer(player) {
+
+  let request = player.request;
+  let token = request.auth_info;
+  let msg = player.GetAuthTicket(request.request_id);
+
+  if (!token || !token.provider) {
+    print("Invalid authentication token! Kicking..", 31);
+    player.world.removePlayer(player);
+    return void 0;
+  }
+
+  if (token.provider === "google") {
+    if (token.token !== null) {
+      let decoded = jwtDecode(token.token.contents);
+      player.email = decoded.email;
+      player.email_verified = decoded.email_verified;
+      player.isGoogleAccount = true;
+      print(`${player.email} connected!`, 36);
+    }
+    else {
+      print("Invalid authentication token! Kicking..", 31);
+      player.world.removePlayer(player);
+      return void 0;
+    }
+  }
+  else {
+    print("Invalid provider! Kicking..", 31);
+    player.world.removePlayer(player);
+    return void 0;
+  }
+
+  player.authenticated = true;
+  player.sendResponse(msg);
 
 }
 

@@ -1,6 +1,6 @@
 import POGOProtos from "pokemongo-protobuf";
-import jwtDecode from "jwt-decode";
 
+import Bag from "./Bag";
 import Info from "./Info";
 import Party from "./Party";
 import Avatar from "./Avatar";
@@ -37,7 +37,6 @@ export default class Player extends MapObject  {
 
     this.world = obj.world;
 
-    this._team = 0;
     this._email = null;
 
     this.username = "unknown";
@@ -61,31 +60,18 @@ export default class Player extends MapObject  {
 
     this.remoteAddress = null;
 
-    this.maxPkmnStorage = 250;
-    this.maxItemStorage = 350;
-
+    this.bag = new Bag(this);
     this.info = new Info(this);
     this.party = new Party(this);
     this.avatar = new Avatar(this);
     this.contact = new Contact(this);
-    this.currency = new Currency(this);
     this.tutorial = new Tutorial(this);
-
-/*
-    this.bag = new Bag(this);
-    this.info = new Info(this);
+    this.currency = new Currency(this);
+    /*
     this.pokedex = new Pokedex(this);
-*/
-
+    */
     this.refreshSocket(obj.request, obj.response);
 
-  }
-
-  get team() {
-    return (this._team);
-  }
-  set team(value) {
-    this._team = value;
   }
 
   get email() {
@@ -112,50 +98,8 @@ export default class Player extends MapObject  {
     this.response = res;
   }
 
-  authenticate() {
-
-    let request = this.request;
-
-    let msg = this.GetAuthTicket(request.request_id);
-
-    let token = request.auth_info;
-
-    if (!token || !token.provider) {
-      print("Invalid authentication token! Kicking..", 31);
-      this.world.removePlayer(this);
-      return void 0;
-    }
-
-    if (token.provider === "google") {
-      if (token.token !== null) {
-        let decoded = jwtDecode(token.token.contents);
-        this.email = decoded.email;
-        this.email_verified = decoded.email_verified;
-        this.isGoogleAccount = true;
-        print(`${this.email} connected!`, 36);
-      }
-      else {
-        print("Invalid authentication token! Kicking..", 31);
-        this.world.removePlayer(this);
-        return void 0;
-      }
-    }
-    else {
-      print("Invalid provider! Kicking..", 31);
-      this.world.removePlayer(this);
-      return void 0;
-    }
-
-    this.authenticated = true;
-
-    this.sendResponse(msg);
-
-  }
-
   getDevicePlatform() {
-
     let request = this.request;
-
     if (request.unknown6 && request.unknown6[0]) {
       let sig = parseSignature(request);
       if (sig.device_info !== void 0) {
@@ -166,7 +110,6 @@ export default class Player extends MapObject  {
         print(`${this.email} is playing with an ${this.isIOS ? "Apple" : "Android"} device!`, 36);
       }
     }
-
   }
 
   /**

@@ -8,14 +8,14 @@ import print from "../../../print";
  */
 export default function FortDetails(msg) {
 
-  let id = String(msg.fort_id);
-  let number = id.substring(id.lastIndexOf(".") + 1);
+  let id = msg.fort_id.split(".");
 
   return new Promise((resolve) => {
-    this.instance.getQueryByColumnFromTable("id", number, "forts").then((forts) => {
+    this.instance.db.query("SELECT * from forts WHERE cell_id=? AND cell_uid=?", [id[0], id[1]], (e, forts) => {
       let fort = forts[0];
+      if (!fort) return void 0;
       let buffer = {
-        fort_id: id,
+        fort_id: msg.fort_id,
         name: fort.name,
         description: fort.description,
         image_urls: [

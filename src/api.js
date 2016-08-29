@@ -1,10 +1,14 @@
 import fs from "fs";
 import url from "url";
-import prompt from "prompt";
 import s2 from "s2-geometry";
+import prompt from "prompt";
 
 import print from "./print";
 import CFG from "../cfg";
+
+import {
+  getHashCodeFrom
+} from "./utils";
 
 const S2Geo = s2.S2;
 
@@ -162,51 +166,62 @@ export function api_spawnPkmnToPlayer(data) {
 }
 
 export function api_addFortToPosition(data) {
-
-  let latitude = data.lat;
-  let longitude = data.lng;
-
-  let name = data.name;
-  let description = data.desc;
-
-  let cellId = S2Geo.keyToId(S2Geo.latLngToKey(latitude, longitude, data.zoom));
-
-  let query = `
-    INSERT INTO forts
-    SET
-      cell_id=?,
-      latitude=?,
-      longitude=?,
-      enabled=?,
-      name=?,
-      description=?,
-      image_url=?,
-      rewards=?
-  `;
-
-  let queryData = [
-    cellId,
-    latitude,
-    longitude,
-    true,
-    name,
-    description,
-    "http://thecatapi.com/api/images/get?format=src&type=png",
-    ""
-  ];
-
   return new Promise((resolve) => {
-    this.db.query(query, queryData, (res) => {
+    this.world.insertFort(data).then((fort) => {
       resolve({
-        result: res,
-        cellId: cellId,
         success: true
       });
     });
   });
-
 }
 
-export function api_getFortsByCellIds(data) {
-  console.log(data);
+export function api_deleteFortById(data) {
+  let cellId = data.cell_id;
+  let uid = data.cell_uid;
+  return new Promise((resolve) => {
+    this.world.getFortById(cellId, uid).then((fort) => {
+      fort.deleted = true;
+      this.world.processDeletedFort(fort);
+    });
+  });
+}
+
+export function getNeighbors(lvl, lat, lng) {
+  let origin = S2Geo.latLngToKey(lat, lng, lvl);
+  let walk = [S2Geo.keyToId(origin)];
+  let next = S2Geo.nextKey(origin);
+  let prev = S2Geo.prevKey(origin);
+  let ii = 0;
+  let length = 20;
+  for (; ii < length; ++ii) {
+    walk.push(S2Geo.toId(prev));
+    walk.push(S2Geo.toId(next));
+    next = S2Geo.nextKey(next);
+    prev = S2Geo.prevKey(prev);
+  };
+  return (walk);
+}
+
+export function getNeighboredForts(cells, out, index) {
+  return new Promise((resolve) => {
+    let id = cells[index];
+    this.world.getFortsByCell(id).then((res) => {
+      out = out.concat(res.forts);
+      if (++index >= cells.length) resolve(out);
+      else resolve(this.getNeighboredForts(cells, out, index));
+    });
+  });
+}
+
+export function api_getFortsByPosition(data) {
+  return new Promise((resolve) => {
+    let lat = data.lat;
+    let lng = data.lng;
+    this.getNeighboredForts(this.getNeighbors(15, lat, lng), [], 0).then((res) => {
+      resolve({
+        forts: res,
+        success: true
+      });
+    });
+  });
 }

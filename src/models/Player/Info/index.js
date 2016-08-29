@@ -8,6 +8,8 @@ export default class Info {
 
     this.lvl = 0;
 
+    this.team = 0;
+
     this.exp = 0;
     this.prevLvlExp = 0;
     this.nextLvlExp = 0;
@@ -21,6 +23,9 @@ export default class Info {
     this.eggsHatched = 0;
     this.bigMagikarpCaught = 0;
     this.pkmnDeployed = 0;
+
+    this.maxPkmnStorage = 250;
+    this.maxItemStorage = 350;
 
   }
 

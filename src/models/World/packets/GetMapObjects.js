@@ -15,11 +15,11 @@ export default function GetMapObjects(msg) {
   let latitude = msg.latitude;
   let longitude = msg.longitude;
 
-  let cells = [];
+  let mapCells = [];
 
   let buffer = {
     status: "SUCCESS",
-    map_cells: cells
+    map_cells: mapCells
   };
 
   let limit = msg.cell_id.length;
@@ -27,25 +27,12 @@ export default function GetMapObjects(msg) {
   // TODO: oop, forts are world objects!
 
   return new Promise((resolve) => {
-    var self = this;
-    function getForts(index) {
-      self.instance.getQueryByColumnFromTable("cell_id", msg.cell_id[index], "forts").then((items) => {
-        items = items || [];
-        let forts = [];
-        items.map((fort) => {
-          forts.push({
-            id: fort.cell_id + "." + fort.id,
-            last_modified_timestamp_ms: "1471621873766",
-            latitude: fort.latitude,
-            longitude: fort.longitude,
-            enabled: true,
-            type: "CHECKPOINT"
-          });
-        });
-        cells.push({
-          s2_cell_id: msg.cell_id[index],
+    this.getFortsByCells(msg.cell_id, [], 0).then((cells) => {
+      cells.map((cell) => {
+        mapCells.push({
+          s2_cell_id: cell.id,
           current_timestamp_ms: +new Date(),
-          forts: forts,
+          forts: cell.forts.map((fort) => { return fort.serialize() }),
           spawn_points: [],
           deleted_objects: [],
           fort_summaries: [],
@@ -54,16 +41,11 @@ export default function GetMapObjects(msg) {
           catchable_pokemons: [],
           nearby_pokemons: []
         });
-        if (index >= limit) {
-          resolve(
-            POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetMapObjectsResponse")
-          );
-          return void 0;
-        }
-        getForts(++index);
       });
-    };
-    getForts(0);
+      resolve(
+        POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetMapObjectsResponse")
+      );
+    });
   });
 
 }

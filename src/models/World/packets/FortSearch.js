@@ -8,17 +8,18 @@ import print from "../../../print";
  */
 export default function FortSearch(msg) {
 
-  let id = String(msg.fort_id);
-  let number = id.substring(id.lastIndexOf(".") + 1);
+  let id = msg.fort_id.split(".");
 
   return new Promise((resolve) => {
-    this.instance.getQueryByColumnFromTable("id", number, "forts").then((forts) => {
+    this.instance.db.query("SELECT * from forts WHERE cell_id=? AND cell_uid=?", [id[0], id[1]], (e, forts) => {
+      let fort = forts[0];
+      if (!fort) return void 0;
       let buffer = ({
         result: "SUCCESS",
-        items_awarded: [{
-          "item_id": 3,
-          "item_count": 1
-        }],
+        items_awarded: [
+          { item_id: 3 },
+          { item_id: 4 }
+        ],
         experience_awarded: 1337,
         cooldown_complete_timestamp_ms: +new Date() + 5e3,
         chain_hack_sequence_number: 2

@@ -33,7 +33,7 @@ export function parseMessage(req, type) {
 export function processResponse(player, req) {
 
   let cc = _toCC(req.request_type);
-  let msg = this.parseMessage(req, cc);
+  let msg = this.parseMessage(req, cc) || {};
 
   return new Promise((resolve) => {
 
@@ -59,6 +59,7 @@ export function processResponse(player, req) {
         case "DOWNLOAD_SETTINGS":
         case "DOWNLOAD_REMOTE_CONFIG_VERSION":
         case "DOWNLOAD_ITEM_TEMPLATES":
+          msg.player = player;
           player.world.getPacket(req.request_type, msg).then((result) => {
             print(`Success: ${req.request_type} => ${result.toString().length}`);
             resolve(result);

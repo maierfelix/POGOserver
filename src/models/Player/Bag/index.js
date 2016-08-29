@@ -1,5 +1,3 @@
-import Candy from "./Candy";
-
 /**
  * @class Bag
  */
@@ -8,7 +6,7 @@ export default class Bag {
   /** @constructor */
   constructor() {
 
-    this.candies = new CandyBag();
+    //this.candies = new CandyBag();
 
     this.stardust = 0;
     this.pokecoins = 0;
