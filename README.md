@@ -69,4 +69,4 @@ Depending on your OS, you need to run either ``run-linux.sh`` or ``run-windows.b
 6. Connect your PoGo app with the server
 7. Enjoy:)
 
-TIP: Instead of automaticly mapping the ports map them static so they don't change after reboots.
+NOTE: Instead of automatically mapping the ports map them static so they don't change after reboots.
