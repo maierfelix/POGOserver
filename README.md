@@ -61,8 +61,9 @@ Depending on your OS, you need to run either ``run-linux.sh`` or ``run-windows.b
 
 ## Docker setup
 
-1. Place the Dockerfile and a cfg.js in the same folder.
-2. Modify the cfg.js to your likings and don't forget add your credentials and possible to your own gmaps api. (DO NOT CHANGE THE PORT. IF YOU DO YOU NEED TO CHANGE IT IN THE Dockerfile ASWELL.)
+1. Download cfg.js.example and supervisord.conf 
+2. Place the Dockerfile, cfg.js.example and supervisord.conf in the same folder. Rename cfg.js.example to cfg.js
+3. Modify the cfg.js to your likings and don't forget add your credentials and possible to your own gmaps api. (DO NOT CHANGE THE PORT. IF YOU DO YOU NEED TO CHANGE IT IN THE Dockerfile ASWELL.)
 3. Create a container and run it.
 4. Connect your PoGo app with the server
 5. Enjoy:)
