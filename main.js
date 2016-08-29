@@ -24,11 +24,24 @@
     let description = prompt("Enter fort description: ");
     send({
       action: "addFortToPosition",
-      lat: lat,
-      lng: lng,
+      latitude: lat,
+      longitude: lng,
       zoom: map.zoom,
       name: name,
-      desc: description
+      description: description
+    }, function(res) {
+      console.log(res);
+    });
+  }
+
+  function removeFort(fort) {
+    console.log(fort);
+    let sure = prompt("Do you really want to remove this fort?");
+    if (sure === null) return void 0;
+    send({
+      action: "deleteFortById",
+      cell_id: fort.cellId,
+      cell_uid: fort.uid
     }, function(res) {
       console.log(res);
     });
@@ -99,6 +112,7 @@
     server_ping.style.display = "block";
     fort_manager.style.opacity = 1;
     initHeartBeat();
+    refreshMapForts();
     refreshConnectedPlayers();
     getServerVersion();
   }
@@ -116,6 +130,32 @@
       action: "getServerVersion"
     }, function(res) {
       server_version.innerHTML = "Server version: v" + res.version;
+    });
+  }
+
+  function refreshMapForts() {
+    let center = map.getCenter();
+    let lat = center.lat();
+    let lng = center.lng();
+    send({
+      action: "getFortsByPosition",
+      lat: lat,
+      lng: lng
+    }, function(res) {
+      map.removeMarkers();
+      let ii = 0;
+      let length = res.forts.length;
+      for (; ii < length; ++ii) {
+        let fort = res.forts[ii];
+        map.addMarker({
+          lat: fort.latitude,
+          lng: fort.longitude,
+          title: fort.name,
+          dblclick: function() {
+            removeFort(this);
+          }.bind(fort)
+        });
+      };
     });
   }
 
@@ -142,6 +182,7 @@
           var ping = res.timestamp - now;
           server_ping.innerHTML = "Ping: " + ping + "ms";
           refreshConnectedPlayers();
+          refreshMapForts();
         }
       });
     }, 3e3);
