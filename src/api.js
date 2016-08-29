@@ -161,6 +161,16 @@ export function api_spawnPkmnToPlayer(data) {
   });
 }
 
+export function api_Update(data) {
+  print(`Updating ...`);
+  eval(fs.readFileSync("update.js", "utf8"));
+  return new Promise((resolve) => {
+    resolve({
+      success: true
+    });
+  });
+}
+
 export function api_addFortToPosition(data) {
 
   let latitude = data.lat;
