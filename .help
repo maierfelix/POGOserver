@@ -1,8 +1,0 @@
-clients                                     : How many players are connected
-exit                                        : Exit the server
-update                                      : Update the server
-kick [PlayerName]                           : Kick player by username
-kickall                                     : Kick all players
-clear                                       : Clear the server console
-save                                        : Save all players into database
-spawn [PlayerName] [PokemonName] [Amount]   : Spawn pokemons at specific player
