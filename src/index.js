@@ -1,5 +1,6 @@
 import fs from "fs";
 import os from "os";
+import request from "request";
 import POGOProtos from "pokemongo-protobuf";
 
 import {
@@ -58,12 +59,47 @@ export default class GameServer {
 
     if (CFG.GREET) this.greet();
 
-    print(`Booting Server v${require("../package.json").version}-dev`, 33);
+    this.getLatestVersion().then((latest) => {
+      let current = require("../package.json").version;
+      print(`Booting Server v${current}`, 33);
+      if (current < latest) {
+        print(`WARNING: Please update to the latest build v${latest}!`, 33);
+      }
+      this.world = new World(this);
+      this.setup();
+    });
 
-    this.world = new World(this);
+  }
 
-    this.setup();
+  fetchVersioningUrl() {
+    return new Promise((resolve) => {
+      let url = "";
+      let branch = "dev";
+      let base = "https://raw.githubusercontent.com";
+      url = require("../package.json").repository.url;
+      url = url.replace("git://", "");
+      url = url.replace(".git", "");
+      url = url.replace("github.com/", "");
+      url = `${base}/${url}/${branch}/package.json`;
+      resolve(url);
+    });
+  }
 
+  getLatestVersion() {
+    return new Promise((resolve) => {
+      this.fetchVersioningUrl().then((url) => {
+        request({url: url}, (error, response, body) => {
+          let json = null;
+          try {
+            json = JSON.parse(body);
+          } catch (e) {
+            json = {};
+            print(e, 31);
+          }
+          resolve(json.version);
+        });
+      });
+    });
   }
 
   /**

@@ -38,11 +38,12 @@ export default class Party {
 
   /**
    * @param {Number} id
+   * @return {Pokemon}
    */
   deletePkmn(id) {
     let index = this.getPkmnIndexById(id);
     let pkmn = this.party[index];
-    if (pkmn) this.party.splice(index, 1);
+    if (pkmn) this.party.splice(index, 1)[0];
   }
 
   /**

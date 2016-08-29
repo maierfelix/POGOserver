@@ -14,8 +14,8 @@ export default {
       pokemon_visible_range: 70.00196078431372,
       poke_nav_range_meters: 751.0156862745098,
       encounter_range_meters: 50.25098039215686,
-      get_map_objects_min_refresh_seconds: 10.007843017578125,
-      get_map_objects_max_refresh_seconds: 11.01568603515625,
+      get_map_objects_min_refresh_seconds: 0,
+      get_map_objects_max_refresh_seconds: 0,
       get_map_objects_min_distance_meters: 10.007843017578125,
       google_maps_api_key: CFG.GMAPS_KEY
     },
