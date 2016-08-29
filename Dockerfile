@@ -25,7 +25,9 @@ RUN apt-get install -y \
 					curl \
 					make \
 					g++ \
-					unzip
+					unzip \
+					supervisor
+RUN mkdir -p /var/run/sshd /var/log/supervisor
 RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get install -y \
 			nodejs \
@@ -36,11 +38,7 @@ RUN cd /
 RUN git clone --recursive https://github.com/maierfelix/POGOserver.git
 RUN chmod +x /POGOserver/run-linux.sh
 COPY cfg.js /POGOserver/
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN service mysql start && mysql -u root -e "create database pogosql";
-EXPOSE 22
-EXPOSE 80
-EXPOSE 443
-EXPOSE 3306
-EXPOSE 3000
-CMD ["/usr/bin/mysqld_safe"]
-CMD ["/POGOserver/run-linux.sh"]
+EXPOSE 22 80 443 3306 3000
+CMD ["/usr/bin/supervisord"]
