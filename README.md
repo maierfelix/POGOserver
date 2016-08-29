@@ -58,3 +58,11 @@ The required database tables get generated automatically.
 
 You need at minimum [Node.js](https://nodejs.org/en/) version 6.x.
 Depending on your OS, you need to run either ``run-linux.sh`` or ``run-windows.bat`` from the root folder.
+
+## Docker setup
+
+1. Place the Dockerfile and a cfg.js in the same folder.
+2. Modify the cfg.js to your likings and don't forget add your credentials and possible to your own gmaps api. (DO NOT CHANGE THE PORT. IF YOU DO YOU NEED TO CHANGE IT IN THE Dockerfile ASWELL.)
+3. Create a container and run it.
+4. Connect your PoGo app with the server
+5. Enjoy:)
