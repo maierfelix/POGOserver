@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Language" content="en">
     <meta name="viewport" content="width=device-width">
     <meta content="origin-when-cross-origin" name="referrer" />
-    <title>POGOserver api</title>
+    <title>POGOserver Interface</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/pure.min.css">
@@ -15,11 +15,13 @@
   <body class="body">
 
     <p class="ping area" id="server_ping" style="position: absolute;top: 0px;left: 10px; display:none;">Ping: 0ms</p>
+	<p style="position: absolute;top: 0px;right: 20px"><a href="https://github.com/maierfelix/POGOserver" target="_blank"><img src="https://assets-cdn.github.com/images/modules/open_graph/github-octocat.png" height="78" width="150" align="center"></a></p>
+	
 
     <div class="area">
       <p>POGOserver</p>
       <p id="version" class="version"> </p>
-      <p><button class="btn color-1 view login_input" id="connection_status" href="#" style="color:yellow;">Connecting..</button></p>
+      <p><button class="btn color-1 view login_input" id="connection_status" href="#" style="color:yellow;">Connecting...</button></p>
     </div>
 
     <div id="login_area" class="area">
@@ -34,7 +36,8 @@
       <p class="info" id="connected_players">Connected players: 0</p>
       <p class="login_area" style="padding-bottom: 15px;">World Manager</p>
       <p><button class="btn color-1 view cmd_label label">Spawn</button><input class="btn color-1 view input login_input with_label" id="spawn_user" placeholder="Username" autocomplete="new-password"></input><input class="btn color-1 view input login_input with_label" autocomplete="new-password" id="spawn_pkmn" placeholder="Pokemon"></input><button id="submit_spawn" class="btn color-1 view login_input with_label submit">Submit</button></p>
-      <br/>
+      <p><button class="btn color-1 view cmd_label label">Update Server</button></input><button id="submit_update" class="btn color-1 view login_input with_label submit">Submit</button></p>
+	  <br/>
     </div>
 
     <div class="area" id="fort_manager" style="padding-bottom:500px;opacity:0;">

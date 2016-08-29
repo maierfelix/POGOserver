@@ -77,6 +77,14 @@
       console.log(res);
     });
   });
+  
+  submit_update.addEventListener("click", function() {
+    send({
+      action: "Update"
+    }, function(res) {
+      console.log(res);
+    });
+  });
 
   function login() {
 
