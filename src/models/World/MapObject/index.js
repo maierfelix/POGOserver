@@ -13,6 +13,8 @@ export default class MapObject {
 
     this.cellId = null;
 
+    this.world = null;
+
     this.altitude = 0;
     this.latitude = 0;
     this.longitude = 0;

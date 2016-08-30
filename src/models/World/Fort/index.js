@@ -20,6 +20,8 @@ export default class Fort extends MapObject {
 
     super(obj);
 
+    this.parent = null;
+
     this.enabled = true;
     this.deleted = false;
 
@@ -88,6 +90,10 @@ export default class Fort extends MapObject {
     return (
       this.cellId + "." + this.uid
     );
+  }
+
+  delete() {
+    this.deleted = true;
   }
 
   /**

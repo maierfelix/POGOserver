@@ -29,8 +29,14 @@ export default function GetMapObjects(msg) {
   return new Promise((resolve) => {
     this.getFortsByCells(msg.cell_id, [], 0).then((cells) => {
       cells.map((cell) => {
+        if (cell.forts.length) {
+          console.log("###" + cell.cellId + "###");
+          cell.forts.map((fort) => {
+            console.log(fort.uid, fort.latitude, fort.longitude);
+          });
+        }
         mapCells.push({
-          s2_cell_id: cell.id,
+          s2_cell_id: cell.cellId,
           current_timestamp_ms: +new Date(),
           forts: cell.forts.map((fort) => { return fort.serialize() }),
           spawn_points: [],

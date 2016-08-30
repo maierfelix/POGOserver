@@ -74,7 +74,7 @@ export default class GameServer {
   fetchVersioningUrl() {
     return new Promise((resolve) => {
       let url = "";
-      let branch = "dev";
+      let branch = "master";
       let base = "https://raw.githubusercontent.com";
       url = require("../package.json").repository.url;
       url = url.replace("git://", "");
