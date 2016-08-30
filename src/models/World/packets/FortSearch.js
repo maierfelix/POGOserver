@@ -11,7 +11,7 @@ export default function FortSearch(msg) {
   let id = msg.fort_id.split(".");
 
   return new Promise((resolve) => {
-    this.instance.db.query("SELECT * from forts WHERE cell_id=? AND cell_uid=?", [id[0], id[1]], (e, forts) => {
+    this.instance.db.query(`SELECT * from ${CFG.MYSQL_FORT_TABLE} WHERE cell_id=? AND cell_uid=?`, [id[0], id[1]], (e, forts) => {
       let fort = forts[0];
       if (!fort) return void 0;
       let buffer = ({
@@ -21,7 +21,7 @@ export default function FortSearch(msg) {
           { item_id: 4 }
         ],
         experience_awarded: 1337,
-        cooldown_complete_timestamp_ms: +new Date() + 5e3,
+        cooldown_complete_timestamp_ms: +new Date() + fort.cooldown,
         chain_hack_sequence_number: 2
       });
       resolve(

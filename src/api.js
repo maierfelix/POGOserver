@@ -3,6 +3,8 @@ import url from "url";
 import s2 from "s2-geometry";
 import prompt from "prompt";
 
+import Cell from "./models/World/Cell";
+
 import print from "./print";
 import CFG from "../cfg";
 
@@ -167,7 +169,7 @@ export function api_spawnPkmnToPlayer(data) {
 
 export function api_addFortToPosition(data) {
   return new Promise((resolve) => {
-    this.world.insertFort(data).then((fort) => {
+    this.world.insertFortIntoDatabase(data).then((fort) => {
       resolve({
         success: true
       });
@@ -176,23 +178,45 @@ export function api_addFortToPosition(data) {
 }
 
 export function api_deleteFortById(data) {
-  let cellId = data.cell_id;
-  let uid = data.cell_uid;
+  let uid = data.uid;
+  let cellId = Cell.getIdByPosition(data.latitude, data.longitude, data.zoom);
   return new Promise((resolve) => {
-    this.world.getFortById(cellId, uid).then((fort) => {
-      fort.deleted = true;
-      this.world.processDeletedFort(fort);
+    this.world.deleteFort(cellId, uid).then(() => {
+      resolve({
+        success: true
+      });
     });
   });
 }
 
-export function getNeighbors(lvl, lat, lng) {
+export function api_getFortsByPosition(data) {
+  return new Promise((resolve) => {
+    let lat = data.latitude;
+    let lng = data.longitude;
+    let zoom = data.zoom;
+    this.getNeighboredForts(this.getNeighbors(lat, lng, zoom), [], 0).then((forts) => {
+      let result = [];
+      for (let fort of forts) {
+        let fortData = fort.serialize();
+        fortData.name = fort.name;
+        fortData.uid = fort.uid;
+        result.push(fortData);
+      };
+      resolve({
+        forts: result,
+        success: true
+      });
+    });
+  });
+}
+
+export function getNeighbors(lat, lng, lvl) {
   let origin = S2Geo.latLngToKey(lat, lng, lvl);
   let walk = [S2Geo.keyToId(origin)];
   let next = S2Geo.nextKey(origin);
   let prev = S2Geo.prevKey(origin);
   let ii = 0;
-  let length = 20;
+  let length = 30;
   for (; ii < length; ++ii) {
     walk.push(S2Geo.toId(prev));
     walk.push(S2Geo.toId(next));
@@ -205,23 +229,10 @@ export function getNeighbors(lvl, lat, lng) {
 export function getNeighboredForts(cells, out, index) {
   return new Promise((resolve) => {
     let id = cells[index];
-    this.world.getFortsByCell(id).then((res) => {
-      out = out.concat(res.forts);
+    this.world.getFortsByCellId(id).then((cell) => {
+      out = out.concat(cell.forts);
       if (++index >= cells.length) resolve(out);
       else resolve(this.getNeighboredForts(cells, out, index));
-    });
-  });
-}
-
-export function api_getFortsByPosition(data) {
-  return new Promise((resolve) => {
-    let lat = data.lat;
-    let lng = data.lng;
-    this.getNeighboredForts(this.getNeighbors(15, lat, lng), [], 0).then((res) => {
-      resolve({
-        forts: res,
-        success: true
-      });
     });
   });
 }
