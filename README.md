@@ -61,12 +61,12 @@ Depending on your OS, you need to run either ``run-linux.sh`` or ``run-windows.b
 
 ## Docker setup
 
-1. Download ``cfg.js.example`` and ``supervisord.conf`` from github. 
-2. Place the ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` in the same folder. Rename ``cfg.js.example`` to ``cfg.js``
-3. Modify the ``cfg.js`` to your likings and don't forget add your credentials and possible to your own gmaps api. (DO NOT CHANGE THE PORT. IF YOU DO YOU NEED TO CHANGE IT IN THE Dockerfile ASWELL.)
+1. Download ``Dockerfile,``, ``cfg.js.example`` and ``supervisord.conf`` from github.
+2. Place ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` into the same folder. Rename ``cfg.js.example`` to ``cfg.js``.
+3. Modify ``cfg.js`` to your requirements as described above.
 4. Create a container and run it.
-5. Open a bash prompt and use ``cd /POGOserver/`` and then run ``./run-linux.sh``
-6. Connect your PoGo app with the server
-7. Enjoy:)
+5. Open a bash prompt, enter: ``cd /POGOserver/`` and ``./run-linux.sh``.
+6. Connect the Pokemon Go app to the server.
+7. Done.
 
-NOTE: Instead of automatically mapping the ports map them static so they don't change after reboots.
+Note: Instead of automatically mapping the ports, map them static, so they don't change after reboot.
