@@ -16,37 +16,6 @@
   });
   map.setZoom(20);
 
-  function addFort(e) {
-    let latLng = e.latLng.toString().split(",");
-    let lat = latLng[0].substring(1);
-    let lng = latLng[1].substring(0, latLng[1].length - 1);
-    let name = prompt("Enter fort name: ");
-    let description = prompt("Enter fort description: ");
-    send({
-      action: "addFortToPosition",
-      latitude: lat,
-      longitude: lng,
-      zoom: map.zoom,
-      name: name,
-      description: description
-    }, function(res) {
-      console.log(res);
-    });
-  }
-
-  function removeFort(fort) {
-    console.log(fort);
-    let sure = prompt("Do you really want to remove this fort?");
-    if (sure === null) return void 0;
-    send({
-      action: "deleteFortById",
-      cell_id: fort.cellId,
-      cell_uid: fort.uid
-    }, function(res) {
-      console.log(res);
-    });
-  }
-
   function setStatus(txt, color) {
     connection_status.innerHTML = txt;
     connection_status.style.color = color;
@@ -139,14 +108,12 @@
     let lng = center.lng();
     send({
       action: "getFortsByPosition",
-      lat: lat,
-      lng: lng
-    }, function(res) {
+      latitude: lat,
+      longitude: lng,
+      zoom: map.zoom
+    }, function(result) {
       map.removeMarkers();
-      let ii = 0;
-      let length = res.forts.length;
-      for (; ii < length; ++ii) {
-        let fort = res.forts[ii];
+      result.forts.map((fort) => {
         map.addMarker({
           lat: fort.latitude,
           lng: fort.longitude,
@@ -155,7 +122,41 @@
             removeFort(this);
           }.bind(fort)
         });
-      };
+      });
+    });
+  }
+
+  function addFort(e) {
+    let latLng = e.latLng.toString().split(",");
+    let lat = latLng[0].substring(1);
+    let lng = latLng[1].substring(0, latLng[1].length - 1);
+    let name = prompt("Enter fort name: ");
+    let description = prompt("Enter fort description: ");
+    send({
+      action: "addFortToPosition",
+      latitude: lat,
+      longitude: lng,
+      zoom: map.zoom,
+      name: name,
+      description: description
+    }, function(res) {
+      console.log(res);
+      refreshMapForts();
+    });
+  }
+
+  function removeFort(fort) {
+    let sure = prompt("Do you really want to remove this fort?");
+    if (sure === null) return void 0;
+    send({
+      action: "deleteFortById",
+      uid: fort.uid,
+      latitude: fort.latitude,
+      longitude: fort.longitude,
+      zoom: map.zoom
+    }, function(res) {
+      console.log(res);
+      refreshMapForts();
     });
   }
 
