@@ -29,3 +29,5 @@ favorite tinyint(1) NOT NULL,
 nickname longtext NOT NULL,
 from_fort int(11) NOT NULL,
 PRIMARY KEY (id)
+
+ALTER TABLE `owned_pkmn` ADD CONSTRAINT `owned_pkmn_ibfk_1` FOREIGN KEY (`users`) REFERENCES `users` (`id`);
