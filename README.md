@@ -61,7 +61,7 @@ Depending on your OS, you need to run either ``run-linux.sh`` or ``run-windows.b
 
 ## Docker setup
 
-1. Download ``Dockerfile,``, ``cfg.js.example`` and ``supervisord.conf`` from github.
+1. Download ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` from github.
 2. Place ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` into the same folder. Rename ``cfg.js.example`` to ``cfg.js``.
 3. Modify ``cfg.js`` to your requirements as described above.
 4. Create a container and run it.
