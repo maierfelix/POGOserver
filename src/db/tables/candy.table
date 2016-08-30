@@ -1,8 +1,0 @@
-id int(15) NOT NULL AUTO_INCREMENT,
-fort_id varchar(42) NOT NULL,
-latitude double NOT NULL,
-longitude double NOT NULL,
-enabled tinyint(1) NOT NULL,
-items_awarded varchar(42) NOT NULL,
-experience_awarded int(10) NOT NULL
-PRIMARY KEY (id)
