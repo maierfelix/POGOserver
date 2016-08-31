@@ -32,11 +32,11 @@ export default class MapObject {
       if (this.hasOwnProperty(key)) {
         this[key] = obj[key];
       }
+      else if (key === "id") {
+        this.uid = obj[key];
+      }
       else if (key === "cell_id") {
         this.cellId = obj[key];
-      }
-      else if (key === "cell_uid") {
-        this.uid = obj[key];
       }
     };
   }

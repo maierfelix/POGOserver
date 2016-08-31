@@ -1,5 +1,6 @@
 import POGOProtos from "pokemongo-protobuf";
 
+import CFG from "../../../../CFG";
 import print from "../../../print";
 
 /**
@@ -8,19 +9,13 @@ import print from "../../../print";
  */
 export default function FortSearch(msg) {
 
-  let id = msg.fort_id.split(".");
-
   return new Promise((resolve) => {
-    this.instance.db.query(`SELECT * from ${CFG.MYSQL_FORT_TABLE} WHERE cell_id=? AND cell_uid=?`, [id[0], id[1]], (e, forts) => {
-      let fort = forts[0];
+    this.getFortDataById(msg.fort_id).then((fort) => {
       if (!fort) return void 0;
       let buffer = ({
         result: "SUCCESS",
-        items_awarded: [
-          { item_id: 3 },
-          { item_id: 4 }
-        ],
-        experience_awarded: 1337,
+        items_awarded: fort.serializeRewards(),
+        experience_awarded: fort.experience,
         cooldown_complete_timestamp_ms: +new Date() + fort.cooldown,
         chain_hack_sequence_number: 2
       });

@@ -65,8 +65,9 @@ export default class GameServer {
       if (current < latest) {
         print(`WARNING: Please update to the latest build v${latest}!`, 33);
       }
-      this.world = new World(this);
-      this.setup();
+      this.setup().then(() => {
+        this.world = new World(this);
+      });
     });
 
   }

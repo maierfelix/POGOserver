@@ -17,42 +17,47 @@ import {
 
 export function setup() {
 
-  let save = JSON.parse(fs.readFileSync(".save", "utf8"));
+  return new Promise((resolve, reject) => {
 
-  if (save.isFirstRun) {
-    print("Required assets are missing! Preparing dump session..", 33);
-    setTimeout(() => {
-      this.onFirstRun(() => {
-        save.isFirstRun = false;
-        fs.writeFileSync(".save", JSON.stringify(save), "utf8");
-        this.setup();
+    let save = JSON.parse(fs.readFileSync(".save", "utf8"));
+
+    if (save.isFirstRun) {
+      print("Required assets are missing! Preparing dump session..", 33);
+      setTimeout(() => {
+        this.onFirstRun(() => {
+          save.isFirstRun = false;
+          fs.writeFileSync(".save", JSON.stringify(save), "utf8");
+          this.setup().then(resolve);
+        });
+      }, 1e3);
+      return void 0;
+    }
+
+    // make sure all assets got loaded properly
+    this.validateAssets().then(() => {
+
+      print(`Downloaded assets are valid! Proceeding..`);
+
+      let parsedMaster = this.parseGameMaster();
+      shared.GAME_MASTER = new GameMaster(parsedMaster);
+
+      this.setupDatabaseConnection().then(() => {
+        if (CFG.PORT < 1) {
+          print("Invalid port!", 31);
+          return void 0;
+        }
+        this.socket = this.createHTTPServer();
+        setTimeout(this::this.cycle, 1);
+        let localIPv4 = this.getLocalIPv4();
+        print(`Server listening at ${localIPv4}:${CFG.PORT}`, 33);
+        resolve();
       });
-    }, 1e3);
-    return void 0;
-  }
 
-  // make sure all assets got loaded properly
-  this.validateAssets().then(() => {
-
-    print(`Downloaded assets are valid! Proceeding..`);
-
-    let parsedMaster = this.parseGameMaster();
-    shared.GAME_MASTER = new GameMaster(parsedMaster);
-
-    this.setupDatabaseConnection().then(() => {
-      if (CFG.PORT < 1) {
-        print("Invalid port!", 31);
-        return void 0;
-      }
-      this.socket = this.createHTTPServer();
-      setTimeout(this::this.cycle, 1);
-      let localIPv4 = this.getLocalIPv4();
-      print(`Server listening at ${localIPv4}:${CFG.PORT}`, 33);
+    }).catch((e) => {
+      //fse.removeSync(CFG.DUMP_ASSET_PATH);
+      print("Error: " + e + " was not found!", 31);
     });
 
-  }).catch((e) => {
-    //fse.removeSync(CFG.DUMP_ASSET_PATH);
-    print("Error: " + e + " was not found!", 31);
   });
 
 }

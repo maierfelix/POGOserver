@@ -5,6 +5,28 @@ import CFG from "../../../cfg";
 import print from "../../print";
 
 /**
+ * @param {String} id
+ */
+export function getFortDataById(id) {
+
+  id = id.split(".") || [];
+
+  let uid = id[1];
+  let cellId = id[0];
+
+  let cell = this.getCellById(cellId);
+
+  return new Promise((resolve) => {
+    if (!cellId || !uid || !cell) return resolve();
+    cell.loadForts().then(() => {
+      let fort = cell.getFortById(uid);
+      resolve(fort);
+    });
+  });
+
+}
+
+/**
  * @param {Array} cells
  * @param {Array} out
  * @param {Number} index
@@ -71,44 +93,31 @@ export function deleteFort(cellId, uid) {
   let cell = this.getCellById(cellId);
   let fort = cell.getFortById(uid);
   return new Promise((resolve) => {
-    this.deleteFortFromDatabase(fort).then(() => {
-      fort.delete();
-      resolve();
-    });
-  });
-}
-
-export function insertFortIntoDatabase(obj) {
-  return new Promise((resolve) => {
-    this.addFort(obj).then((fort) => {
-      let query = `INSERT INTO ${CFG.MYSQL_FORT_TABLE} SET cell_id=?, cell_uid=?, latitude=?, longitude=?, name=?, description=?, image_url=?, rewards=?`;
-      let id = fort.parent.cellId;
-      let lat = fort.latitude;
-      let lng = fort.longitude;
-      let name = fort.name;
-      let desc = fort.description;
-      let img = "http://thecatapi.com/api/images/get?format=src&type=png&d=" + +new Date();
-      this.instance.db.query(query, [id, 0, lat, lng, name, desc, img, ""], (e, res) => {
-        let insertId = res.insertId;
-        this.instance.db.query(`SELECT * from ${CFG.MYSQL_FORT_TABLE} WHERE cell_id=? ORDER BY cell_uid DESC`, [id], (e, res) => {
-          let index = res instanceof Array ? res[0].cell_uid + 1 : 0;
-          this.instance.db.query(`UPDATE ${CFG.MYSQL_FORT_TABLE} SET cell_uid=? WHERE id=?`, [index, insertId], (e, res) => {
-            fort.uid = index;
-            resolve(fort);
-          });
-        });
-      });
-    });
+    fort.delete();
+    resolve();
   });
 }
 
 /**
- * @param {Fort} fort
+ * @param {Object} obj
  */
-export function deleteFortFromDatabase(fort) {
+export function insertFortIntoDatabase(obj) {
   return new Promise((resolve) => {
-    this.instance.db.query(`DELETE FROM ${CFG.MYSQL_FORT_TABLE} WHERE cell_id=? AND cell_uid=? LIMIT 1`, [fort.cellId, fort.uid], (e, res) => {
-      resolve();
+    let cellId = Cell.getIdByPosition(obj.latitude, obj.longitude, obj.zoom);
+    let query = `INSERT INTO ${CFG.MYSQL_FORT_TABLE} SET cell_id=?, latitude=?, longitude=?, name=?, description=?, image_url=?, experience=?, rewards=?`;
+    let lat = obj.latitude;
+    let lng = obj.longitude;
+    let name = obj.name;
+    let desc = obj.description;
+    let img = obj.image || "";
+    let exp = obj.experience || 500;
+    this.instance.db.query(query, [cellId, lat, lng, name, desc, img, exp, ""], (e, res) => {
+      let insertId = res.insertId;
+      obj.uid = insertId;
+      obj.cell_id = cellId;
+      this.addFort(obj).then((fort) => {
+        resolve(fort);
+      });
     });
   });
 }

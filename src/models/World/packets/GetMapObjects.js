@@ -2,6 +2,7 @@ import POGOProtos from "pokemongo-protobuf";
 
 import s2 from "s2-geometry";
 
+import CFG from "../../../../CFG";
 import print from "../../../print";
 
 const S2Geo = s2.S2;
@@ -30,9 +31,20 @@ export default function GetMapObjects(msg) {
     this.getFortsByCells(msg.cell_id, [], 0).then((cells) => {
       cells.map((cell) => {
         if (cell.forts.length) {
-          console.log("###" + cell.cellId + "###");
+          let ids = [];
+          /*console.log("###" + cell.cellId + "###");
           cell.forts.map((fort) => {
             console.log(fort.uid, fort.latitude, fort.longitude);
+          });*/
+          cell.forts.map((fort) => {
+            let id = fort.cellId + "." + fort.uid;
+            if (ids.indexOf(id) > -1) {
+              print(`Duplicated!!!! => ${id}`, 31);
+            }
+            else {
+              ids.push(id);
+            }
+            print(`Active fort: ${fort.cellId}.${fort.uid}`, 35);
           });
         }
         mapCells.push({

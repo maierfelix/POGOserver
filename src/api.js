@@ -183,6 +183,7 @@ export function api_deleteFortById(data) {
   return new Promise((resolve) => {
     this.world.deleteFort(cellId, uid).then(() => {
       resolve({
+        id: cellId + "." + uid,
         success: true
       });
     });
@@ -216,13 +217,14 @@ export function getNeighbors(lat, lng, lvl) {
   let next = S2Geo.nextKey(origin);
   let prev = S2Geo.prevKey(origin);
   let ii = 0;
-  let length = 30;
+  let length = 10;
   for (; ii < length; ++ii) {
     walk.push(S2Geo.toId(prev));
     walk.push(S2Geo.toId(next));
     next = S2Geo.nextKey(next);
     prev = S2Geo.prevKey(prev);
   };
+  walk.sort((a, b) => a - b);
   return (walk);
 }
 

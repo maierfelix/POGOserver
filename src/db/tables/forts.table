@@ -1,10 +1,10 @@
 id int(11) NOT NULL AUTO_INCREMENT,
 cell_id varchar(64) NOT NULL,
-cell_uid int(11) NOT NULL,
 latitude double NOT NULL,
 longitude double NOT NULL,
 name varchar(64) NOT NULL,
 description varchar(128) NOT NULL,
 image_url varchar(128) NOT NULL,
-rewards varchar(64) NOT NULL,
+experience int(11) NOT NULL DEFAULT '0',
+rewards varchar(64) NOT NULL DEFAULT '{}',
 PRIMARY KEY (id)

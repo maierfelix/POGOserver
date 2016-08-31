@@ -50,10 +50,12 @@ export default class Cell extends MapObject {
       }
       else {
         this.getFortsFromDatabase().then((forts) => {
+          this.forts = [];
           forts.map((fort) => {
             this.processDeletedFort(this.addFort(fort));
           });
           this.synced = true;
+          print(`Synced ${this.cellId} with database..`, 33);
           resolve(this.forts);
         });
       }
@@ -81,8 +83,22 @@ export default class Cell extends MapObject {
       // wait for the next map refresh
       setTimeout(() => {
         this.deleteFortById(fort.uid);
+        this.deleteFortFromDatabase(fort).then(() => {
+
+        });
       }, (MAP_REFRESH_RATE * 1e3) * 3);
     }
+  }
+
+  /**
+   * @param {Fort} fort
+   */
+  deleteFortFromDatabase(fort) {
+    return new Promise((resolve) => {
+      this.world.instance.db.query(`DELETE FROM ${CFG.MYSQL_FORT_TABLE} WHERE cell_id=? AND id=? LIMIT 1`, [fort.cellId, fort.uid], (e, res) => {
+        resolve();
+      });
+    });
   }
 
   /**
@@ -92,7 +108,7 @@ export default class Cell extends MapObject {
   getFortIndexById(id) {
     let index = 0;
     for (let fort of this.forts) {
-      if (fort.uid === id) return (index);
+      if (fort.uid === id || fort.uid === id << 0) return (index);
       ++index;
     };
     return (-1);
@@ -125,8 +141,6 @@ export default class Cell extends MapObject {
   addFort(obj) {
     obj.world = this.world;
     let fort = new Fort(obj);
-    fort.parent = this;
-    fort.cellId = fort.parent.cellId;
     this.forts.push(fort);
     return (fort);
   }

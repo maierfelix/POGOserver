@@ -60,19 +60,15 @@ export function decode(req, res) {
  * @param  {Response} res
  */
 export function dumpTraffic(req, res) {
-
-  let decoded = this.decode(req, res);
-
-  let out = {
-    Request: decoded.req,
-    Response: decoded.res
-  };
-
   try {
-    let decoded = JSON.stringify(out, null, 2);
+    let decoded = this.decode(req, res);
+    let out = {
+      Request: decoded.req,
+      Response: decoded.res
+    };
+    decoded = JSON.stringify(out, null, 2);
     fse.outputFileSync(CFG.DEBUG_DUMP_PATH + Date.now(), decoded);
   } catch (e) {
     print("Dump traffic: " + e, 31);
   }
-
 }

@@ -1,5 +1,6 @@
 import POGOProtos from "pokemongo-protobuf";
 
+import CFG from "../../../../CFG";
 import print from "../../../print";
 
 /**
@@ -8,18 +9,17 @@ import print from "../../../print";
  */
 export default function FortDetails(msg) {
 
-  let id = msg.fort_id.split(".");
-
   return new Promise((resolve) => {
-    this.instance.db.query(`SELECT * from ${CFG.MYSQL_FORT_TABLE} WHERE cell_id=? AND cell_uid=?`, [id[0], id[1]], (e, forts) => {
-      let fort = forts[0];
+    this.getFortDataById(msg.fort_id).then((fort) => {
       if (!fort) return void 0;
+      let ts = +new Date();
+      let url = fort.image_url;
       let buffer = {
         fort_id: msg.fort_id,
         name: fort.name,
         description: fort.description,
         image_urls: [
-          fort.image_url
+          url
         ],
         type: "CHECKPOINT",
         latitude: fort.latitude,

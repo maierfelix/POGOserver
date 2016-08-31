@@ -1,5 +1,5 @@
-import Pokemon from "index";
-import CaptureProbability from "CaptureProbability";
+import Pokemon from "../index";
+//import CaptureProbability from "CaptureProbability";
 
 /**
  * @class WildPokemon

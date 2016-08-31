@@ -7,6 +7,8 @@ import {
   validName
 } from "../../../utils";
 
+import enum from "../../../enum";
+
 /**
  * @class Fort
  */
@@ -19,8 +21,6 @@ export default class Fort extends MapObject {
   constructor(obj) {
 
     super(obj);
-
-    this.parent = null;
 
     this.enabled = true;
     this.deleted = false;
@@ -46,7 +46,7 @@ export default class Fort extends MapObject {
   init(obj) {
     obj = obj || {};
     for (let key in obj) {
-      if (this.hasOwnProperty(key)) {
+      if (this.hasOwnProperty(key) && key !== "rewards") {
         this[key] = obj[key];
       }
     };
@@ -76,7 +76,7 @@ export default class Fort extends MapObject {
       let amount = this.rewards[key] << 0;
       for (let ii = 0; ii < amount; ++ii) {
         out.push({
-          item_id: key
+          item_id: enum.getItemNameById(enum.ITEMS, key << 0)
         });
       };
     };
