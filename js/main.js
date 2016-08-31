@@ -7,14 +7,57 @@
   var heartTimeout = null;
   var heartTimedOut = true;
 
-  var map = new GMaps({
+  var gmap = new GMaps({
     el: "#map",
-    lat: 39.18875480450959,
-    lng: -96.58109955489635,
     disableDoubleClickZoom: true,
-    dblclick: addFort
+    lat: 0,
+    lng: 0,
+    disableDefaultUI: true,
+    dblclick: function(e) {
+      vex.dialog.open({
+        message: "<center><img src='img/pokestop_blue.png' /><br/>Create new fort</center>",
+        input: [
+          '<input name="name" placeholder="Name" type="text" />',
+          '<input name="description" placeholder="Description" type="text" />',
+          '<input name="image_url" placeholder="Image" type="text" />',
+          '<input name="experience" placeholder="Experience" type="text" />'
+        ].join(""),
+        buttons: [
+          $.extend({}, vex.dialog.buttons.YES, {
+            text: "Submit"
+          }),
+          $.extend({}, vex.dialog.buttons.NO, {
+            text: "Abort"
+          })
+        ],
+        callback: function(data) {
+          e.name = data.name;
+          e.description = data.description;
+          e.imageUrl = data.image_url;
+          e.experience = data.experience;
+          addFort(e);
+        }
+      })
+    }
   });
-  map.setZoom(20);
+
+  function addFort(e) {
+    let lat = e.latLng.lat();
+    let lng = e.latLng.lng();
+    send({
+      action: "addFortToPosition",
+      latitude: lat,
+      longitude: lng,
+      zoom: gmap.zoom,
+      name: e.name,
+      description: e.description,
+      image: e.imageUrl,
+      experience: e.experience
+    }, function(res) {
+      console.log(res);
+      refreshMapForts();
+    });
+  }
 
   function setStatus(txt, color) {
     connection_status.innerHTML = txt;
@@ -79,7 +122,13 @@
     setStatus("Logged in!", "green");
     world_manager.style.display = "block";
     server_ping.style.display = "block";
-    fort_manager.style.opacity = 1;
+    map_manager.style.display = "block";
+    gmap.refresh();
+    gmap.setCenter({
+      lat: CFG.GMAPS.BASE_LAT,
+      lng: CFG.GMAPS.BASE_LNG
+    });
+    gmap.setZoom(CFG.GMAPS.BASE_ZOOM);
     initHeartBeat();
     refreshMapForts();
     refreshConnectedPlayers();
@@ -103,57 +152,42 @@
   }
 
   function refreshMapForts() {
-    let center = map.getCenter();
+    let center = gmap.getCenter();
     let lat = center.lat();
     let lng = center.lng();
     send({
       action: "getFortsByPosition",
       latitude: lat,
       longitude: lng,
-      zoom: map.zoom
+      zoom: gmap.zoom
     }, function(result) {
-      map.removeMarkers();
+      gmap.removeMarkers();
       result.forts.map((fort) => {
-        map.addMarker({
+        gmap.addMarker({
           lat: fort.latitude,
           lng: fort.longitude,
           title: fort.name,
-          dblclick: function() {
-            removeFort(this);
+          icon: "img/pokestop_blue.png",
+          rightclick: function(e) {
+            vex.dialog.confirm({
+              message: "<center><img src='img/pokestop_blue.png' /><br/>Delete this fort?</center>",
+              callback: function(value) {
+                if (value) removeFort(this);
+              }.bind(fort)
+            })
           }.bind(fort)
         });
       });
     });
   }
 
-  function addFort(e) {
-    let latLng = e.latLng.toString().split(",");
-    let lat = latLng[0].substring(1);
-    let lng = latLng[1].substring(0, latLng[1].length - 1);
-    let name = prompt("Enter fort name: ");
-    let description = prompt("Enter fort description: ");
-    send({
-      action: "addFortToPosition",
-      latitude: lat,
-      longitude: lng,
-      zoom: map.zoom,
-      name: name,
-      description: description
-    }, function(res) {
-      console.log(res);
-      refreshMapForts();
-    });
-  }
-
   function removeFort(fort) {
-    let sure = prompt("Do you really want to remove this fort?");
-    if (sure === null) return void 0;
     send({
       action: "deleteFortById",
       uid: fort.uid,
       latitude: fort.latitude,
       longitude: fort.longitude,
-      zoom: map.zoom
+      zoom: gmap.zoom
     }, function(res) {
       console.log(res);
       refreshMapForts();

@@ -1,7 +1,7 @@
 function send(data, resolve) {
   var xhr = new XMLHttpRequest();
   var protocol = window.location.protocol;
-  xhr.open("POST", protocol + "//" + "127.0.0.1:3000/api", true);
+  xhr.open("POST", protocol + "//" + CFG.API.HOST + ":" + CFG.API.PORT + CFG.API.ROUTE, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {

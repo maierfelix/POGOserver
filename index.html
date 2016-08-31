@@ -9,8 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/pure.min.css">
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=X"></script>
-    <script src="./gmaps.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vex-js/2.3.4/js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = "vex-theme-plain";</script>
+    <link rel="stylesheet" type="text/css" href="css/vex.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/2.3.4/css/vex-theme-plain.css">
   </head>
   <body class="body">
 
@@ -37,12 +40,12 @@
       <br/>
     </div>
 
-    <div class="area" id="fort_manager" style="padding-bottom:500px;opacity:0;">
+    <div class="area" id="map_manager">
       <div id="map"></div>
     </div>
 
-    <script language="javascript" src="ajax.js"></script>
-    <script language="javascript" src="main.js"></script>
+    <script src="cfg.js"></script>
+    <script src="js/init.js"></script>
 
   </body>
 </html>
