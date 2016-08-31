@@ -2,3 +2,4 @@ node_modules/
 scripts/
 data/
 cfg.js
+logs/
