@@ -1,0 +1,8 @@
+id int(11) NOT NULL AUTO_INCREMENT,
+cell_id varchar(64) NOT NULL,
+latitude double NOT NULL,
+longitude double NOT NULL,
+team int(1) NOT NULL,
+in_battle tinyint(1) NOT NULL DEFAULT '0',
+points int(11) NOT NULL DEFAULT '0',
+PRIMARY KEY (id)

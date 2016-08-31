@@ -41,7 +41,8 @@ export default {
   MYSQL_USERNAME: "root",
   MYSQL_PASSWORD: "",
   MYSQL_USERS_TABLE: "users",
-  MYSQL_FORT_TABLE: "forts",
+  MYSQL_GYM_TABLE: "gym",
+  MYSQL_POKESTOP_TABLE: "pokestop",
   MYSQL_OWNED_PKMN_TABLE: "owned_pkmn",
 
   // Used for asset download session

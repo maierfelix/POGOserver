@@ -103,15 +103,47 @@ export function deleteFort(cellId, uid) {
  */
 export function insertFortIntoDatabase(obj) {
   return new Promise((resolve) => {
-    let cellId = Cell.getIdByPosition(obj.latitude, obj.longitude, obj.zoom);
-    let query = `INSERT INTO ${CFG.MYSQL_FORT_TABLE} SET cell_id=?, latitude=?, longitude=?, name=?, description=?, image_url=?, experience=?, rewards=?`;
-    let lat = obj.latitude;
-    let lng = obj.longitude;
-    let name = obj.name;
-    let desc = obj.description;
-    let img = obj.image || "";
-    let exp = obj.experience || 500;
+    if (obj.type === "CHECKPOINT") {
+      this.insertPokestopIntoDatabase(obj).then((gym) => {
+        resolve(gym);
+      });
+    }
+    else if (obj.type === "GYM") {
+      this.insertGymIntoDatabase(obj).then((pokestop) => {
+        resolve(pokestop);
+      });
+    }
+  });
+}
+
+export function insertPokestopIntoDatabase(obj) {
+  let cellId = Cell.getIdByPosition(obj.latitude, obj.longitude, obj.zoom);
+  let lat = obj.latitude;
+  let lng = obj.longitude;
+  let name = obj.name;
+  let desc = obj.description;
+  let img = obj.image || "";
+  let exp = obj.experience || 500;
+  let query = `INSERT INTO ${Cell.getTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, name=?, description=?, image_url=?, experience=?, rewards=?`;
+  return new Promise((resolve) => {
     this.instance.db.query(query, [cellId, lat, lng, name, desc, img, exp, ""], (e, res) => {
+      let insertId = res.insertId;
+      obj.uid = insertId;
+      obj.cell_id = cellId;
+      this.addFort(obj).then((fort) => {
+        resolve(fort);
+      });
+    });
+  });
+}
+
+export function insertGymIntoDatabase(obj) {
+  let cellId = Cell.getIdByPosition(obj.latitude, obj.longitude, obj.zoom);
+  let lat = obj.latitude;
+  let lng = obj.longitude;
+  let query = `INSERT INTO ${Cell.getTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, team=?, in_battle=?, points=?`;
+  return new Promise((resolve) => {
+    this.instance.db.query(query, [cellId, lat, lng, 0, 0, 0], (e, res) => {
       let insertId = res.insertId;
       obj.uid = insertId;
       obj.cell_id = cellId;

@@ -7,8 +7,6 @@ import {
   validName
 } from "../../../utils";
 
-import enum from "../../../enum";
-
 /**
  * @class Fort
  */
@@ -25,16 +23,7 @@ export default class Fort extends MapObject {
     this.enabled = true;
     this.deleted = false;
 
-    this.name = null;
-    this.description = null;
-
-    this.image_url = null;
-
-    this.cooldown = 5e3;
-
-    this.experience = 0;
-
-    this.rewards = this.parseRewards(obj.rewards);
+    this.type = null;
 
     this.init(obj);
 
@@ -50,37 +39,6 @@ export default class Fort extends MapObject {
         this[key] = obj[key];
       }
     };
-  }
-
-  /**
-   * @return {Object}
-   */
-  parseRewards(rewards) {
-    rewards = rewards || "{}";
-    let json = null;
-    try {
-      json = JSON.parse(rewards);
-    } catch (e) {
-      json = {};
-      print(e, 31);
-    }
-    return (json);
-  }
-
-  /**
-   * @return {Array}
-   */
-  serializeRewards() {
-    let out = [];
-    for (let key in this.rewards) {
-      let amount = this.rewards[key] << 0;
-      for (let ii = 0; ii < amount; ++ii) {
-        out.push({
-          item_id: enum.getItemNameById(enum.ITEMS, key << 0)
-        });
-      };
-    };
-    return (out);
   }
 
   /**
@@ -106,7 +64,7 @@ export default class Fort extends MapObject {
       latitude: this.latitude,
       longitude: this.longitude,
       enabled: this.enabled,
-      type: "CHECKPOINT"
+      type: this.type
     });
   }
 

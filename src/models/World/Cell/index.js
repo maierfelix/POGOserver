@@ -1,6 +1,8 @@
 import s2 from "s2-geometry";
 
-import Fort from "../Fort";
+import Gym from "../Fort/Gym";
+import Pokestop from "../Fort/Pokestop";
+
 import MapObject from "../MapObject";
 import Settings from "../../../modes";
 import CFG from "../../../../cfg";
@@ -26,6 +28,8 @@ export default class Cell extends MapObject {
     this.synced = false;
 
     this.forts = [];
+
+    this.type = obj.type;
 
   }
 
@@ -62,11 +66,38 @@ export default class Cell extends MapObject {
     });
   }
 
+  /**
+   * @param {String} type
+   * @return {String}
+   */
+  static getTable(type) {
+    return (
+      type === "CHECKPOINT" ?
+      CFG.MYSQL_POKESTOP_TABLE :
+      CFG.MYSQL_GYM_TABLE
+    );
+  }
+
   getFortsFromDatabase() {
     return new Promise((resolve) => {
-      this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_FORT_TABLE).then((forts) => {
-        resolve(forts || []);
-      });
+      try {
+        let out = [];
+        this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_POKESTOP_TABLE).then((forts) => {
+          forts = forts || [];
+          forts.map((fort) => {
+            fort.type = "CHECKPOINT";
+            out.push(fort);
+          });
+          this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_GYM_TABLE).then((forts) => {
+            forts = forts || [];
+            forts.map((fort) => {
+              fort.type = "GYM";
+              out.push(fort);
+            });
+            resolve(out);
+          });
+        });
+      } catch (e) { console.log(e); }
     });
   }
 
@@ -84,7 +115,7 @@ export default class Cell extends MapObject {
       setTimeout(() => {
         this.deleteFortById(fort.uid);
         this.deleteFortFromDatabase(fort).then(() => {
-
+          // do sth after
         });
       }, (MAP_REFRESH_RATE * 1e3) * 3);
     }
@@ -95,7 +126,8 @@ export default class Cell extends MapObject {
    */
   deleteFortFromDatabase(fort) {
     return new Promise((resolve) => {
-      this.world.instance.db.query(`DELETE FROM ${CFG.MYSQL_FORT_TABLE} WHERE cell_id=? AND id=? LIMIT 1`, [fort.cellId, fort.uid], (e, res) => {
+      let table = Cell.getTable(fort.type);
+      this.world.instance.db.query(`DELETE FROM ${table} WHERE cell_id=? AND id=? LIMIT 1`, [fort.cellId, fort.uid], (e, res) => {
         resolve();
       });
     });
@@ -140,7 +172,8 @@ export default class Cell extends MapObject {
    */
   addFort(obj) {
     obj.world = this.world;
-    let fort = new Fort(obj);
+    let fort = null;
+    fort = obj.type === "CHECKPOINT" ? new Pokestop(obj) : new Gym(obj);
     this.forts.push(fort);
     return (fort);
   }
