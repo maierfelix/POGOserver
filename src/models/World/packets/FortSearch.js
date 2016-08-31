@@ -1,6 +1,6 @@
 import POGOProtos from "pokemongo-protobuf";
 
-import CFG from "../../../../CFG";
+import CFG from "../../../../cfg";
 import print from "../../../print";
 
 /**
