@@ -18,9 +18,9 @@
   </a>
 </div>
 
-<img width="25%" src="http://image.prntscr.com/image/55fb47b99164465abefb2698a7bb142d.png" />
+<img width="25%" src="http://image.prntscr.com/image/918383bb5cde453ab2572461084b4601.png" />
 <img width="24%" src="http://image.prntscr.com/image/0ab416fa479f427180476cad8a238f04.png" />
-<img width="24%" src="http://image.prntscr.com/image/918383bb5cde453ab2572461084b4601.png" />
+<img width="24%" src="http://image.prntscr.com/image/b93d4e81e7e24ec1b1bc8c21b089c1f4.png" />
 <img width="25%" src="http://i.imgur.com/iZypeny.png" />
 
 # Getting started
