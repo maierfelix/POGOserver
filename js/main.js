@@ -7,6 +7,27 @@
   var heartTimeout = null;
   var heartTimedOut = true;
 
+  var header = `
+    <div class="pure-form pure-g">
+      <div class="pure-u-1-2">
+        <center>
+          <img src='img/pokestop_blue.png'/><br/>
+          <input id="option-one" type="radio" name="type" value="CHECKPOINT" style="margin: 18px;" checked>
+        </center> 
+      </div>
+      <div class="pure-u-1-2">
+        <center>
+          <img src='img/gym_0.png'/><br/>
+          <input id="option-two" type="radio" name="type" style="margin: 18px;" value="GYM">
+        </center> 
+      </div>
+    </div>
+    <input name="name" placeholder="Name" type="text" />
+    <input name="description" placeholder="Description" type="text" />
+    <input name="image_url" placeholder="Image" type="text" />
+    <input name="experience" placeholder="Experience" type="text" />
+  `;
+
   var gmap = new GMaps({
     el: "#map",
     disableDoubleClickZoom: true,
@@ -15,13 +36,8 @@
     disableDefaultUI: true,
     dblclick: function(e) {
       vex.dialog.open({
-        message: "<center><img src='img/pokestop_blue.png' /><br/>Create new fort</center>",
-        input: [
-          '<input name="name" placeholder="Name" type="text" />',
-          '<input name="description" placeholder="Description" type="text" />',
-          '<input name="image_url" placeholder="Image" type="text" />',
-          '<input name="experience" placeholder="Experience" type="text" />'
-        ].join(""),
+        message: "",
+        input: header,
         buttons: [
           $.extend({}, vex.dialog.buttons.YES, {
             text: "Submit"
@@ -31,11 +47,14 @@
           })
         ],
         callback: function(data) {
-          e.name = data.name;
-          e.description = data.description;
-          e.imageUrl = data.image_url;
-          e.experience = data.experience;
-          addFort(e);
+          if (data !== false && Object.keys(data).length) {
+            e.name = data.name;
+            e.description = data.description;
+            e.imageUrl = data.image_url;
+            e.experience = data.experience;
+            e.type = data.type;
+            addFort(e);
+          }
         }
       })
     }
@@ -52,7 +71,8 @@
       name: e.name,
       description: e.description,
       image: e.imageUrl,
-      experience: e.experience
+      experience: e.experience,
+      type: e.type
     }, function(res) {
       console.log(res);
       refreshMapForts();
@@ -163,11 +183,14 @@
     }, function(result) {
       gmap.removeMarkers();
       result.forts.map((fort) => {
+        let icon = null;
+        if (fort.type === "CHECKPOINT") icon = "img/pokestop_blue.png";
+        else icon = "img/gym_" + fort.owned_by_team + ".png";
         gmap.addMarker({
           lat: fort.latitude,
           lng: fort.longitude,
           title: fort.name,
-          icon: "img/pokestop_blue.png",
+          icon: icon,
           rightclick: function(e) {
             vex.dialog.confirm({
               message: "<center><img src='img/pokestop_blue.png' /><br/>Delete this fort?</center>",
