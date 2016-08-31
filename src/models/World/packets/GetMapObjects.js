@@ -2,7 +2,7 @@ import POGOProtos from "pokemongo-protobuf";
 
 import s2 from "s2-geometry";
 
-import CFG from "../../../../CFG";
+import CFG from "../../../../cfg";
 import print from "../../../print";
 
 const S2Geo = s2.S2;
