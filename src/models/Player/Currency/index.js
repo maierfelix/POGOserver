@@ -7,7 +7,7 @@ export default class Currency {
   constructor() {
 
     this.currencies = {
-      "POKECOINS": 0,
+      "POKECOIN": 0,
       "STARDUST": 0
     };
 

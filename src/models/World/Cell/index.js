@@ -59,7 +59,7 @@ export default class Cell extends MapObject {
             this.processDeletedFort(this.addFort(fort));
           });
           this.synced = true;
-          print(`Synced ${this.cellId} with database..`, 33);
+          //print(`Synced ${this.cellId} with database..`, 33);
           resolve(this.forts);
         });
       }

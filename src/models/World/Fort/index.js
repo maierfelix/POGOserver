@@ -27,6 +27,8 @@ export default class Fort extends MapObject {
 
     this.init(obj);
 
+    this.uid += this.type[0].toUpperCase();
+
   }
 
   /**

@@ -39,12 +39,12 @@ export default function GetMapObjects(msg) {
           cell.forts.map((fort) => {
             let id = fort.cellId + "." + fort.uid;
             if (ids.indexOf(id) > -1) {
-              print(`Duplicated!!!! => ${id}`, 31);
+              print(`Duplicated fort!!!! => ${id}`, 31);
             }
             else {
               ids.push(id);
             }
-            print(`Active fort: ${fort.cellId}.${fort.uid}`, 35);
+            //print(`Active fort: ${fort.cellId}.${fort.uid}`, 35);
           });
         }
         mapCells.push({

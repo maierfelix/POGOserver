@@ -9,6 +9,8 @@ import print from "../../../print";
  */
 export default function FortSearch(msg) {
 
+  let player = msg.player;
+
   return new Promise((resolve) => {
     this.getFortDataById(msg.fort_id).then((fort) => {
       if (!fort) return void 0;
@@ -19,6 +21,7 @@ export default function FortSearch(msg) {
         cooldown_complete_timestamp_ms: +new Date() + fort.cooldown,
         chain_hack_sequence_number: 2
       });
+      player.info.upgradeExp(fort.experience);
       resolve(
         POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.FortSearchResponse")
       );

@@ -1,6 +1,7 @@
 import fs from "fs";
 import os from "os";
 import request from "request";
+import readline from "readline";
 import POGOProtos from "pokemongo-protobuf";
 
 import {
@@ -44,6 +45,8 @@ export default class GameServer {
 
     this.db = null;
 
+    this.repository = null;
+
     this.apiClients = {};
 
     this.socket = null;
@@ -62,6 +65,7 @@ export default class GameServer {
     this.getLatestVersion().then((latest) => {
       let current = require("../package.json").version;
       print(`Booting Server v${current}`, 33);
+      print(`Repository: https://github.com/${this.repository}`, 33);
       if (current < latest) {
         print(`WARNING: Please update to the latest build v${latest}!`, 33);
       }
@@ -81,6 +85,7 @@ export default class GameServer {
       url = url.replace("git://", "");
       url = url.replace(".git", "");
       url = url.replace("github.com/", "");
+      this.repository = url;
       url = `${base}/${url}/${branch}/package.json`;
       resolve(url);
     });
@@ -190,7 +195,13 @@ inherit(GameServer, _mysql_create);
 
   const server = new GameServer();
 
-  process.openStdin().addListener("data", (data) => {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false
+  });
+
+  rl.on("line", (data) => {
     server.stdinInput(data);
   });
 

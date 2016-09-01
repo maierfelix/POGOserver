@@ -1,3 +1,7 @@
+import { GAME_MASTER } from "../../../shared";
+
+import print from "../../../print";
+
 /**
  * @class Info
  */
@@ -6,13 +10,15 @@ export default class Info {
   /** @constructor */
   constructor() {
 
-    this.lvl = 0;
+    this.lvl = 1;
 
-    this.team = 0;
+    this.team = "NEUTRAL";
 
-    this.exp = 0;
-    this.prevLvlExp = 0;
-    this.nextLvlExp = 0;
+    this.exp = this.getLevelExp(this.lvl);
+    this.prevLvlExp = this.getLevelExp(this.lvl);
+    this.nextLvlExp = this.getLevelExp(this.lvl + 1);
+
+    this.levelReward = false;
 
     this.kmWalked = 0;
     this.pkmnEncountered = 0;
@@ -35,13 +41,13 @@ export default class Info {
 
   getLevelSettings() {
     return (
-      this.owner.gameMaster("PLAYER_LEVEL_SETTINGS")
+      GAME_MASTER.settings.PLAYER_LEVEL_SETTINGS.player_level
     );
   }
 
   getMaximumLevel() {
     return (
-      Object.keys(this.getLevelSettings().player_level).length
+      this.getLevelSettings().required_experience.length
     );
   }
 
@@ -55,29 +61,45 @@ export default class Info {
     return (1);
   }
 
+  getLevelExp(lvl) {
+    return (
+      this.getLevelSettings().required_experience[lvl - 1]
+    );
+  }
+
   /**
    * @param {Number} exp
    */
   upgradeExp(exp) {
-    let levels = this.getLevelSettings().required_experience;
-    let maxLevel = this.getMaximumLevel();
-    let currentLevel = this.getCurrentLevel();
-    if (currentLevel + 1 <= maxLevel) {
-      this.lvl += 1;
-      this.exp += exp;
-      this.prevLvlExp = levels[this.lvl - 1];
-      this.nextLvlExp = levels[this.lvl + 1];
+    if (!this.maxLevelReached()) {
+      let currentLevelExp = this.getLevelExp(this.lvl);
+      let nextLevelExp = this.getLevelExp(this.lvl + 1);
+      let leftExp = nextLevelExp - this.exp;
+      this.levelReward = false;
+      if (this.exp + exp >= nextLevelExp) {
+        this.lvl += 1;
+        this.prevLvlExp = nextLevelExp;
+        this.nextLvlExp = this.getLevelExp(this.lvl + 1);
+        this.exp += leftExp + 1;
+        this.levelReward = true;
+        this.upgradeExp(exp - leftExp);
+      }
+      else {
+        this.exp += exp;
+      }
     }
-    else {
-      this.exp += exp;
-    }
+  }
+
+  maxLevelReached() {
+    return (
+      this.lvl + 1 >= this.getMaximumLevel()
+    );
   }
 
   serialize() {
     return ({
       level: this.lvl,
       experience: this.exp,
-      prev_level_xp: this.prevLvlExp,
       next_level_xp: this.nextLvlExp,
       km_walked: this.kmWalked,
       pokemons_encountered: this.pkmnEncountered,

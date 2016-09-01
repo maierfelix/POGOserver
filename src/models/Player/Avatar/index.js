@@ -13,7 +13,7 @@ export default class Avatar {
     this._hat = 0;
     this._shoes = 0;
     this._eyes = 0;
-    this._gender = 0;
+    this._gender = "MALE";
     this._backpack = 0;
 
   }
@@ -105,7 +105,7 @@ export default class Avatar {
     return (this._gender);
   }
   set gender(value) {
-    if (this.between(value, 0, 1)) {
+    if (value === "MALE" || value === "FEMALE") {
       this._gender = value;
     }
   }
@@ -129,7 +129,7 @@ export default class Avatar {
       hat: this.hat,
       shoes: this.shoes,
       eyes: this.eyes,
-      gender: this.gender,
+      gender: this.gender ? "FEMALE" : "MALE",
       backpack: this.backpack
     });
   }

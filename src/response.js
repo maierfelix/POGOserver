@@ -40,10 +40,13 @@ export function processResponse(player, req) {
     try {
       switch (req.request_type) {
         // Player
+        case "SET_AVATAR":
         case "GET_PLAYER":
         case "GET_INVENTORY":
         case "GET_ASSET_DIGEST":
         case "GET_HATCHED_EGGS":
+        case "LEVEL_UP_REWARDS":
+        case "GET_PLAYER_PROFILE":
         case "CHECK_AWARDED_BADGES":
           player.getPacket(req.request_type, msg).then((result) => {
             print(`Success: ${req.request_type} => ${result.toString().length}`);

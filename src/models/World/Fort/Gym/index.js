@@ -7,6 +7,8 @@ import {
   validName
 } from "../../../../utils";
 
+import ENUM from "../../../../enum";
+
 /**
  * @class Gym
  */
@@ -20,7 +22,7 @@ export default class Gym extends Fort {
 
     super(obj);
 
-    this.team = "RED";
+    this.team = 0;
 
     this.guardPkmn = 0;
     this.guardPkmnCp = 0;
@@ -43,7 +45,7 @@ export default class Gym extends Fort {
       latitude: this.latitude,
       longitude: this.longitude,
       enabled: this.enabled,
-      owned_by_team: this.team,
+      owned_by_team: ENUM.getItemNameById(ENUM.TEAM, this.team),
       guard_pokemon_id: this.guardPkmn,
       gym_points: this.gymPoints,
       active_fort_modifier: []

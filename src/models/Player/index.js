@@ -119,6 +119,15 @@ export default class Player extends MapObject  {
   getPacket(type, msg) {
     return new Promise((resolve) => {
       switch (type) {
+        case "LEVEL_UP_REWARDS":
+          resolve(this.LevelUpRewards(msg));
+        break;
+        case "GET_PLAYER_PROFILE":
+          resolve(this.GetPlayerProfile(msg));
+        break;
+        case "SET_AVATAR":
+          resolve(this.SetAvatar(msg));
+        break;
         case "GET_PLAYER":
           resolve(this.GetPlayer(msg));
         break;
@@ -135,6 +144,26 @@ export default class Player extends MapObject  {
           resolve(this.CheckAwardedBadges(msg));
         break;
       };
+    });
+  }
+
+  /**
+   * @return {Object}
+   */
+  getPlayerData() {
+    return ({
+      creation_timestamp_ms: +new Date(),
+      username: this.username,
+      team: this.info.team,
+      tutorial_state: this.tutorial.serialize(),
+      avatar: this.avatar.serialize(),
+      max_pokemon_storage: 250,
+      max_item_storage: 350,
+      daily_bonus: {},
+      equipped_badge: {},
+      contact_settings: this.contact.serialize(),
+      currencies: this.currency.serialize(),
+      remaining_codename_claims: 0
     });
   }
 

@@ -43,8 +43,11 @@ export function processCommand(cmd, data) {
     case "/spawn":
       this.spawnPkmnAtPlayer(data[1], data[2], data[3] || 1);
     break;
-    case "/update":
-      eval(fs.readFileSync("update.js", "utf8"));
+    case "/dump":
+      print("Preparing dump session..");
+      this.onFirstRun(() => {
+        print("Dumped assets successfully!");
+      });
     break;
     default:
       print(`${cmd} is not a valid command!`, 31);
@@ -53,11 +56,9 @@ export function processCommand(cmd, data) {
 };
 
 export function stdinInput(data) {
-  data = data.toString().substring(0, data.length - 2);
-  if (data.length < 1) return void 0;
-  data = data.split(" ");
-  var cmd = data[0];
-  this.processCommand(cmd, data);
+  if (data.length <= 1) return void 0;
+  let cmds = data.split(" ");
+  this.processCommand(cmds[0], cmds.splice(0, 1));
 };
 
 export function uncaughtException(excp) {

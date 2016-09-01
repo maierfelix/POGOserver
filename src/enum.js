@@ -1,7 +1,9 @@
 import proto from "node-pogo-protos";
 
 export default {
+  TEAM: proto.Enums.TeamColor,
   ITEMS: proto.Inventory.Item.ItemId,
+  GENDER: proto.Enums.Gender,
   getItemNameById: (emu, id) => {
     id <<= 0;
     for (let key in emu) {

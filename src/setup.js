@@ -11,6 +11,7 @@ import * as shared from "./shared";
 import GameMaster from "./models/GameMaster";
 
 import {
+  _toCC,
   capitalize,
   idToPkmnBundleName
 } from "./utils";
@@ -141,12 +142,13 @@ export function parseGameMaster() {
 }
 
 export function onFirstRun(resolve) {
-  // make sure to login first!
+  print(`Attempt to login with ${_toCC(CFG.DOWNLOAD_PROVIDER)}..`, 33);
   pogo.login({
     provider: CFG.DOWNLOAD_PROVIDER, // google or ptc
     username: CFG.DOWNLOAD_USERNAME,
     password: CFG.DOWNLOAD_PASSWORD
   }).then(() => {
+    print(`Successfully logged in!`);
     this.downloadAssetDigests().then(() => {
       this.downloadAssets().then(resolve);
     });
