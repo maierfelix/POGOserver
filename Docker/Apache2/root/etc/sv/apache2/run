@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+export APACHE_RUN_USER=apache
+export APACHE_RUN_GROUP=www-data
+export APACHE_PID_FILE=/web/run/apache2.pid
+export APACHE_RUN_DIR=/var/run/
+export APACHE_LOCK_DIR=/var/lock/
+export APACHE_LOG_DIR=/web/log/
+
+export LANG=C
+export LANG
+
+exec /usr/sbin/httpd -DNO_DETACH -f /web/config/httpd.conf
+
