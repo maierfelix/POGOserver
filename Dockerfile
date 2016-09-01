@@ -1,6 +1,6 @@
 FROM ubuntu:latest
-MAINTAINER Draco Miles X
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qq mysql-server mysql-client -y && apt-get upgrade -y && apt-get dist-upgrade -y 
+MAINTAINER DracoMilesX
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qq apache2 mysql-server mysql-client phpmyadmin -y && apt-get upgrade -y && apt-get dist-upgrade -y 
 RUN apt-get install -y \
 					apt-utils \
 					nano \
@@ -22,7 +22,6 @@ RUN apt-get install -y \
 					autoconf \
 					automake \
 					libtool \
-					curl \
 					make \
 					g++ \
 					unzip \
@@ -37,6 +36,7 @@ RUN cd /protobuf && ./autogen.sh && ./configure && make && make check && make in
 RUN cd /
 RUN git clone --recursive https://github.com/maierfelix/POGOserver.git
 RUN chmod +x /POGOserver/run-linux.sh
+RUN git clone --recursive https://github.com/maierfelix/POGOserver.git -b api /var/www/html/pogo/
 COPY cfg.js /POGOserver/
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN service mysql start && mysql -u root -e "create database pogosql";
