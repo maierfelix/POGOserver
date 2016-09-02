@@ -34,7 +34,17 @@ export function getHashCodeFrom(str) {
     hash |= 0; // Convert to 32bit integer
   }
   return hash;
-};
+}
+
+export function deXOR(value, hash) {
+  let out = "";
+  let ii = 0;
+  let length = value.length;
+  for (; ii < length; ++ii) {
+    out += String.fromCharCode(hash ^ value.charCodeAt(ii));
+  };
+  return (out);
+}
 
 /**
  * @return {Number}

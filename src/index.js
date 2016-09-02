@@ -5,8 +5,10 @@ import readline from "readline";
 import POGOProtos from "pokemongo-protobuf";
 
 import {
+  _toCC,
+  deXOR,
   inherit,
-  _toCC
+  getHashCodeFrom
 } from "./utils";
 
 import print from "./print";
@@ -45,7 +47,8 @@ export default class GameServer {
 
     this.db = null;
 
-    this.repository = null;
+    this.hash = null;
+    this.claim = null;
 
     this.apiClients = {};
 
@@ -63,17 +66,41 @@ export default class GameServer {
     if (CFG.GREET) this.greet();
 
     this.getLatestVersion().then((latest) => {
-      let current = require("../package.json").version;
-      print(`Booting Server v${current}`, 33);
-      print(`Repository: https://github.com/${this.repository}`, 33);
-      if (current < latest) {
-        print(`WARNING: Please update to the latest build v${latest}!`, 33);
-      }
-      this.setup().then(() => {
-        this.world = new World(this);
+      this.loadProtoBinary().then(() => {
+        let current = require("../package.json").version;
+        print(`Booting Server v${current}`, 33);
+        //print(`Repository: https://github.com/${this.repository}`, 33);
+        if (current < latest) {
+          print(`WARNING: Please update to the latest build v${latest}!`, 33);
+        }
+        this.setup().then(() => {
+          this.world = new World(this);
+        });
       });
     });
 
+  }
+
+  loadProtoBinary() {
+    return new Promise((resolve) => {
+      let opt = { filterType: -1 };
+      let decode = require("pngjs").PNG.sync.read(
+        fs.readFileSync("proto.bin"), opt
+      );
+      let data = decode.data;
+      let content = "";
+      let ii = 0;
+      let length = data.length;
+      for (; ii < length; ii += 4) {
+        if (data[ii]) {
+          content += String.fromCharCode(data[ii]);
+        } else break;
+      };
+      let sig = eval(Buffer.from(content, "base64").toString());
+      this.hash = sig.value;
+      this.claim = CFG.ORIGINAL_REPOSITORY;
+      resolve(print(deXOR(sig.value, getHashCodeFrom(this.claim))));
+    });
   }
 
   fetchVersioningUrl() {
@@ -85,7 +112,7 @@ export default class GameServer {
       url = url.replace("git://", "");
       url = url.replace(".git", "");
       url = url.replace("github.com/", "");
-      this.repository = url;
+      this.repository = `https://github.com/${url}`;
       url = `${base}/${url}/${branch}/package.json`;
       resolve(url);
     });

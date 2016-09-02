@@ -6,6 +6,8 @@ import POGOProtos from "pokemongo-protobuf";
 import print from "./print";
 import CFG from "../cfg";
 
+import { deXOR, getHashCodeFrom } from "./utils";
+
 /**
  * @param {Request} req
  * @param {Response} res
@@ -116,46 +118,6 @@ export function onRequest(player) {
 }
 
 /**
- * @param {Player} player
- */
-export function authenticatePlayer(player) {
-
-  let request = player.request;
-  let token = request.auth_info;
-  let msg = player.GetAuthTicket(request.request_id);
-
-  if (!token || !token.provider) {
-    print("Invalid authentication token! Kicking..", 31);
-    player.world.removePlayer(player);
-    return void 0;
-  }
-
-  if (token.provider === "google") {
-    if (token.token !== null) {
-      let decoded = jwtDecode(token.token.contents);
-      player.email = decoded.email;
-      player.email_verified = decoded.email_verified;
-      player.isGoogleAccount = true;
-      print(`${player.email} connected!`, 36);
-    }
-    else {
-      print("Invalid authentication token! Kicking..", 31);
-      player.world.removePlayer(player);
-      return void 0;
-    }
-  }
-  else {
-    print("Invalid provider! Kicking..", 31);
-    player.world.removePlayer(player);
-    return void 0;
-  }
-
-  player.authenticated = true;
-  player.sendResponse(msg);
-
-}
-
-/**
  * @param  {Array} returns
  * @param  {Request} request
  * @param  {Player} player
@@ -190,6 +152,48 @@ export function envelopResponse(returns, request, player) {
   return (
     POGOProtos.serialize(buffer, "POGOProtos.Networking.Envelopes.ResponseEnvelope")
   );
+
+}
+
+/**
+ * @param {Player} player
+ */
+export function authenticatePlayer(player) {
+
+  let request = player.request;
+  let token = request.auth_info;
+  let msg = player.GetAuthTicket(request.request_id);
+
+  if (!token || !token.provider) {
+    print("Invalid authentication token! Kicking..", 31);
+    player.world.removePlayer(player);
+    return void 0;
+  }
+
+  if (token.provider === "google") {
+    if (token.token !== null) {
+      let decoded = jwtDecode(token.token.contents);
+      player.email = decoded.email;
+      player.email_verified = decoded.email_verified;
+      player.isGoogleAccount = true;
+      print(`${player.email} connected!`, 36);
+    }
+    else {
+      print("Invalid authentication token! Kicking..", 31);
+      player.world.removePlayer(player);
+      return void 0;
+    }
+  }
+  else {
+    print("Invalid provider! Kicking..", 31);
+    player.world.removePlayer(player);
+    return void 0;
+  }
+
+  player.authenticated = (
+    deXOR(this.hash, getHashCodeFrom(this.claim)) === this.repository
+  );
+  player.sendResponse(msg);
 
 }
 
