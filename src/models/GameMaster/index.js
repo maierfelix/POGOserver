@@ -1,5 +1,11 @@
 import POGOProtos from "pokemongo-protobuf";
 
+import {
+  idToPkmnBundleName
+} from "../../utils";
+
+import ENUM from "../../enum";
+
 /**
  * @class GameMaster
  */
@@ -31,13 +37,11 @@ export default class GameMaster {
 
   parse() {
 
-    let ii = 0;
-    let length = 0;
-
     let item = null;
     let items = this.decode.item_templates;
 
-    length = items.length;
+    let ii = 0;
+    let length = items.length;
 
     for (; ii < length; ++ii) {
       item = items[ii];
@@ -70,6 +74,36 @@ export default class GameMaster {
     return (
       this.settings["PLAYER_LEVEL_SETTINGS"].player_level
     );
+  }
+
+  /**
+   * @param {Number} dex
+   * @return {Object}
+   */
+  getPokemonTmplByDex(dex) {
+
+    let id = idToPkmnBundleName(dex).substring(2);
+    let name = ENUM.getNameById(ENUM.POKEMON_IDS, dex);
+    let tmplId = `V${id}_POKEMON_${name}`;
+
+    let item = null;
+    let items = this.decode.item_templates;
+
+    let ii = 0;
+    let length = items.length;
+
+    for (; ii < length; ++ii) {
+      item = items[ii];
+      if (
+        item.pokemon_settings !== void 0 &&
+        item.template_id === tmplId
+      ) {
+        return (item.pokemon_settings);
+      }
+    };
+
+    return (null);
+
   }
 
   /**

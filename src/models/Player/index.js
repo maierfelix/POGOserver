@@ -4,6 +4,7 @@ import Bag from "./Bag";
 import Info from "./Info";
 import Party from "./Party";
 import Avatar from "./Avatar";
+import CandyBag from "./CandyBag";
 import Contact from "./Contact";
 import Tutorial from "./Tutorial";
 import Currency from "./Currency";
@@ -61,6 +62,8 @@ export default class Player extends MapObject  {
     this.remoteAddress = null;
 
     this.bag = new Bag(this);
+    this.candyBag = new CandyBag(this);
+
     this.info = new Info(this);
     this.party = new Party(this);
     this.avatar = new Avatar(this);

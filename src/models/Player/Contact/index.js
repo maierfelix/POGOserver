@@ -3,8 +3,13 @@
  */
 export default class Contact {
 
-  /** @constructor */
-  constructor() {
+  /**
+   * @param {Player} player
+   * @constructor
+   */
+  constructor(player) {
+
+    this.player = player;
 
     this.sendMarketingEmails = false;
     this.sendPushNotifications = false;

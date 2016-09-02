@@ -23,28 +23,15 @@ export default function GetMapObjects(msg) {
     map_cells: mapCells
   };
 
-  let limit = msg.cell_id.length;
-
-  // TODO: oop, forts are world objects!
-
   return new Promise((resolve) => {
     this.getFortsByCells(msg.cell_id, [], 0).then((cells) => {
       cells.map((cell) => {
         if (cell.forts.length) {
           let ids = [];
-          /*console.log("###" + cell.cellId + "###");
-          cell.forts.map((fort) => {
-            console.log(fort.uid, fort.latitude, fort.longitude);
-          });*/
           cell.forts.map((fort) => {
             let id = fort.cellId + "." + fort.uid;
-            if (ids.indexOf(id) > -1) {
-              print(`Duplicated fort!!!! => ${id}`, 31);
-            }
-            else {
-              ids.push(id);
-            }
-            //print(`Active fort: ${fort.cellId}.${fort.uid}`, 35);
+            if (ids.indexOf(id) > -1) print(`Duplicated fort!!!! => ${id}`, 31);
+            else ids.push(id);
           });
         }
         mapCells.push({

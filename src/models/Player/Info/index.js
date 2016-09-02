@@ -7,10 +7,18 @@ import print from "../../../print";
  */
 export default class Info {
 
-  /** @constructor */
-  constructor() {
+  /**
+   * @param {Player} player
+   * @constructor
+   */
+  constructor(player) {
+
+    this.player = player;
 
     this.lvl = 1;
+
+    this.stardust = 0;
+    this.pokecoins = 0;
 
     this.team = "NEUTRAL";
 
@@ -21,11 +29,11 @@ export default class Info {
     this.levelReward = false;
 
     this.kmWalked = 0;
-    this.pkmnEncountered = 0;
-    this.uniquePokedexEntries = 0;
-    this.pkmnCaptured = 0;
-    this.pokeStopVisits = 0;
-    this.pokeballsThrown = 0;
+    this.pkmnEncountered = 1;
+    this.uniquePokedexEntries = 1;
+    this.pkmnCaptured = 1;
+    this.pokeStopVisits = 2;
+    this.pokeballsThrown = 3;
     this.eggsHatched = 0;
     this.bigMagikarpCaught = 0;
     this.pkmnDeployed = 0;
@@ -90,26 +98,58 @@ export default class Info {
     }
   }
 
+  /**
+   * @return {Boolean}
+   */
   maxLevelReached() {
     return (
       this.lvl + 1 >= this.getMaximumLevel()
     );
   }
 
+  /**
+   * @return {Object}
+   */
   serialize() {
     return ({
-      level: this.lvl,
-      experience: this.exp,
-      next_level_xp: this.nextLvlExp,
-      km_walked: this.kmWalked,
-      pokemons_encountered: this.pkmnEncountered,
-      unique_pokedex_entries: this.uniquePokedexEntries,
-      pokemons_captured: this.pkmnCaptured,
-      poke_stop_visits: this.pokeStopVisits,
-      pokeballs_thrown: this.pokeballsThrown,
-      eggs_hatched: this.eggsHatched,
-      big_magikarp_caught: this.bigMagikarpCaught,
-      pokemon_deployed: this.pkmnDeployed
+      modified_timestamp_ms: +new Date(),
+      inventory_item_data: {
+        player_stats: {
+          level: this.lvl,
+          experience: this.exp,
+          next_level_xp: this.nextLvlExp,
+          km_walked: this.kmWalked,
+          pokemons_encountered: this.pkmnEncountered,
+          unique_pokedex_entries: this.uniquePokedexEntries,
+          pokemons_captured: this.pkmnCaptured,
+          poke_stop_visits: this.pokeStopVisits,
+          pokeballs_thrown: this.pokeballsThrown,
+          eggs_hatched: this.eggsHatched,
+          big_magikarp_caught: this.bigMagikarpCaught,
+          pokemon_deployed: this.pkmnDeployed,
+          pokemon_caught_by_type: {
+            0: 0,
+            1: 1,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0,
+            7: 0,
+            8: 0,
+            9: 0,
+            10: 0,
+            11: 0,
+            12: 0,
+            13: 0,
+            14: 0,
+            15: 0,
+            16: 0,
+            17: 0,
+            18: 0
+          }
+        }
+      }
     });
   }
 

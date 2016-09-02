@@ -45,7 +45,7 @@ export default class Gym extends Fort {
       latitude: this.latitude,
       longitude: this.longitude,
       enabled: this.enabled,
-      owned_by_team: ENUM.getItemNameById(ENUM.TEAM, this.team),
+      owned_by_team: ENUM.getNameById(ENUM.TEAM, this.team),
       guard_pokemon_id: this.guardPkmn,
       gym_points: this.gymPoints,
       active_fort_modifier: []

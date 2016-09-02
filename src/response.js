@@ -59,6 +59,7 @@ export function processResponse(player, req) {
         case "FORT_DETAILS":
         case "GET_MAP_OBJECTS":
         case "CHECK_CHALLENGE":
+        case "GET_DOWNLOAD_URLS":
         case "DOWNLOAD_SETTINGS":
         case "DOWNLOAD_REMOTE_CONFIG_VERSION":
         case "DOWNLOAD_ITEM_TEMPLATES":

@@ -3,8 +3,13 @@
  */
 export default class Avatar {
 
-  /** @constructor */
-  constructor() {
+  /**
+   * @param {Player} player
+   * @constructor
+   */
+  constructor(player) {
+
+    this.player = player;
 
     this._skin = 0;
     this._hair = 0;

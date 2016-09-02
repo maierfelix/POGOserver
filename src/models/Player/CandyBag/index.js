@@ -3,9 +3,16 @@
  */
 export default class CandyBag {
 
-  /** @constructor */
-  constructor() {
+  /**
+   * @param {Player} player
+   * @constructor
+   */
+  constructor(player) {
+
+    this.player = player;
+
     this.candies = [];
+
   }
 
   getCandyByDexNumber(dex) {

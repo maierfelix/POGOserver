@@ -103,8 +103,15 @@ export function onRequest(player) {
   }
 
   if (!request.requests.length) {
-    print("Received invalid request!", 31);
-    return void 0;
+    // Dirty hack, appears when open pkmn stats in inventory
+    if (request.unknown6 && request.unknown6[1].request_type === 6) {
+      let msg = this.envelopResponse([], request, player);
+      player.sendResponse(msg);
+    }
+    else {
+      print("Received invalid request!", 31);
+      return void 0;
+    }
   }
 
   this.processRequests(player, request.requests).then((returns) => {

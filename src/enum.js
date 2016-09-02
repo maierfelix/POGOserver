@@ -4,14 +4,15 @@ export default {
   TEAM: proto.Enums.TeamColor,
   ITEMS: proto.Inventory.Item.ItemId,
   GENDER: proto.Enums.Gender,
-  getItemNameById: (emu, id) => {
+  POKEMON_IDS: proto.Enums.PokemonId,
+  getNameById: (emu, id) => {
     id <<= 0;
     for (let key in emu) {
       if (emu[key] === id) return (key);
     };
     return (null);
   },
-  getItemIdByName: (emu, name) => {
+  getIdByName: (emu, name) => {
     for (let key in emu) {
       if (key === name) return (emu[key]);
     };

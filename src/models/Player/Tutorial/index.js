@@ -3,9 +3,16 @@
  */
 export default class Tutorial {
 
-  /** @constructor */
-  constructor() {
+  /**
+   * @param {Player} player
+   * @constructor
+   */
+  constructor(player) {
+
+    this.player = player;
+
     this.states = [];
+
   }
 
   skipTutorial() {
@@ -26,6 +33,16 @@ export default class Tutorial {
     return (
       this.states
     );
+  }
+
+  /**
+   * @return {String}
+   */
+  querify() {
+    let buffer = {
+      "states": this.serialize()
+    };
+    return (JSON.stringify(buffer));
   }
 
 }

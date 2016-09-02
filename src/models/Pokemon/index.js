@@ -1,10 +1,15 @@
-import pokename from "pokename";
-
 import MapObject from "../World/MapObject";
 
+import { GAME_MASTER } from "../../shared";
+
 import {
+  _toCC,
   validName
 } from "../../utils";
+
+import print from "../../print";
+
+const pokename = require("pokename")();
 
 /**
  * @class Pokemon
@@ -48,9 +53,13 @@ export default class Pokemon extends MapObject {
 
     this.nickname = null;
 
+    this.pokeball = null;
+
     this.favorite = 0;
 
     this.init(obj);
+
+    this.evolvePkmn();
 
   }
 
@@ -86,24 +95,39 @@ export default class Pokemon extends MapObject {
    * @return {Object}
    */
   getPkmnTemplate(dex) {
-    let name = pokename.getPokemonNameById(dex);
-    return (this.owner.gameMaster.pokemon[name]);
+    let tmpl = GAME_MASTER.getPokemonTmplByDex(dex);
+    return (tmpl);
   }
 
-  upgradePkmn() {
+  /**
+   * @return {String}
+   */
+  getPkmnName() {
+    return (
+      pokename.getPokemonNameById(this.dexNumber)
+    );
+  }
+
+  evolvePkmn() {
     let pkmnTmpl = this.getPkmnTemplate(this.dexNumber);
-    let ownerCandies = this.owner.bag.getCandyByDexNumber(this.dexNumber);
-    if (ownerCandies >= pkmnTmpl.CandyToEvolve) {
-      this.owner.bag.setCandyByDex(ownerCandies - pkmnTmpl.CandyToEvolve);
-      this.evolveTo(pkmnTmpl.Evolution);
+    let evolutions = pkmnTmpl.evolution_ids;
+    if (evolutions.length <= 1) {
+      this.evolveInto(evolutions[0]);
+    }
+    else {
+      print(`Evolving this pokemon isnt supported yet!`, 31);
     }
   }
 
   /**
-   * @param {Number} dex
+   * @param {String} ev
    */
-  evolveTo(dex) {
-    console.log("EVOLVE TO: ", dex);
+  evolveInto(ev) {
+    let evName = _toCC(ev);
+    let evId = pokename.getPokemonIdByName(evName);
+    if (evId <= 0) return print(`Failed at retrieving id for pokemon ${ev}`, 31);
+    let evTmpl = this.getPkmnTemplate(evId);
+    print(`${this.owner.username} successfully evolved ${this.getPkmnName()} to ${evName}`);
   }
 
   /**
@@ -111,18 +135,32 @@ export default class Pokemon extends MapObject {
    */
   serialize() {
     return ({
+      id: 1,
       pokemon_id: this.dexNumber,
       cp: this.cp,
       stamina: this.stamina,
-      stamina_max: this.stamina_max,
-      move_1: this.move_1,
-      move_2: this.move_2,
+      stamina_max: this.staminaMax,
+      move_1: this.move1,
+      move_2: this.move2,
       height_m: this.height,
       weight_kg: this.weight,
       individual_attack: this.ivAttack,
       individual_defense: this.ivDefense,
       individual_stamina: this.ivStamina,
-      cp_multiplier: this.cpMultiplier
+      cp_multiplier: this.cpMultiplier,
+      pokeball: "ITEM_POKE_BALL",
+      captured_cell_id: "1337",
+      creation_time_ms: +new Date() - 1e3,
+      favorite: this.favorite
+    });
+  }
+
+  /**
+   * @return {Object}
+   */
+  querify() {
+    return ({
+
     });
   }
 

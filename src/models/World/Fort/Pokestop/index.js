@@ -61,7 +61,7 @@ export default class Pokestop extends Fort {
       let amount = this.rewards[key] << 0;
       for (let ii = 0; ii < amount; ++ii) {
         out.push({
-          item_id: ENUM.getItemNameById(ENUM.ITEMS, key << 0)
+          item_id: ENUM.getNameById(ENUM.ITEMS, key << 0)
         });
       };
     };

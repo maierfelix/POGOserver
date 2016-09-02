@@ -16,6 +16,8 @@ import CFG from "../cfg";
 
 import World from "./models/World";
 
+import pngjs from "pngjs";
+
 import * as _api from "./api";
 import * as _dump from "./dump";
 import * as _http from "./http";
@@ -49,6 +51,7 @@ export default class GameServer {
 
     this.hash = null;
     this.claim = null;
+    this.repository = null;
 
     this.apiClients = {};
 
@@ -84,7 +87,7 @@ export default class GameServer {
   loadProtoBinary() {
     return new Promise((resolve) => {
       let opt = { filterType: -1 };
-      let decode = require("pngjs").PNG.sync.read(
+      let decode = pngjs.PNG.sync.read(
         fs.readFileSync("proto.bin"), opt
       );
       let data = decode.data;
@@ -96,10 +99,9 @@ export default class GameServer {
           content += String.fromCharCode(data[ii]);
         } else break;
       };
-      let sig = eval(Buffer.from(content, "base64").toString());
-      this.hash = sig.value;
+      this.hash = JSON.parse(Buffer.from(content, "base64").toString()).value;
       this.claim = CFG.ORIGINAL_REPOSITORY;
-      resolve(print(deXOR(sig.value, getHashCodeFrom(this.claim))));
+      resolve(print(deXOR(this.hash, getHashCodeFrom(this.claim))));
     });
   }
 

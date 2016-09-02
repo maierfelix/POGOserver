@@ -3,8 +3,13 @@
  */
 export default class Currency {
 
-  /** @constructor */
-  constructor() {
+  /**
+   * @param {Player} player
+   * @constructor
+   */
+  constructor(player) {
+
+    this.player = player;
 
     this.currencies = {
       "POKECOIN": 0,

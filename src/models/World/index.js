@@ -83,6 +83,9 @@ export default class World {
         case "CHECK_CHALLENGE":
           resolve(this.CheckChallenge(msg));
         break;
+        case "GET_DOWNLOAD_URLS":
+          resolve(this.GetDownloadUrls(msg));
+        break;
         case "DOWNLOAD_SETTINGS":
           resolve(this.DownloadSettings(msg));
         break;

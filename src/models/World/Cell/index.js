@@ -80,24 +80,22 @@ export default class Cell extends MapObject {
 
   getFortsFromDatabase() {
     return new Promise((resolve) => {
-      try {
-        let out = [];
-        this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_POKESTOP_TABLE).then((forts) => {
+      let out = [];
+      this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_POKESTOP_TABLE).then((forts) => {
+        forts = forts || [];
+        forts.map((fort) => {
+          fort.type = "CHECKPOINT";
+          out.push(fort);
+        });
+        this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_GYM_TABLE).then((forts) => {
           forts = forts || [];
           forts.map((fort) => {
-            fort.type = "CHECKPOINT";
+            fort.type = "GYM";
             out.push(fort);
           });
-          this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_GYM_TABLE).then((forts) => {
-            forts = forts || [];
-            forts.map((fort) => {
-              fort.type = "GYM";
-              out.push(fort);
-            });
-            resolve(out);
-          });
+          resolve(out);
         });
-      } catch (e) { console.log(e); }
+      });
     });
   }
 
