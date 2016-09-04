@@ -13,9 +13,6 @@
   <a href="https://github.com/maierfelix/POGOserver/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/GNU GPL-License-blue.svg?style=flat-square" />
   </a>
-  <a href="https://discord.gg/Hp5Mjnc">
-    <img src="https://img.shields.io/badge/Discord-Join%20Chat%20%E2%86%92-738bd7.svg?style=flat-square" />
-  </a>
   <a href="https://nodejs.org/api/documentation.html#documentation_stability_index">
     <img src="https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square" alt="Stability" />
   </a>
