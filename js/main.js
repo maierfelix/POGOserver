@@ -17,7 +17,7 @@
       </div>
       <div class="pure-u-1-2">
         <center>
-          <img src='img/gym_0.png'/><br/>
+          <img src='img/gym_neutral.png'/><br/>
           <input id="option-two" type="radio" name="type" style="margin: 18px;" value="GYM">
         </center> 
       </div>
