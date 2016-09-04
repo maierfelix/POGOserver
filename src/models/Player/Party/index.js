@@ -17,17 +17,6 @@ export default class Party {
 
     this.addPkmn({
       dexNumber: 4,
-      cp: 100,
-      stamina: 10,
-      staminaMax: 20,
-      move1: "TACKLE",
-      move2: "SIGNAL BEAM",
-      height: 0.3,
-      weight: 0.55,
-      ivAttack: 10,
-      ivDefense: 12,
-      ivStamina: 15,
-      cpMultiplier: 0.333,
       pokeball: "ITEM_POKE_BALL",
       favorite: 0
     });

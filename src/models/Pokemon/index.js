@@ -2,6 +2,8 @@ import MapObject from "../World/MapObject";
 
 import { GAME_MASTER } from "../../shared";
 
+import Settings from "../../modes";
+
 import {
   _toCC,
   inherit,
@@ -11,6 +13,7 @@ import {
 import print from "../../print";
 
 import * as _calc from "./calc";
+import * as _actions from "./action";
 
 const pokename = require("pokename")();
 
@@ -30,9 +33,7 @@ export default class Pokemon extends MapObject {
     this.id = 0;
     this.dexNumber = 0;
 
-    this.owner = null;
-
-    this.level = 0;
+    this._level = 1;
     this.capturedLevel = 0;
 
     this.cp = 0;
@@ -55,20 +56,22 @@ export default class Pokemon extends MapObject {
 
     this.staminaMax = 0;
 
-    this.nickname = null;
-
-    this.pokeball = null;
-
     this.favorite = 0;
+
+    this.owner = null;
+    this.nickname = null;
+    this.pokeball = null;
 
     this.init(obj);
 
+  }
+
+  get level() {
+    return (this._level + 1);
+  }
+  set level(value) {
+    this._level = parseFloat(value);
     this.calcStats();
-    this.calcMoves();
-
-    this.powerUp();
-    this.evolve();
-
   }
 
   /**
@@ -81,6 +84,8 @@ export default class Pokemon extends MapObject {
         this[key] = obj[key];
       }
     };
+    this.calcStats();
+    this.calcMoves();
   }
 
   /**
@@ -129,42 +134,25 @@ export default class Pokemon extends MapObject {
   /**
    * @return {Number}
    */
-  getCandiesToEvolve() {
+  candiesToEvolve() {
     let pkmnTmpl = this.getPkmnTemplate(this.dexNumber);
     return (pkmnTmpl.candy_to_evolve << 0);
   }
 
-  powerUp() {
-    let pkmnTmpl = this.getPkmnTemplate(this.dexNumber);
-    let ownerStardust = this.owner.info.stardust;
-    let ownerPkmnCandies = this.owner.candyBag.getCandy(this.dexNumber);
-    let requiredCandies = this.getCandiesToEvolve();
-    let requiredStardust = this.xxx();
-  }
-
-  evolve() {
-    let pkmnTmpl = this.getPkmnTemplate(this.dexNumber);
-    let ownerPkmnCandies = this.owner.candyBag.getCandy(this.dexNumber);
-    if (ownerPkmnCandies < this.getCandiesToEvolve()) return void 0;
-    let evolutions = pkmnTmpl.evolution_ids;
-    if (this.hasEvolution() && evolutions.length <= 1) {
-      this.evolveInto(evolutions[0]);
-      this.owner.candyBag.removeCandy(this.dexNumber, pkmnTmpl.candy_to_evolve);
-    }
-    else {
-      print(`Evolving this pokemon isnt supported yet!`, 31);
-    }
+  /**
+   * @return {Number}
+   */
+  candiesToPowerUp() {
+    return (1337);
   }
 
   /**
-   * @param {String} ev
+   * @return {Boolean}
    */
-  evolveInto(ev) {
-    let evName = _toCC(ev);
-    let evId = pokename.getPokemonIdByName(evName);
-    if (evId <= 0) return print(`Failed at retrieving id for pokemon ${ev}`, 31);
-    let evTmpl = this.getPkmnTemplate(evId);
-    print(`${this.owner.username} successfully evolved ${this.getPkmnName()} into ${evName}`);
+  hasReachedMaxLevel() {
+    return (
+      this.level > this.owner.info.getMaximumLevel() * 2
+    );
   }
 
   /**
@@ -204,3 +192,4 @@ export default class Pokemon extends MapObject {
 }
 
 inherit(Pokemon, _calc);
+inherit(Pokemon, _actions);
