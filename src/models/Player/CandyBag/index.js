@@ -15,6 +15,10 @@ export default class CandyBag {
 
   }
 
+  /**
+   * @param {Number} dex
+   * @return {Object}
+   */
   getCandyByDexNumber(dex) {
 
     let candies = this.candies;
@@ -30,6 +34,35 @@ export default class CandyBag {
 
     return (null);
 
+  }
+
+  /**
+   * @param {Number} dex
+   * @return {Number}
+   */
+  getCandy(dex) {
+    return (
+      this.getCandyByDexNumber(dex) || 0
+    );
+  }
+
+  /**
+   * @param {Number} dex
+   * @param {Number} amount
+   */
+  addCandy(dex, amount) {
+    let candy = this.getCandyByDexNumber(dex);
+    candy.amount += amount << 0;
+  }
+
+  /**
+   * @param {Number} dex
+   * @param {Number} amount
+   */
+  removeCandy(dex, amount) {
+    let candy = this.getCandyByDexNumber(dex);
+    candy.amount -= amount << 0;
+    if (candy.amount < 0) candy.amount = 0;
   }
 
   /**

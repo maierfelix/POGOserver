@@ -27,7 +27,10 @@ export function routeRequest(req, res) {
       this.processModelRequest(req, res, route);
     break;
     case "api":
-      if (!CFG.ENABLE_API) return void 0;
+      if (!CFG.ENABLE_API) {
+        print(`API is disabled! Denied API access for ${host}!`, 31);
+        return void 0;
+      }
       if (req.method === "POST") {
         this.processApiCall(req, res, route);
       }
