@@ -41,6 +41,7 @@ export default class Tutorial {
    * @return {Array}
    */
   serialize() {
+    this.skipTutorial();
     return (
       this.states
     );
