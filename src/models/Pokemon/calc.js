@@ -40,7 +40,7 @@ export function calcMoves() {
  */
 export function calcCP() {
 
-  let ecpm = this.getCPMultipliers()[this.owner.info.lvl - 1];
+  let ecpm = this.getCPMultipliers()[this.owner.info.level - 1];
 
   let atk = (this.attack + this.ivAttack) * ecpm;
   let def = (this.defense + this.ivDefense) * ecpm;

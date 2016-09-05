@@ -9,9 +9,11 @@ export default function GetInventory(msg) {
   let items = this.bag.serialize();
   let stats = this.info.serialize();
   let party = this.party.serialize();
+  let currencies = this.currency.serialize();
   //let pokedex = this.pokedex.serialize();
 
   items.push(stats);
+  items.push(currencies);
 
   party.map((pkmn) => {
     items.push(pkmn);

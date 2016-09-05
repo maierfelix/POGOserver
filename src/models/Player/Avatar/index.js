@@ -19,7 +19,7 @@ export default class Avatar {
     this._shoes = 0;
     this._eyes = 0;
     this._backpack = 0;
-    this._gender = "MALE";
+    this._gender = 0;
 
   }
 
@@ -60,7 +60,7 @@ export default class Avatar {
     return (this._shirt);
   }
   set shirt(value) {
-    if (this.between(value, 0, 3)) {
+    if (this.between(value, 0, 9)) {
       this._shirt = value;
     }
   }
@@ -117,10 +117,10 @@ export default class Avatar {
 
   // gender
   get gender() {
-    return (this._gender);
+    return (this._gender === 0 ? "MALE" : "FEMALE");
   }
   set gender(value) {
-    if (value === "MALE" || value === "FEMALE") {
+    if (this.between(value, 0, 1)) {
       this._gender = value;
     }
   }

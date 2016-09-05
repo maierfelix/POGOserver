@@ -193,6 +193,21 @@ export default class Player extends MapObject  {
       else if (key === "tutorial") {
         this.tutorial.parseJSON(obj[key]);
       }
+      else if (key === "pokecoins") {
+        this.info.pokecoins = obj[key] << 0;
+      }
+      else if (key === "stardust") {
+        this.info.stardust = obj[key] << 0;
+      }
+      else if (key === "level") {
+        this.info.level = obj[key] << 0;
+      }
+      else if (key === "exp") {
+        this.info.exp = obj[key] << 0;
+      }
+      else if (key === "team") {
+        this.info.team = obj[key] << 0;
+      }
       else {
         if (this.hasOwnProperty(key)) {
           this[key] = obj[key];

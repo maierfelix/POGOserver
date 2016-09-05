@@ -11,11 +11,6 @@ export default class Currency {
 
     this.player = player;
 
-    this.currencies = {
-      "POKECOIN": 0,
-      "STARDUST": 0
-    };
-
   }
 
   /**
@@ -23,12 +18,14 @@ export default class Currency {
    */
   serialize() {
     let out = [];
-    for (let key in this.currencies) {
-      out.push({
-        name: key,
-        amount: this.currencies[key]
-      });
-    };
+    out.push({
+      name: "POKECOIN",
+      amount: this.player.info.pokecoin
+    });
+    out.push({
+      name: "STARDUST",
+      amount: this.player.info.stardust
+    });
     return (out);
   }
 
