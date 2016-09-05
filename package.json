@@ -1,6 +1,6 @@
 {
   "name": "POGOServer",
-  "version": "0.5.0",
+  "version": "0.5.5",
   "description": "",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\"",
     "babel-node": "babel-node --presets=es2015",
-    "start": "npm run babel-node -- ./src/index.js"
+    "boot": "npm run babel-node -- ./src/index.js"
   },
   "engines": {
     "node": ">= 6.x",

@@ -122,6 +122,9 @@ export default class Player extends MapObject  {
   getPacket(type, msg) {
     return new Promise((resolve) => {
       switch (type) {
+        case "SET_FAVORITE_POKEMON":
+          resolve(this.SetFavoritePokemon(msg));
+        break;
         case "LEVEL_UP_REWARDS":
           resolve(this.LevelUpRewards(msg));
         break;
@@ -146,6 +149,9 @@ export default class Player extends MapObject  {
         case "CHECK_AWARDED_BADGES":
           resolve(this.CheckAwardedBadges(msg));
         break;
+        case "RECYCLE_INVENTORY_ITEM":
+          resolve(this.RecycleInventoryItem(msg));
+        break;
       };
     });
   }
@@ -168,6 +174,55 @@ export default class Player extends MapObject  {
       currencies: this.currency.serialize(),
       remaining_codename_claims: 0
     });
+  }
+
+  inheritByObject(obj) {
+    for (let key in obj) {
+      // ignore
+      if (!(key !== "id")) continue;
+      if (!(key !== "email")) continue;
+      if (key === "candies") {
+        this.candyBag.parseJSON(obj[key]);
+      }
+      else if (key === "items") {
+        this.bag.parseJSON(obj[key]);
+      }
+      else if (key === "avatar") {
+        this.avatar.parseJSON(obj[key]);
+      }
+      else if (key === "tutorial") {
+        this.tutorial.parseJSON(obj[key]);
+      }
+      else {
+        if (this.hasOwnProperty(key)) {
+          this[key] = obj[key];
+        }
+      }
+    };
+  }
+
+  syncWithDatabase() {
+    return new Promise((resolve) => {
+      this.loadFromDatabase().then((row) => {
+        this.inheritByObject(row);
+        resolve();
+      });
+    });
+  }
+
+  loadFromDatabase() {
+    let query = `SELECT * from ${CFG.MYSQL_USERS_TABLE} WHERE email=? LIMIT 1`;
+    return new Promise((resolve) => {
+      this.world.db.query(query, [this.email], (e, rows) => {
+        if (e) return print(e, 31);
+        if (rows.length >= 1) resolve(rows[0]);
+        else print(`Failed to sync player ${this.username} with database!`, 31);
+      });
+    });
+  }
+
+  saveIntoDatabase() {
+
   }
 
 }

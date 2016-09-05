@@ -4,6 +4,7 @@ export default {
   TEAM: proto.Enums.TeamColor,
   ITEMS: proto.Inventory.Item.ItemId,
   GENDER: proto.Enums.Gender,
+  TUTORIAL: proto.Enums.TutorialState,
   POKEMON_IDS: proto.Enums.PokemonId,
   getNameById: (emu, id) => {
     id <<= 0;

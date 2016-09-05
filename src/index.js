@@ -201,6 +201,16 @@ export default class GameServer {
     return (true);
   }
 
+  /**
+   * @return {String}
+   */
+  getCurrentTime() {
+    let date = new Date();
+    return (
+      `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    );
+  }
+
   greet() {
     console.log(greetMessage);
   }

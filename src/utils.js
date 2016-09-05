@@ -94,6 +94,13 @@ export function validUsername(str) {
   );
 }
 
+let rx_email = /\S+@\S+\.\S+/;
+export function validEmail(str) {
+  return (
+    !!rx_email.test(str)
+  );
+}
+
 /**
  * @param {Request} req
  */

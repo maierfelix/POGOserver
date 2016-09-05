@@ -1,3 +1,5 @@
+import ENUM from "../../../enum";
+
 /**
  * @class Tutorial
  */
@@ -15,6 +17,16 @@ export default class Tutorial {
 
   }
 
+  /**
+   * @param {String} name
+   * @return {String}
+   */
+  getItemName(name) {
+    return (
+      ENUM.getNameById(ENUM.TUTORIAL, name)
+    );
+  }
+
   skipTutorial() {
     this.states = [
       "LEGAL_SCREEN",
@@ -29,7 +41,6 @@ export default class Tutorial {
    * @return {Array}
    */
   serialize() {
-    this.skipTutorial();
     return (
       this.states
     );
@@ -43,6 +54,20 @@ export default class Tutorial {
       "states": this.serialize()
     };
     return (JSON.stringify(buffer));
+  }
+
+  /**
+   * @param {String} str
+   */
+  parseJSON(str) {
+    this.states = [];
+    let obj = JSON.parse(str);
+    for (let key in obj) {
+      let name = this.getItemName(key);
+      if (obj[key] === 1) {
+        this.states.push(name.toUpperCase());
+      }
+    };
   }
 
 }

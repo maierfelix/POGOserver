@@ -18,8 +18,8 @@ export default class Avatar {
     this._hat = 0;
     this._shoes = 0;
     this._eyes = 0;
-    this._gender = "MALE";
     this._backpack = 0;
+    this._gender = "MALE";
 
   }
 
@@ -41,7 +41,7 @@ export default class Avatar {
   }
   set skin(value) {
     if (this.between(value, 0, 3)) {
-      this.skin = value;
+      this._skin = value;
     }
   }
 
@@ -105,16 +105,6 @@ export default class Avatar {
     }
   }
 
-  // gender
-  get gender() {
-    return (this._gender);
-  }
-  set gender(value) {
-    if (value === "MALE" || value === "FEMALE") {
-      this._gender = value;
-    }
-  }
-
   // backpack
   get backpack() {
     return (this._backpack);
@@ -125,6 +115,19 @@ export default class Avatar {
     }
   }
 
+  // gender
+  get gender() {
+    return (this._gender);
+  }
+  set gender(value) {
+    if (value === "MALE" || value === "FEMALE") {
+      this._gender = value;
+    }
+  }
+
+  /**
+   * @return {Object}
+   */
   serialize() {
     return ({
       skin: this.skin,
@@ -134,9 +137,21 @@ export default class Avatar {
       hat: this.hat,
       shoes: this.shoes,
       eyes: this.eyes,
-      gender: this.gender ? "FEMALE" : "MALE",
+      gender: this.gender,
       backpack: this.backpack
     });
+  }
+
+  /**
+   * @param {String} str
+   */
+  parseJSON(str) {
+    let obj = JSON.parse(str);
+    for (let key in obj) {
+      if (this.hasOwnProperty("_" + key)) {
+        this[key] = obj[key];
+      }
+    };
   }
 
 }

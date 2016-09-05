@@ -11,7 +11,7 @@ export function processCommand(cmd, data) {
     // How many active connections there are
     case "/players":
       var length = players.length;
-      print(`${length}:${CFG.MAX_CONNECTIONS} connected players!`, 33);
+      print(`${length}/${CFG.MAX_CONNECTIONS} connected players!`, 33);
     break;
     // Exit the server
     case "/exit":

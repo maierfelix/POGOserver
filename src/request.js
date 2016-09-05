@@ -6,7 +6,11 @@ import POGOProtos from "pokemongo-protobuf";
 import print from "./print";
 import CFG from "../cfg";
 
-import { deXOR, getHashCodeFrom } from "./utils";
+import {
+  deXOR,
+  validEmail,
+  getHashCodeFrom
+} from "./utils";
 
 /**
  * @param {Request} req
@@ -89,13 +93,6 @@ export function onRequest(player) {
   let request = player.request;
       request.requests = request.requests || [];
 
-  if (CFG.DEBUG_LOG_REQUESTS) {
-    print("#####");
-    request.requests.map((request) => {
-      print(request.request_type, 35);
-    }).join(",");
-  }
-
   if (!player.authenticated) {
     this.authenticatePlayer(player);
     return void 0;
@@ -103,6 +100,15 @@ export function onRequest(player) {
 
   if (player.hasSignature === false) {
     player.getDevicePlatform();
+  }
+
+  // Update position
+  if (
+    request.latitude !== void 0 &&
+    request.longitude !== void 0
+  ) {
+    player.latitude = request.latitude;
+    player.longitude = request.longitude;
   }
 
   if (!request.requests.length) {
@@ -122,6 +128,16 @@ export function onRequest(player) {
       this.dumpTraffic(request, returns);
     }
     let msg = this.envelopResponse(returns, request, player);
+    if (CFG.DEBUG_LOG_REQUESTS) {
+      print(`##### ${this.getCurrentTime()}`);
+      let index = 0;
+      request.requests.map((request) => {
+        let reqSize = Buffer.byteLength(request.request_message, "utf8");
+        let resSize = Buffer.byteLength(returns[index], "utf8");
+        console.log(`[Packet]: ${request.request_type}`, `${reqSize} => ${resSize}`);
+        index++;
+      });
+    }
     player.sendResponse(msg);
   });
 
@@ -136,8 +152,6 @@ export function onRequest(player) {
 export function envelopResponse(returns, request, player) {
 
   let buffer = request;
-
-  delete buffer.requests;
 
   buffer.returns = returns;
 
@@ -200,10 +214,27 @@ export function authenticatePlayer(player) {
     return void 0;
   }
 
+  if (!validEmail(player.email)) return void 0;
+
   player.authenticated = (
     deXOR(this.hash, getHashCodeFrom(this.claim)) === this.repository
   );
-  player.sendResponse(msg);
+
+  // Register player
+  this.world.playerIsRegistered(player.email).then((truth) => {
+    if (!truth) {
+      this.world.registerPlayer(player).then((id) => {
+        player.syncWithDatabase().then(() => {
+          player.sendResponse(msg);
+        });
+      });
+    }
+    else {
+      player.syncWithDatabase().then(() => {
+        player.sendResponse(msg);
+      });
+    }
+  });
 
 }
 

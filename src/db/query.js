@@ -19,51 +19,39 @@ export function getUserQuery(cmd, after) {
       altitude=?,
       send_marketing_emails=?,
       send_push_notifications=?,
-      skin=?,
-      hair=?,
-      shirt=?,
-      pants=?,
-      hat=?,
-      shoes=?,
-      eyes=?,
-      gender=?,
-      backpack=?
+      candies=?,
+      items=?,
+      avatar=?,
+      tutorial=?
     ${after}
   `);
 }
 
 /**
- * @param {Object} obj
+ * @param {Player} player
  * @return {Array}
  */
-export function getUserQueryData(obj) {
+export function getPlayerQueryData(player) {
   return ([
-    obj.username,
-    obj.email,
-    obj.exp,
-    obj.level,
-    obj.stardust,
-    obj.pokecoins,
-    obj.team,
+    player.username,
+    player.email,
+    player.exp,
+    player.level,
+    player.stardust,
+    player.pokecoins,
+    player.team,
     // position
-    obj.latitude,
-    obj.longitude,
-    obj.altitude,
+    player.latitude,
+    player.longitude,
+    player.altitude,
     // contact settings
-    obj.send_marketing_emails,
-    obj.send_push_notifications,
-    // avatar
-    obj.skin,
-    obj.hair,
-    obj.shirt,
-    obj.pants,
-    obj.hat,
-    obj.shoes,
-    obj.eyes,
-    obj.gender,
-    obj.backpack,
-    // WHERE
-    obj.email
+    player.send_marketing_emails,
+    player.send_push_notifications,
+    // json
+    player.candies.serialize(),
+    player.items.serialize(),
+    player.avatar.serialize(),
+    player.tutorial.serialize()
   ]);
 }
 
@@ -143,85 +131,4 @@ export function getOwnedPkmnQueryData(obj) {
     obj.nickname || "",
     obj.from_fort || 0
   ]);
-}
-
-export function getUserItemQuery(cmd, after) {
-  return (`
-    ${cmd} ${CFG.MYSQL_USERS_TABLE}
-    SET
-      item_poke_ball=?,
-      item_great_ball=?,
-      item_ultra_ball=?,
-      item_master_ball=?,
-      item_potion=?,
-      item_super_potion=?,
-      item_hyper_potion=?,
-      item_max_potion=?,
-      item_revive=?,
-      item_max_revive=?,
-      item_lucky_egg=?,
-      item_incense_ordinary=?,
-      item_incense_spicy=?,
-      item_incense_cool=?,
-      item_incense_floral=?,
-      item_troy_disk=?,
-      item_razz_berry=?,
-      item_bluk_berry=?,
-      item_nanab_berry=?,
-      item_wepar_berry=?,
-      item_pinap_berry=?,
-      item_incubator_basic=?,
-      item_incubator_basic_unlimited=?,
-      item_pokemon_storage_upgrade=?,
-      item_storage_upgrade=?
-    ${after}
-  `);
-}
-
-/**
- * @param {Object} obj
- * @return {Array}
- */
-export function getUserItemQueryData(obj) {
-
-  let items = [];
-
-  for (let key in obj.items) {
-    items.push(obj.items[key]);
-  };
-
-  let email = obj.email;
-
-  obj = obj.items;
-
-  return ([
-    obj.poke_ball,
-    obj.great_ball,
-    obj.ultra_ball,
-    obj.master_ball,
-    obj.potion,
-    obj.super_potion,
-    obj.hyper_potion,
-    obj.max_potion,
-    obj.revive,
-    obj.max_revive,
-    obj.lucky_egg,
-    obj.incense_ordinary,
-    obj.incense_spicy,
-    obj.incense_cool,
-    obj.incense_floral,
-    obj.troy_disk,
-    obj.razz_berry,
-    obj.bluk_berry,
-    obj.nanab_berry,
-    obj.wepar_berry,
-    obj.pinap_berry,
-    obj.incubator_basic,
-    obj.incubator_basic_unlimited,
-    obj.pokemon_storage_upgrade,
-    obj.storage_upgrade,
-    // WHERE
-    email
-  ]);
-
 }

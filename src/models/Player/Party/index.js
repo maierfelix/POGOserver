@@ -1,5 +1,7 @@
 import Pokemon from "../../Pokemon";
 
+import print from "../../../print";
+
 /**
  * @class Party
  */
@@ -21,6 +23,16 @@ export default class Party {
       favorite: 0
     });
 
+    this.fetchFromDatabase();
+
+  }
+
+  fetchFromDatabase() {
+    let instance = this.player.world.db;
+    this.player.world.db.query(`SELECT * FROM owned_pkmn WHERE owner_id=?`, [this.player.id], (e, rows) => {
+      if (e) return print(e, 31);
+      console.log("Pokemon:", rows);
+    });
   }
 
   /**

@@ -48,8 +48,9 @@ export function processResponse(player, req) {
         case "LEVEL_UP_REWARDS":
         case "GET_PLAYER_PROFILE":
         case "CHECK_AWARDED_BADGES":
+        case "SET_FAVORITE_POKEMON":
+        case "RECYCLE_INVENTORY_ITEM":
           player.getPacket(req.request_type, msg).then((result) => {
-            print(`Success: ${req.request_type} => ${result.toString().length}`);
             resolve(result);
           });
           return void 0;
@@ -65,7 +66,6 @@ export function processResponse(player, req) {
         case "DOWNLOAD_ITEM_TEMPLATES":
           msg.player = player;
           player.world.getPacket(req.request_type, msg).then((result) => {
-            print(`Success: ${req.request_type} => ${result.toString().length}`);
             resolve(result);
           });
           return void 0;

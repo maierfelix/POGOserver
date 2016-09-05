@@ -160,7 +160,7 @@ export default class Pokemon extends MapObject {
    */
   serialize() {
     return ({
-      id: 1,
+      id: this.id,
       pokemon_id: this.dexNumber,
       cp: this.cp,
       stamina: this.stamina,
@@ -181,12 +181,12 @@ export default class Pokemon extends MapObject {
   }
 
   /**
-   * @return {Object}
+   * @return {Array}
    */
   querify() {
-    return ({
+    return ([
 
-    });
+    ]);
   }
 
 }
