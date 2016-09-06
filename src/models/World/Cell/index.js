@@ -1,7 +1,10 @@
 import s2 from "s2-geometry";
+import rare from "pokerare";
 
 import Gym from "../Fort/Gym";
 import Pokestop from "../Fort/Pokestop";
+
+import WildPokemon from "../../Pokemon/WildPokemon";
 
 import MapObject from "../MapObject";
 import Settings from "../../../modes";
@@ -25,12 +28,24 @@ export default class Cell extends MapObject {
 
     super(obj);
 
+    this._uPkmnId = 0;
+
     this.synced = false;
 
     this.forts = [];
 
+    this.encounters = [];
+
     this.type = obj.type;
 
+  }
+
+  get uPkmnId() {
+    return (this._uPkmnId);
+  }
+  set uPkmnId(value) {
+    if (this.uPkmnId < Number.MAX_SAFE_INTEGER) this._uPkmnId += value;
+    else this._uPkmnId = 0;
   }
 
   /**
@@ -42,6 +57,63 @@ export default class Cell extends MapObject {
     return (
       S2Geo.keyToId(S2Geo.latLngToKey(lat, lng, zoom || 15))
     );
+  }
+
+  /**
+   * @param {Object} obj
+   * @return {Fort}
+   */
+  addFort(obj) {
+    obj.world = this.world;
+    let fort = null;
+    fort = obj.type === "CHECKPOINT" ? new Pokestop(obj) : new Gym(obj);
+    this.forts.push(fort);
+    return (fort);
+  }
+
+  /**
+   * @return {WildPokemon}
+   */
+  addEncounter() {
+    let pkmn = this.getRandomEncounter();
+    print(`Spawned 1x ${pkmn.getPkmnName()} at ${this.cellId}`);
+    this.encounters.push(pkmn);
+    return (pkmn);
+  }
+
+  getRandomEncounter() {
+    let ids = rare.getPkmnByRarity(255, 255);
+    let index = Math.floor(Math.random() * ids.length);
+    return new WildPokemon({
+      dexNumber: ids[index].id,
+      pokeball: "ITEM_POKE_BALL",
+      favorite: 0,
+      isWild: true,
+      uid: this.uPkmnId++,
+      cellId: this.cellId
+    });
+  }
+
+  /**
+   * @param {WildPokemon} encounter
+   */
+  removeEncounter(encounter) {
+    let index = 0;
+    this.encounters.map((pkmn) => {
+      if (pkmn.uid === encounter.uid) {
+        print(`Killed 1x ${pkmn.getPkmnName()} at ${this.cellId}`, 33);
+        this.encounters.splice(index, 1);
+      }
+      index++;
+    });
+  }
+
+  refreshEncounters() {
+    this.encounters.map((encounter) => {
+      if (encounter.isExpired()) {
+        this.removeEncounter(encounter);
+      }
+    });
   }
 
   loadForts() {
@@ -165,15 +237,21 @@ export default class Cell extends MapObject {
   }
 
   /**
-   * @param {Object} obj
-   * @return {Fort}
+   * @return {Object}
    */
-  addFort(obj) {
-    obj.world = this.world;
-    let fort = null;
-    fort = obj.type === "CHECKPOINT" ? new Pokestop(obj) : new Gym(obj);
-    this.forts.push(fort);
-    return (fort);
+  serialize() {
+    return ({
+      s2_cell_id: this.cellId,
+      current_timestamp_ms: +new Date(),
+      forts: this.forts.map((fort) => { return fort.serialize(); }),
+      spawn_points: [],
+      deleted_objects: [],
+      fort_summaries: [],
+      decimated_spawn_points: [],
+      wild_pokemons: this.encounters.map((pkmn) => { return pkmn.serializeWild(); }),
+      catchable_pokemons: this.encounters.map((pkmn) => { return pkmn.serializeCatchable(); }),
+      nearby_pokemons: this.encounters.map((pkmn) => { return pkmn.serializeNearby(); })
+    });
   }
 
 }

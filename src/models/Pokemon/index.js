@@ -62,6 +62,8 @@ export default class Pokemon extends MapObject {
     this.nickname = null;
     this.pokeball = null;
 
+    this.isWild = false;
+
     this.init(obj);
 
   }
@@ -84,8 +86,13 @@ export default class Pokemon extends MapObject {
         this[key] = obj[key];
       }
     };
-    this.calcStats();
-    this.calcMoves();
+    if (obj.isWild) {
+      this.isWild = true;
+    }
+    else {
+      this.calcStats();
+      this.calcMoves();
+    }
   }
 
   /**

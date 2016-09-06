@@ -11,9 +11,9 @@ export default {
       far_interaction_range_meters: 1000.0156862745098
     },
     map_settings: {
-      pokemon_visible_range: 70.00196078431372,
+      pokemon_visible_range: 999.00196078431372,
       poke_nav_range_meters: 751.0156862745098,
-      encounter_range_meters: 50.25098039215686,
+      encounter_range_meters: 999.25098039215686,
       get_map_objects_min_refresh_seconds: 16,
       get_map_objects_max_refresh_seconds: 16,
       get_map_objects_min_distance_meters: 10.007843017578125,
@@ -30,6 +30,7 @@ export default {
   },
   PKMN_SETTINGS: {
     MIN_IV: 1,
-    MAX_IV: 15
+    MAX_IV: 15,
+    EXPIRE_MULTIPLIER: 5
   }
 }

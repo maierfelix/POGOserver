@@ -70,7 +70,7 @@ export default class Avatar {
     return (this._pants);
   }
   set pants(value) {
-    if (this.between(value, 0, 2)) {
+    if (this.between(value, 0, 5)) {
       this._pants = value;
     }
   }
@@ -125,6 +125,17 @@ export default class Avatar {
     }
   }
 
+  resetOutfit() {
+    this.skin = 0;
+    this.hair = 0;
+    this.shirt = 0;
+    this.pants = 0;
+    this.hat = 0;
+    this.shoes = 0;
+    this.eyes = 0;
+    this.backpack = 0;
+  }
+
   /**
    * @return {Object}
    */
@@ -149,7 +160,7 @@ export default class Avatar {
     let obj = JSON.parse(str);
     for (let key in obj) {
       if (this.hasOwnProperty("_" + key)) {
-        this[key] = obj[key];
+        this[key] = obj[key] << 0;
       }
     };
   }

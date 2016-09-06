@@ -22,7 +22,7 @@ export default class World {
 
     this.players = [];
 
-    this.cells = {};
+    this.cells = [];
 
   }
 
@@ -32,13 +32,25 @@ export default class World {
 
   /**
    * @param {String} cellId
+   * @return {Cell}
+   */
+  getCellByCellId(cellId) {
+    let ii = 0;
+    let length = this.cells.length;
+    for (; ii < length; ++ii) {
+      if (this.cells[ii].cellId === cellId) return (this.cells[ii]);
+    };
+    return (null);
+  }
+
+  /**
+   * @param {String} cellId
    * @return {Boolean}
    */
-  cellRegistered(cellId) {
+  cellAlreadyRegistered(cellId) {
+    let cell = this.getCellByCellId(cellId);
     return (
-      this.cells[cellId] !== null &&
-      this.cells[cellId] !== void 0 &&
-      this.cells[cellId]
+      cell !== null
     );
   }
 
@@ -47,15 +59,24 @@ export default class World {
    * @return {Cell}
    */
   getCellById(cellId) {
-    return (this.cells[cellId]);
+    return (this.getCellByCellId(cellId));
   }
 
-  addGym() {
-    
-  }
+  spawnEncounters() {
 
-  addWildPokemon() {
-    
+    let ii = 0;
+    let length = this.cells.length;
+
+    let cell = null;
+
+    for (; ii < length; ++ii) {
+      cell = this.cells[ii];
+      if (Math.random() < .25 && cell.encounters.length <= 3) {
+        cell.addEncounter();
+      }
+      cell.refreshEncounters();
+    };
+
   }
 
   /**
@@ -65,6 +86,11 @@ export default class World {
   getPacket(type, msg) {
     return new Promise((resolve) => {
       switch (type) {
+        case "ENCOUNTER":
+          this.Encounter(msg).then((result) => {
+            resolve(result);
+          });
+        break;
         case "FORT_SEARCH":
           this.FortSearch(msg).then((result) => {
             resolve(result);

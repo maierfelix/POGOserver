@@ -61,6 +61,8 @@ export default class Player extends MapObject  {
 
     this.remoteAddress = null;
 
+    this.currentEncounter = null;
+
     this.bag = new Bag(this);
     this.candyBag = new CandyBag(this);
 

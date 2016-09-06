@@ -1,10 +1,14 @@
+import fs from "fs";
 import POGOProtos from "pokemongo-protobuf";
 
 import {
   idToPkmnBundleName
 } from "../../utils";
 
+import CFG from "../../../cfg";
 import ENUM from "../../enum";
+
+import print from "../../print";
 
 /**
  * @class GameMaster
@@ -12,17 +16,19 @@ import ENUM from "../../enum";
 export default class GameMaster {
 
   /**
-   * @param {Object} decode
+   * @param {GameServer} instance
    * @constructor
    */
-  constructor(decode) {
+  constructor(instance) {
+
+    this.instance = instance;
 
     this.settings = this.buildSettings();
 
-    this.decode = decode;
+    this.decode = this.parse();
     this.buffer = this.encode();
 
-    this.parse();
+    this.parseItemTemplates();
 
   }
 
@@ -36,6 +42,17 @@ export default class GameMaster {
   }
 
   parse() {
+    let master = null;
+    try {
+      let data = fs.readFileSync(CFG.DUMP_ASSET_PATH + "game_master");
+      master = this.instance.parseProtobuf(data, "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
+    } catch (e) {
+      print(e, 31);
+    }
+    return (master);
+  }
+
+  parseItemTemplates() {
 
     let item = null;
     let items = this.decode.item_templates;

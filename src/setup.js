@@ -39,8 +39,7 @@ export function setup() {
 
       print(`Downloaded assets are valid! Proceeding..`);
 
-      let parsedMaster = this.parseGameMaster();
-      shared.GAME_MASTER = new GameMaster(parsedMaster);
+      shared.GAME_MASTER = new GameMaster(this);
 
       this.setupDatabaseConnection().then(() => {
         if (CFG.PORT < 1) {
@@ -93,9 +92,8 @@ export function validateModels() {
 
   return new Promise((resolve, reject) => {
     const validate = (index) => {
-      let platform = pogo.platforms[index];
-      let name = platform.name;
-      let path = CFG.DUMP_ASSET_PATH + name + "/";
+      let platform = pogo.platforms[index].name;
+      let path = CFG.DUMP_ASSET_PATH + platform + "/";
 
       // ups, validate asset_digest's too
       if (!this.fileExists(path + "asset_digest")) {
@@ -103,7 +101,7 @@ export function validateModels() {
       }
       else {
         let buffer = fs.readFileSync(path + "asset_digest");
-        shared.GAME_ASSETS[name] = {
+        shared.GAME_ASSETS[platform] = {
           buffer: buffer,
           decode: this.parseProtobuf(buffer, "POGOProtos.Networking.Responses.GetAssetDigestResponse")
         };
@@ -128,17 +126,6 @@ export function validateModels() {
     validate(0);
   });
 
-}
-
-export function parseGameMaster() {
-  let master = null;
-  try {
-    let data = fs.readFileSync(CFG.DUMP_ASSET_PATH + "game_master");
-    master = this.parseProtobuf(data, "POGOProtos.Networking.Responses.DownloadItemTemplatesResponse");
-  } catch (e) {
-    print(e, 31);
-  }
-  return (master);
 }
 
 export function onFirstRun(resolve) {

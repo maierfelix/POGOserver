@@ -56,6 +56,7 @@ export function processResponse(player, req) {
           return void 0;
         break;
         // Global
+        case "ENCOUNTER":
         case "FORT_SEARCH":
         case "FORT_DETAILS":
         case "GET_MAP_OBJECTS":

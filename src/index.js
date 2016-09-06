@@ -63,6 +63,7 @@ export default class GameServer {
     this.time = 0;
     this.fullTick = 0;
     this.saveTick = 0;
+    this.spawnTick = 0;
     this.timeoutTick = 0;
     this.passedTicks = 0;
 

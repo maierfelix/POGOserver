@@ -1,6 +1,9 @@
 import print from "./print";
 import CFG from "../cfg";
 
+import Settings from "./modes";
+const MAP_REFRESH_RATE = Settings.GAME_SETTINGS.map_settings.get_map_objects_max_refresh_seconds;
+
 export function startCycle() {
   this.cycleInstance = setTimeout(() => this.cycle(), CFG.TICK_INTERVAL);
 }
@@ -50,6 +53,12 @@ export function resetTimers() {
   if (this.saveTick >= CFG.SAVE_INTERVAL) {
     //this.saveAllPlayers();
     this.saveTick = 0;
+  }
+  this.spawnTick++;
+  // Pkmn spawn interval
+  if (this.spawnTick >= MAP_REFRESH_RATE * 1e3) {
+    this.world.spawnEncounters();
+    this.spawnTick = 0;
   }
   return void 0;
 }

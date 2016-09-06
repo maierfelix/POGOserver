@@ -1,3 +1,4 @@
+export Encounter from "./Encounter";
 export FortSearch from "./FortSearch";
 export FortDetails from "./FortDetails";
 export GetMapObjects from "./GetMapObjects";

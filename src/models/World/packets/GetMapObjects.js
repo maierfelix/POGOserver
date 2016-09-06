@@ -30,18 +30,7 @@ export default function GetMapObjects(msg) {
             else ids.push(id);
           });
         }
-        mapCells.push({
-          s2_cell_id: cell.cellId,
-          current_timestamp_ms: +new Date(),
-          forts: cell.forts.map((fort) => { return fort.serialize() }),
-          spawn_points: [],
-          deleted_objects: [],
-          fort_summaries: [],
-          decimated_spawn_points: [],
-          wild_pokemons: [],
-          catchable_pokemons: [],
-          nearby_pokemons: []
-        });
+        mapCells.push(cell.serialize());
       });
       resolve(
         POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetMapObjectsResponse")

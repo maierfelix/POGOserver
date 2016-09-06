@@ -46,7 +46,7 @@ export function getFortsByCells(cells, out, index) {
  */
 export function getFortsByCellId(cellId) {
   return new Promise((resolve) => {
-    if (!this.cellRegistered(cellId)) {
+    if (!this.cellAlreadyRegistered(cellId)) {
       this.registerCell(cellId).then((cell) => {
         resolve(cell);
       });
@@ -68,7 +68,7 @@ export function registerCell(cellId) {
     world: this,
     cellId: cellId
   });
-  this.cells[cellId] = cell;
+  this.cells.push(cell);
   return new Promise((resolve) => {
     cell.loadForts().then(() => {
       resolve(this.getCellById(cellId));
