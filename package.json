@@ -21,17 +21,18 @@
     "babel-cli": "^6.11.4",
     "babel-preset-es2015": "^6.13.1",
     "babel-preset-stage-0": "^6.5.0",
+    "fs-extra": "^0.30.0",
+    "jwt-decode": "^2.1.0",
+    "mysql": "^2.11.1",
+    "node-pogo-protos": "^1.4.0",
+    "pcrypt": "git+https://github.com/laverdet/pcrypt.git",
     "pngjs": "^3.0.0",
-    "url": "^0.11.0",
+    "pogo-asset-downloader": "^0.3.1",
+    "pokerare": "^0.1.1",
+    "pokemongo-protobuf": "^1.11.0",
     "prompt": "^1.0.0",
     "s2-geometry": "^1.2.9",
-    "fs-extra": "^0.30.0",
-    "mysql": "^2.11.1",
-    "jwt-decode": "^2.1.0",
-    "pogo-asset-downloader": "^0.3.1",
-    "node-pogo-protos": "^1.4.0",
-    "pokemongo-protobuf": "^1.11.0",
-    "pcrypt": "git+https://github.com/laverdet/pcrypt.git"
+    "url": "^0.11.0"
   },
   "devDependencies": {}
 }
