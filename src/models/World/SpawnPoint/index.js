@@ -73,7 +73,6 @@ export default class SpawnPoint extends MapObject {
       pokeball: "ITEM_POKE_BALL",
       favorite: 0,
       isWild: true,
-      uid: this.uPkmnId++,
       cellId: this.cellId,
       minExpire: this.minExpire,
       maxExpire: this.maxExpire

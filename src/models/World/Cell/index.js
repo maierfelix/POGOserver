@@ -38,14 +38,6 @@ export default class Cell extends MapObject {
 
   }
 
-  get uPkmnId() {
-    return (this._uPkmnId);
-  }
-  set uPkmnId(value) {
-    if (this.uPkmnId < Number.MAX_SAFE_INTEGER) this._uPkmnId += value;
-    else this._uPkmnId = 0;
-  }
-
   /**
    * @param  {Number} lat
    * @param  {Number} lng

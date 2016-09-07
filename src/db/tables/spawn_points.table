@@ -3,7 +3,7 @@ cell_id varchar(64) NOT NULL,
 latitude double NOT NULL DEFAULT '0',
 longitude double NOT NULL DEFAULT '0',
 encounters varchar(64) NOT NULL DEFAULT '{}',
-interval int(11) NOT NULL DEFAULT '5',
+update_interval int(11) NOT NULL DEFAULT '5',
 min_spawn_expire int(11) NOT NULL DEFAULT '2',
 max_spawn_expire int(11) NOT NULL DEFAULT '15',
 PRIMARY KEY (id)
