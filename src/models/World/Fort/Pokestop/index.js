@@ -27,7 +27,7 @@ export default class Pokestop extends Fort {
 
     this.image_url = null;
 
-    this.cooldown = 5e3;
+    this.cooldown = 10e3;
 
     this.experience = 0;
 

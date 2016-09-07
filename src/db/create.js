@@ -22,11 +22,13 @@ export function createTableIfNotExists(name) {
  */
 export function createTables() {
   return new Promise((resolve) => {
-    this.createTable(CFG.MYSQL_USERS_TABLE).then(() => {
-      this.createTable(CFG.MYSQL_OWNED_PKMN_TABLE).then(() => {
-        this.createTable(CFG.MYSQL_POKESTOP_TABLE).then(() => {
-          this.createTable(CFG.MYSQL_GYM_TABLE).then(() => {
-            resolve();
+    this.createTable(CFG.MYSQL_GYM_TABLE).then(() => {
+      this.createTable(CFG.MYSQL_USERS_TABLE).then(() => {
+        this.createTable(CFG.MYSQL_SPAWN_TABLE).then(() => {
+          this.createTable(CFG.MYSQL_POKESTOP_TABLE).then(() => {
+            this.createTable(CFG.MYSQL_OWNED_PKMN_TABLE).then(() => {
+              resolve();
+            });
           });
         });
       });

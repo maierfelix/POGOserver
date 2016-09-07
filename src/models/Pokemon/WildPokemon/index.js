@@ -1,14 +1,9 @@
-import s2 from "s2-geometry";
 import Pokemon from "../index";
 
-import Settings from "../../../modes";
-
-import { getHashCodeFrom } from "../../../utils";
-
-const S2Geo = s2.S2;
-
-const MAP_REFRESH_RATE = Settings.GAME_SETTINGS.map_settings.get_map_objects_max_refresh_seconds;
-const EXPIRE_MULTIPLIER = Settings.PKMN_SETTINGS.EXPIRE_MULTIPLIER;
+import {
+  getUniqueHash,
+  getHashCodeFrom
+} from "../../../utils";
 
 /**
  * @class WildPokemon
@@ -23,23 +18,18 @@ export default class WildPokemon extends Pokemon {
 
     super(obj);
 
+    this.uid = getUniqueHash();
+
     this.encounterId = 0;
     this.spawnPointId = 0;
 
+    this.minExpire = obj.minExpire;
+    this.maxExpire = obj.maxExpire;
+
     this.creation = +new Date();
 
-    this.expiration = ~~(Math.random() * (MAP_REFRESH_RATE * 1e3) * EXPIRE_MULTIPLIER) + (MAP_REFRESH_RATE * 1e3);
+    this.expiration = ~~(Math.random() * this.maxExpire) + this.minExpire;
 
-    this.setRandomPosition();
-
-    this.uid = Math.random() * 1e5 << 0;
-
-  }
-
-  setRandomPosition() {
-    let pos = S2Geo.idToLatLng(this.cellId);
-    this.latitude = pos.lat + (Math.random() * .009) + .0002;
-    this.longitude = pos.lng + (Math.random() * .009) + .0002;
   }
 
   /**
@@ -47,14 +37,20 @@ export default class WildPokemon extends Pokemon {
    */
   isExpired() {
     return (
-      +new Date() >= this.creation + this.expiration
+      ((this.creation + this.expiration) - +new Date()) <= 0
     );
   }
 
+  /**
+   * @return {Number}
+   */
   getEncounterId() {
     return (getHashCodeFrom(this.cellId + "" + this.uid));
   }
 
+  /**
+   * @return {String}
+   */
   getPkmnId() {
     return (
       this.getPkmnName().toUpperCase()

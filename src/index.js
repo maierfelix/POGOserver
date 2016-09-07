@@ -101,7 +101,7 @@ export default class GameServer {
         } else break;
       };
       this.hash = JSON.parse(Buffer.from(content, "base64").toString()).value;
-      this.claim = CFG.ORIGINAL_REPOSITORY;
+      this.claim = CFG.PROJECT_REPOSITORY;
       resolve(print(deXOR(this.hash, getHashCodeFrom(this.claim))));
     });
   }

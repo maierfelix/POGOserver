@@ -4,7 +4,7 @@ export default {
 
   VERSION: JSON.parse(fs.readFileSync("./package.json")).version,
 
-  ORIGINAL_REPOSITORY: "https://github.com/maierfelix/POGOServer",
+  PROJECT_REPOSITORY: "https://github.com/maierfelix/POGOServer",
 
   // show greeting
   GREET: true,
@@ -42,8 +42,9 @@ export default {
   MYSQL_DB_NAME: "pogosql",
   MYSQL_USERNAME: "root",
   MYSQL_PASSWORD: "",
-  MYSQL_USERS_TABLE: "users",
   MYSQL_GYM_TABLE: "gym",
+  MYSQL_USERS_TABLE: "users",
+  MYSQL_SPAWN_TABLE: "spawn_points",
   MYSQL_POKESTOP_TABLE: "pokestop",
   MYSQL_OWNED_PKMN_TABLE: "owned_pkmn",
 

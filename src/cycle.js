@@ -57,7 +57,7 @@ export function resetTimers() {
   this.spawnTick++;
   // Pkmn spawn interval
   if (this.spawnTick >= MAP_REFRESH_RATE * 1e3) {
-    this.world.spawnEncounters();
+    this.world.refreshSpawns();
     this.spawnTick = 0;
   }
   return void 0;

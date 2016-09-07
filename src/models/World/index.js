@@ -1,3 +1,5 @@
+import Cell from "./Cell";
+
 import CFG from "../../../cfg";
 
 import print from "../../print";
@@ -62,21 +64,26 @@ export default class World {
     return (this.getCellByCellId(cellId));
   }
 
-  spawnEncounters() {
+  refreshSpawns() {
+    this.cells.map((cell) => {
+      cell.refreshSpawnPoints();
+    });
+  }
 
-    let ii = 0;
-    let length = this.cells.length;
-
-    let cell = null;
-
-    for (; ii < length; ++ii) {
-      cell = this.cells[ii];
-      if (Math.random() < .25 && cell.encounters.length <= 3) {
-        cell.addEncounter();
+  /**
+   * @param {Number} lat
+   * @param {Number} lng
+   */
+  triggerSpawnAt(lat, lng) {
+    let cell = this.getCellById(Cell.getIdByPosition(lat, lng, 15));
+    // Wait until cell got registered
+    if (cell === null) return void 0;
+    cell.spawns.map((spawn) => {
+      //if (spawn.activeSpawns.length >= 4) return void 0;
+      if (Math.random() < .85) {
+        spawn.spawnPkmn();
       }
-      cell.refreshEncounters();
-    };
-
+    });
   }
 
   /**

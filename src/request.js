@@ -102,15 +102,6 @@ export function onRequest(player) {
     player.getDevicePlatform();
   }
 
-  // Update position
-  if (
-    request.latitude !== void 0 &&
-    request.longitude !== void 0
-  ) {
-    player.latitude = request.latitude;
-    player.longitude = request.longitude;
-  }
-
   if (!request.requests.length) {
     // Dirty hack, appears when open pkmn stats in inventory
     if (request.unknown6 && request.unknown6[1].request_type === 6) {

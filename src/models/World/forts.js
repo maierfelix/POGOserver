@@ -124,7 +124,7 @@ export function insertPokestopIntoDatabase(obj) {
   let desc = obj.description;
   let img = obj.image || "";
   let exp = obj.experience || 500;
-  let query = `INSERT INTO ${Cell.getTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, name=?, description=?, image_url=?, experience=?, rewards=?`;
+  let query = `INSERT INTO ${Cell.getFortTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, name=?, description=?, image_url=?, experience=?, rewards=?`;
   return new Promise((resolve) => {
     this.instance.db.query(query, [cellId, lat, lng, name, desc, img, exp, ""], (e, res) => {
       let insertId = res.insertId;
@@ -141,7 +141,7 @@ export function insertGymIntoDatabase(obj) {
   let cellId = Cell.getIdByPosition(obj.latitude, obj.longitude, obj.zoom);
   let lat = obj.latitude;
   let lng = obj.longitude;
-  let query = `INSERT INTO ${Cell.getTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, team=?, in_battle=?, points=?`;
+  let query = `INSERT INTO ${Cell.getFortTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, team=?, in_battle=?, points=?`;
   return new Promise((resolve) => {
     this.instance.db.query(query, [cellId, lat, lng, 0, 0, 0], (e, res) => {
       let insertId = res.insertId;

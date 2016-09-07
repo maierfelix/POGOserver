@@ -101,6 +101,8 @@ export default class Player extends MapObject  {
   refreshSocket(req, res) {
     this.request = POGOProtos.parseWithUnknown(req.body, "POGOProtos.Networking.Envelopes.RequestEnvelope");
     this.response = res;
+    // Try to update players position on each req
+    this.refreshPosition();
   }
 
   getDevicePlatform() {
@@ -240,6 +242,18 @@ export default class Player extends MapObject  {
 
   saveIntoDatabase() {
 
+  }
+
+  refreshPosition() {
+    let req = this.request;
+    if (
+      req.latitude !== void 0 &&
+      req.longitude !== void 0
+    ) {
+      this.latitude = req.latitude;
+      this.longitude = req.longitude;
+    }
+    this.world.triggerSpawnAt(this.latitude, this.longitude);
   }
 
 }

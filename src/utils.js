@@ -20,6 +20,18 @@ export function inherit(cls, prot) {
 
 }
 
+let hashIndex = 0;
+
+/**
+ * @return {Number}
+ */
+export function getUniqueHash() {
+  if (++hashIndex >= Number.MAX_SAFE_INTEGER) {
+    hashIndex = 0;
+  }
+  return (hashIndex);
+}
+
 /**
  * http://stackoverflow.com/a/7616484/3367904
  * @param {String} str

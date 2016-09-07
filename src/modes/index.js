@@ -30,7 +30,6 @@ export default {
   },
   PKMN_SETTINGS: {
     MIN_IV: 1,
-    MAX_IV: 15,
-    EXPIRE_MULTIPLIER: 5
+    MAX_IV: 15
   }
 }
