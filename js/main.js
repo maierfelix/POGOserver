@@ -9,23 +9,57 @@
 
   var header = `
     <div class="pure-form pure-g">
-      <div class="pure-u-1-2">
+      <div class="pure-u-1-3">
         <center>
-          <img src='img/pokestop_blue.png'/><br/>
-          <input id="option-one" type="radio" name="type" value="CHECKPOINT" style="margin: 18px;" checked>
+          <img src='img/spawn_point.png'/><br/>
+          <input id="option_one" type="radio" name="type" style="margin: 18px;" value="SPAWN">
         </center> 
       </div>
-      <div class="pure-u-1-2">
+      <div class="pure-u-1-3">
+        <center>
+          <img src='img/pokestop_blue.png'/><br/>
+          <input id="option_two" type="radio" name="type" style="margin: 18px;" value="CHECKPOINT" >
+        </center> 
+      </div>
+      <div class="pure-u-1-3">
         <center>
           <img src='img/gym_NEUTRAL.png'/><br/>
-          <input id="option-two" type="radio" name="type" style="margin: 18px;" value="GYM">
+          <input id="option_three" type="radio" name="type" style="margin: 18px;" value="GYM">
         </center> 
       </div>
     </div>
-    <input name="name" placeholder="Name" type="text" />
-    <input name="description" placeholder="Description" type="text" />
-    <input name="image_url" placeholder="Image" type="text" />
-    <input name="experience" placeholder="Experience" type="text" />
+    <div id="form_checkpoint" style="display:none;">
+      <input name="name" placeholder="Name" type="text" />
+      <input name="description" placeholder="Description" type="text" />
+      <input name="image_url" placeholder="Image" type="text" />
+      <input name="experience" placeholder="Experience" type="text" />
+    </div>
+    <div id="form_spawn" style="display:none;">
+      <input name="interval" placeholder="Interval" type="text" />
+      <input name="encounters" placeholder="Encounters" type="text" />
+    </div>
+    <div id="form_gym" style="display:none;">
+      <input name="team" placeholder="Team" type="text" />
+    </div>
+    <script>
+      function hideAllForms() {
+        form_checkpoint.style.display = "none";
+        form_spawn.style.display = "none";
+        form_gym.style.display = "none";
+      }
+      function showForm(e) {
+        var target = e.target || e;
+        hideAllForms();
+        var key = "#form_" + target.value.toLowerCase();
+        var el = document.querySelector(key);
+        el.style.display = "block";
+      }
+      option_one.onclick = showForm;
+      option_two.onclick = showForm;
+      option_three.onclick = showForm;
+      option_one.checked = true;
+      showForm(option_one);
+    </script>
   `;
 
   var gmap = new GMaps({
@@ -48,32 +82,40 @@
         ],
         callback: function(data) {
           if (data !== false && Object.keys(data).length) {
-            e.name = data.name;
-            e.description = data.description;
-            e.imageUrl = data.image_url;
-            e.experience = data.experience;
+            var ed = e.data = {};
+            if (data.type === "SPAWN") {
+              ed.interval = data.interval;
+              ed.encounters = data.encounters;
+            }
+            else if (data.type === "CHECKPOINT") {
+              ed.name = data.name;
+              ed.description = data.description;
+              ed.imageUrl = data.image_url;
+              ed.experience = data.experience;
+            }
+            else if (data.type === "GYM") {
+              ed.team = data.team;
+            }
             e.type = data.type;
-            addFort(e);
+            addFort(e, ed);
           }
         }
       })
     }
   });
 
-  function addFort(e) {
+  function addFort(e, data) {
     let lat = e.latLng.lat();
     let lng = e.latLng.lng();
-    send({
+    let obj = {
       action: "addFortToPosition",
       latitude: lat,
       longitude: lng,
       zoom: gmap.zoom,
-      name: e.name,
-      description: e.description,
-      image: e.imageUrl,
-      experience: e.experience,
       type: e.type
-    }, function(res) {
+    };
+    Object.assign(obj, data);
+    send(obj, function(res) {
       console.log(res);
       refreshMapForts();
     });
@@ -93,7 +135,11 @@
       setStatus("Connected!", "green");
     }
     else {
-      setStatus("Connection failed!", "red");
+      if (res.reason !== void 0) {
+        setStatus(res.reason);
+      } else {
+        setStatus("Connection failed!", "red");
+      }
       return void 0;
     }
   });
@@ -185,6 +231,7 @@
       result.forts.map((fort) => {
         let icon = null;
         if (fort.type === "CHECKPOINT") icon = "img/pokestop_blue.png";
+        else if (fort.uid[fort.uid.length - 1] === "S") icon = "img/spawn_point.png";
         else icon = "img/gym_" + fort.owned_by_team + ".png";
         gmap.addMarker({
           lat: fort.latitude,
