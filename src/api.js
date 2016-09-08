@@ -1,7 +1,6 @@
 import fs from "fs";
 import url from "url";
 import s2 from "s2-geometry";
-import prompt from "prompt";
 
 import Cell from "./models/World/Cell";
 
@@ -14,10 +13,7 @@ import {
 
 const S2Geo = s2.S2;
 
-prompt.start({
-  message: " ",
-  delimiter: " "
-});
+let showHint = true;
 
 export function processApiCall(req, res, route) {
 
@@ -27,7 +23,16 @@ export function processApiCall(req, res, route) {
   let hoster = url.parse(req.headers.referer).host;
 
   if (!(allowedHosts.indexOf(hoster) > -1)) {
-    this.grantApiAccess(req, res, route);
+    print(`Denied API access for ${hoster}!`, 31);
+    if (showHint) {
+      print(`To grant ${hoster} API access, add it to the allowed hosts in .save`, 33);
+      showHint = false;
+    }
+    let result = {
+      success:false,
+      reason: "API access denied!"
+    };
+    this.answerApiCall(res, JSON.stringify(result));
     return void 0;
   }
 
@@ -68,29 +73,6 @@ export function processApiCall(req, res, route) {
 
 }
 
-export function grantApiAccess(req, res, route) {
-
-  let save = JSON.parse(fs.readFileSync(".save", "utf8"));
-
-  let hoster = url.parse(req.headers.referer).host;
-
-  let msg = `[Console] \x1b[33mGrant API access to ${hoster}?\x1b[0m`;
-
-  prompt.get([{ name: "grant", required: true, description: msg }], (e, result) => {
-    if (result.grant === "y" || result.grant === "yes") {
-      save.allowedApiHosts.push(hoster);
-      fs.writeFileSync(".save", JSON.stringify(save), "utf8");
-      print(`Successfully added ${hoster} to allowed API hosts!`);
-      this.processApiCall(req, res, route);
-    }
-    else {
-      print(`Denied API access for ${hoster}`, 31);
-      this.answerApiCall(res, "");
-    }
-  });
-
-}
-
 export function answerApiCall(res, data) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
@@ -103,12 +85,10 @@ export function api_login(data) {
 
   if (typeof data !== "object") return void 0;
 
-  let save = JSON.parse(fs.readFileSync(".save", "utf8"));
-
   let success = false;
 
-  let username = save.loginDetails.username;
-  let password = save.loginDetails.password;
+  let username = CFG.API_USERNAME;
+  let password = CFG.API_PASSWORD;
 
   if (
     username === data.username &&
@@ -197,12 +177,12 @@ export function api_getFortsByPosition(data) {
     let zoom = data.zoom;
     this.getNeighboredForts(this.getNeighbors(lat, lng, zoom), [], 0).then((forts) => {
       let result = [];
-      for (let fort of forts) {
+      forts.map((fort) => {
         let fortData = fort.serialize();
         fortData.name = fort.name;
         fortData.uid = fort.uid;
         result.push(fortData);
-      };
+      });
       resolve({
         forts: result,
         success: true

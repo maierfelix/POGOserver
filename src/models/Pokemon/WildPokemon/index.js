@@ -20,8 +20,7 @@ export default class WildPokemon extends Pokemon {
 
     this.uid = getUniqueHash();
 
-    this.encounterId = 0;
-    this.spawnPointId = 0;
+    this.encounterId = this.getEncounterId();
 
     this.minExpire = obj.minExpire;
     this.maxExpire = obj.maxExpire;
@@ -30,6 +29,29 @@ export default class WildPokemon extends Pokemon {
 
     this.expiration = ~~(Math.random() * this.maxExpire) + this.minExpire;
 
+    // players who already catched this pkmn
+    this.hasCatched = [];
+
+  }
+
+  /**
+   * @param {Player} player
+   * @return {Boolean}
+   */
+  catchedBy(player) {
+    if (!this.alreadyCatchedBy(player)) {
+      this.hasCatched.push(player.uid);
+    }
+  }
+
+  /**
+   * @param {Player} player
+   * @return {Boolean}
+   */
+  alreadyCatchedBy(player) {
+    return (
+      this.hasCatched.indexOf(player.uid) > -1
+    );
   }
 
   /**
@@ -45,7 +67,7 @@ export default class WildPokemon extends Pokemon {
    * @return {Number}
    */
   getEncounterId() {
-    return (getHashCodeFrom(this.cellId + "" + this.uid));
+    return (this.uid);
   }
 
   /**
@@ -62,12 +84,24 @@ export default class WildPokemon extends Pokemon {
    */
   serializeWild() {
     return ({
-      encounter_id: this.getEncounterId(),
+      encounter_id: this.encounterId,
       last_modified_timestamp_ms: +new Date(),
       latitude: this.latitude,
       longitude: this.longitude,
+      spawn_point_id: this.spawnPointId,
       pokemon_data: {
-        pokemon_id: this.getPkmnId()
+        pokemon_id: this.getPkmnId(),
+        cp: 66,
+        stamina: 10,
+        stamina_max: 10,
+        move_1: "BUG_BITE_FAST",
+        move_2: "STRUGGLE",
+        height_m: 0.30962005257606506,
+        weight_kg: 3.3212273120880127,
+        individual_attack: 7,
+        individual_defense: 13,
+        individual_stamina: 3,
+        cp_multiplier: 0.16639786958694458
       },
       time_till_hidden_ms: this.expiration
     });
@@ -78,7 +112,7 @@ export default class WildPokemon extends Pokemon {
    */
   serializeCatchable() {
     return ({
-      encounter_id: this.getEncounterId(),
+      encounter_id: this.encounterId,
       pokemon_id: this.getPkmnId(),
       expiration_timestamp_ms: this.creation + this.expiration,
       latitude: this.latitude,

@@ -113,6 +113,11 @@ export function insertFortIntoDatabase(obj) {
         resolve(pokestop);
       });
     }
+    else if (obj.type === "SPAWN") {
+      this.insertSpawnIntoDatabase(obj).then((spawn) => {
+        resolve(spawn);
+      });
+    }
   });
 }
 
@@ -146,6 +151,26 @@ export function insertGymIntoDatabase(obj) {
     this.instance.db.query(query, [cellId, lat, lng, 0, 0, 0], (e, res) => {
       let insertId = res.insertId;
       obj.uid = insertId;
+      obj.cell_id = cellId;
+      this.addFort(obj).then((fort) => {
+        resolve(fort);
+      });
+    });
+  });
+}
+
+export function insertSpawnIntoDatabase(obj) {
+  let cellId = Cell.getIdByPosition(obj.latitude, obj.longitude, obj.zoom);
+  let lat = obj.latitude;
+  let lng = obj.longitude;
+  let encounters = [];
+  obj.encounters.split(",").map((encounter) => {
+    encounters.push(encounter << 0);
+  });
+  let query = `INSERT INTO ${Cell.getFortTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, encounters=?, update_interval=?`;
+  return new Promise((resolve) => {
+    this.instance.db.query(query, [cellId, lat, lng, `[${encounters}]`, obj.interval << 0], (e, res) => {
+      obj.uid = res.insertId;
       obj.cell_id = cellId;
       this.addFort(obj).then((fort) => {
         resolve(fort);

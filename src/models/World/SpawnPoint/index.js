@@ -21,14 +21,22 @@ export default class SpawnPoint extends MapObject {
 
     super(obj);
 
+    this.type = null;
+
+    this.range = 3;
+
     this.spawns = JSON.parse(obj.encounters);
 
     this.minExpire = ((obj.min_spawn_expire * 1e3) * 60) << 0;
     this.maxExpire = ((obj.max_spawn_expire * 1e3) * 60) << 0;
 
+    this.isSpawn = true;
+
     this.activeSpawns = [];
 
     this.init(obj);
+
+    this.uid += this.type[0].toUpperCase();
 
   }
 
@@ -54,7 +62,7 @@ export default class SpawnPoint extends MapObject {
    * @return {Object}
    */
   getRandomPosition() {
-    let range = .0005;
+    let range = this.range / 1e4;
     let latitude = this.latitude + (Math.random() * (range * 2)) - range;
     let longitude = this.longitude + (Math.random() * (range * 2)) - range;
     return ({
@@ -70,15 +78,14 @@ export default class SpawnPoint extends MapObject {
       dexNumber: randId,
       latitude: randPos.lat,
       longitude: randPos.lng,
-      pokeball: "ITEM_POKE_BALL",
-      favorite: 0,
       isWild: true,
       cellId: this.cellId,
+      spawnPointId: this.uid,
       minExpire: this.minExpire,
       maxExpire: this.maxExpire
     });
     this.activeSpawns.push(pkmn);
-    print(`Spawned ${pkmn.getPkmnName()} at ${this.cellId}}`);
+    print(`Spawned ${pkmn.getPkmnName()} at ${this.cellId}`);
   }
 
   /**
@@ -93,6 +100,21 @@ export default class SpawnPoint extends MapObject {
       }
       index++;
     });
+  }
+
+  /**
+   * @param {String} id
+   * @return {WildPokemon}
+   */
+  getPkmnSpawnById(id) {
+    let ii = 0;
+    let length = this.activeSpawns.length;
+    let spawn = null;
+    for (; ii < length; ++ii) {
+      spawn = this.activeSpawns[ii];
+      if (spawn.uid === id) return (spawn);
+    }
+    return (null);
   }
 
   /**

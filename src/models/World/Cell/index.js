@@ -32,7 +32,6 @@ export default class Cell extends MapObject {
     this.synced = false;
 
     this.forts = [];
-    this.spawns = [];
 
     this.type = obj.type;
 
@@ -55,27 +54,20 @@ export default class Cell extends MapObject {
    */
   addFort(obj) {
     obj.world = this.world;
-    let fort = null;
-    fort = obj.type === "CHECKPOINT" ? new Pokestop(obj) : new Gym(obj);
+    let fort = (
+      obj.type === "CHECKPOINT" ? new Pokestop(obj) :
+      obj.type === "SPAWN" ? new SpawnPoint(obj) :
+      new Gym(obj)
+    );
     this.forts.push(fort);
     return (fort);
   }
 
-  /**
-   * @param {Object} obj
-   * @return {SpawnPoint}
-   */
-  addSpawnPoint(obj) {
-    obj.world = this.world;
-    let spawn = null;
-    spawn = new SpawnPoint(obj);
-    this.spawns.push(spawn);
-    return (spawn);
-  }
-
   refreshSpawnPoints() {
-    this.spawns.map((spawn) => {
-      spawn.refresh();
+    this.forts.map((fort) => {
+      if (fort.isSpawn === true) {
+        fort.refresh();
+      }
     });
   }
 
@@ -88,29 +80,16 @@ export default class Cell extends MapObject {
         resolve(this.forts);
       }
       else {
-        this.getSpawnsFromDatabase().then((spawns) => {
-          spawns.map((spawn) => {
-            this.addSpawnPoint(spawn);
+        this.getFortsFromDatabase().then((forts) => {
+          this.forts = [];
+          forts.map((fort) => {
+            this.processDeletedFort(this.addFort(fort));
           });
-          this.getFortsFromDatabase().then((forts) => {
-            this.forts = [];
-            forts.map((fort) => {
-              this.processDeletedFort(this.addFort(fort));
-            });
-            this.synced = true;
-            //print(`Synced ${this.cellId} with database..`, 33);
-            resolve(this.forts);
-          });
+          this.synced = true;
+          print(`Synced ${this.cellId} with database..`, 33);
+          resolve(this.forts);
         });
       }
-    });
-  }
-
-  getSpawnsFromDatabase() {
-    return new Promise((resolve) => {
-      this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_SPAWN_TABLE).then((spawns) => {
-        resolve(spawns || []);
-      });
     });
   }
 
@@ -122,8 +101,20 @@ export default class Cell extends MapObject {
     return (
       type === "CHECKPOINT" ?
       CFG.MYSQL_POKESTOP_TABLE :
-      CFG.MYSQL_GYM_TABLE
+      type === "SPAWN" ?
+      CFG.MYSQL_SPAWN_TABLE :
+      type === "GYM" ?
+      CFG.MYSQL_GYM_TABLE :
+      "INVALID"
     );
+  }
+
+  getSpawnsFromDatabase() {
+    return new Promise((resolve) => {
+      this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_SPAWN_TABLE).then((spawns) => {
+        resolve(spawns || []);
+      });
+    });
   }
 
   getFortsFromDatabase() {
@@ -141,7 +132,14 @@ export default class Cell extends MapObject {
             fort.type = "GYM";
             out.push(fort);
           });
-          resolve(out);
+          this.world.instance.getQueryByColumnFromTable("cell_id", this.cellId, CFG.MYSQL_SPAWN_TABLE).then((forts) => {
+            forts = forts || [];
+            forts.map((fort) => {
+              fort.type = "SPAWN";
+              out.push(fort);
+            });
+            resolve(out);
+          });
         });
       });
     });
@@ -215,69 +213,98 @@ export default class Cell extends MapObject {
   /**
    * @return {Array}
    */
-  serializeWildPkmns() {
+  serializeSpawnPoints() {
     let ii = 0;
-    let length = this.spawns.length;
+    let length = this.forts.length;
     let out = [];
-    let spawn = null;
+    let fort = null;
     for (; ii < length; ++ii) {
-      spawn = this.spawns[ii];
-      spawn.activeSpawns.map((encounter) => {
-        out.push(encounter.serializeWild());
-      });
+      fort = this.forts[ii];
+      if (!(fort.isSpawn === true)) continue;
+      out.push(fort.serialize());
     };
     return (out);
   }
 
   /**
+   * @param {Player} player
    * @return {Array}
    */
-  serializeCatchablePkmns() {
+  serializeWildPkmns(player) {
     let ii = 0;
-    let length = this.spawns.length;
+    let length = this.forts.length;
     let out = [];
-    let spawn = null;
+    let fort = null;
     for (; ii < length; ++ii) {
-      spawn = this.spawns[ii];
-      spawn.activeSpawns.map((encounter) => {
-        out.push(encounter.serializeCatchable());
+      fort = this.forts[ii];
+      if (!(fort.isSpawn === true)) continue;
+      fort.activeSpawns.map((encounter) => {
+        if (!encounter.alreadyCatchedBy(player)) {
+          out.push(encounter.serializeWild());
+        }
       });
     };
     return (out);
   }
 
   /**
+   * @param {Player} player
    * @return {Array}
    */
-  serializeNearbyPkmns() {
+  serializeCatchablePkmns(player) {
     let ii = 0;
-    let length = this.spawns.length;
+    let length = this.forts.length;
     let out = [];
-    let spawn = null;
+    let fort = null;
     for (; ii < length; ++ii) {
-      spawn = this.spawns[ii];
-      spawn.activeSpawns.map((encounter) => {
-        out.push(encounter.serializeNearby());
+      fort = this.forts[ii];
+      if (!(fort.isSpawn === true)) continue;
+      fort.activeSpawns.map((encounter) => {
+        if (!encounter.alreadyCatchedBy(player)) {
+          out.push(encounter.serializeCatchable());
+        }
       });
     };
     return (out);
   }
 
   /**
+   * @param {Player} player
+   * @return {Array}
+   */
+  serializeNearbyPkmns(player) {
+    let ii = 0;
+    let length = this.forts.length;
+    let out = [];
+    let fort = null;
+    for (; ii < length; ++ii) {
+      fort = this.forts[ii];
+      if (!(fort.isSpawn === true)) continue;
+      fort.activeSpawns.map((encounter) => {
+        if (!encounter.alreadyCatchedBy(player)) {
+          out.push(encounter.serializeNearby());
+        }
+      });
+    };
+    return (out);
+  }
+
+  /**
+   * @param {Player} player
    * @return {Object}
    */
-  serialize() {
+  serialize(player) {
     return ({
       s2_cell_id: this.cellId,
       current_timestamp_ms: +new Date(),
-      forts: this.forts.map((fort) => { return fort.serialize(); }),
-      spawn_points: this.spawns.map((spawn) => { return spawn.serialize(); }),
+      forts: this.forts.map((fort) => { if (!fort.isSpawn) return fort.serialize(); }),
+      spawn_points: this.serializeSpawnPoints(),
       deleted_objects: [],
       fort_summaries: [],
       decimated_spawn_points: [],
-      wild_pokemons: this.serializeWildPkmns(),
-      catchable_pokemons: this.serializeCatchablePkmns(),
-      nearby_pokemons: this.serializeNearbyPkmns()
+      wild_pokemons: this.serializeWildPkmns(player),
+      catchable_pokemons: this.serializeCatchablePkmns(player),
+      nearby_pokemons: this.serializeNearbyPkmns(player)
     });
   }
 

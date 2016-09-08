@@ -65,9 +65,11 @@ export default class World {
   }
 
   refreshSpawns() {
-    this.cells.map((cell) => {
-      cell.refreshSpawnPoints();
-    });
+    let ii = 0;
+    let length = this.cells.length;
+    for (; ii < length; ++ii) {
+      this.cells[ii].refreshSpawnPoints();
+    };
   }
 
   /**
@@ -78,12 +80,41 @@ export default class World {
     let cell = this.getCellById(Cell.getIdByPosition(lat, lng, 15));
     // Wait until cell got registered
     if (cell === null) return void 0;
-    cell.spawns.map((spawn) => {
-      //if (spawn.activeSpawns.length >= 4) return void 0;
-      if (Math.random() < .85) {
-        spawn.spawnPkmn();
+    cell.forts.map((fort) => {
+      if (fort.isSpawn) {
+        if (fort.activeSpawns.length >= fort.spawns.length) return void 0;
+        fort.spawnPkmn();
       }
     });
+  }
+
+  /**
+   * @param  {String} id
+   * @return {WildPokemon}
+   */
+  getEncounterById(id) {
+    id <<= 0;
+    let ii = 0;
+    let jj = 0;
+    let fortLength = 0;
+    let cellLength = this.cells.length;
+    let cell = null;
+    let fort = null;
+    let pkmn = null;
+    for (; ii < cellLength; ++ii) {
+      cell = this.cells[ii];
+      fortLength = cell.forts.length;
+      for (; jj < fortLength; ++jj) {
+        fort = cell.forts[jj];
+        if (fort.isSpawn === true) {
+          if ((pkmn = fort.getPkmnSpawnById(id)) !== null) {
+            return (pkmn);
+          }
+        }
+      };
+      jj = 0;
+    };
+    return (pkmn);
   }
 
   /**
@@ -94,9 +125,10 @@ export default class World {
     return new Promise((resolve) => {
       switch (type) {
         case "ENCOUNTER":
-          this.Encounter(msg).then((result) => {
-            resolve(result);
-          });
+          resolve(this.Encounter(msg));
+        break;
+        case "CATCH_POKEMON":
+          resolve(this.CatchPokemon(msg));
         break;
         case "FORT_SEARCH":
           this.FortSearch(msg).then((result) => {

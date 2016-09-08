@@ -30,7 +30,7 @@ export default function GetMapObjects(msg) {
             else ids.push(id);
           });
         }
-        mapCells.push(cell.serialize());
+        mapCells.push(cell.serialize(msg.player));
       });
       resolve(
         POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.GetMapObjectsResponse")

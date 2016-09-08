@@ -64,6 +64,8 @@ export default class Pokemon extends MapObject {
 
     this.isWild = false;
 
+    this.spawnPoint = null;
+
     this.init(obj);
 
   }

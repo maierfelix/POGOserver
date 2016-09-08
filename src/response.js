@@ -59,6 +59,7 @@ export function processResponse(player, req) {
         case "ENCOUNTER":
         case "FORT_SEARCH":
         case "FORT_DETAILS":
+        case "CATCH_POKEMON":
         case "GET_MAP_OBJECTS":
         case "CHECK_CHALLENGE":
         case "GET_DOWNLOAD_URLS":

@@ -1,6 +1,7 @@
 export Encounter from "./Encounter";
 export FortSearch from "./FortSearch";
 export FortDetails from "./FortDetails";
+export CatchPokemon from "./CatchPokemon";
 export GetMapObjects from "./GetMapObjects";
 export CheckChallenge from "./CheckChallenge";
 export GetDownloadUrls from "./GetDownloadUrls";

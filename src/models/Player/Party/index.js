@@ -1,6 +1,9 @@
 import Pokemon from "../../Pokemon";
+import WildPokemon from "../../Pokemon/WildPokemon";
 
 import print from "../../../print";
+
+import CFG from "../../../cfg";
 
 /**
  * @class Party
@@ -29,9 +32,8 @@ export default class Party {
 
   fetchFromDatabase() {
     let instance = this.player.world.db;
-    this.player.world.db.query(`SELECT * FROM owned_pkmn WHERE owner_id=?`, [this.player.id], (e, rows) => {
+    this.player.world.db.query(`SELECT * FROM ${CFG.MYSQL_OWNED_PKMN_TABLE} WHERE owner_id=?`, [this.player.id], (e, rows) => {
       if (e) return print(e, 31);
-      console.log("Pokemon:", rows);
     });
   }
 
@@ -40,10 +42,7 @@ export default class Party {
    */
   addPkmn(obj) {
     if (!obj.owner) obj.owner = this.player;
-    if (!(obj instanceof Pokemon)) {
-      this.party.push(new Pokemon(obj));
-    }
-    else this.party.push(obj);
+    this.party.push(new Pokemon(obj));
   }
 
   /**

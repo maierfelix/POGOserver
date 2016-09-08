@@ -79,6 +79,28 @@ export default class Bag {
   }
 
   /**
+   * @param {String} key
+   * @return {String}
+   */
+  getLocalItemKey(key) {
+    return (
+      key.replace("ITEM_", "").toLowerCase()
+    );
+  }
+
+  /**
+   * @param {String} key
+   * @return {Number}
+   */
+  getItemAmountByItemKey(key) {
+    let name = this.getLocalItemKey(key);
+    if (this.hasOwnProperty(name)) {
+      return (this[name]);
+    }
+    return (-1);
+  }
+
+  /**
    * @param {String} name
    * @return {Boolean}
    */
@@ -94,7 +116,7 @@ export default class Bag {
    * @return {Number}
    */
   updateItem(name, amount) {
-    let key = name.replace("ITEM_", "").toLowerCase();
+    let key = this.getLocalItemKey(name);
     if (!this.isValidItemKey(key)) return (-1);
     let currentAmount = this[key] << 0;
     if (amount < 0) {

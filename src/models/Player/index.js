@@ -256,6 +256,18 @@ export default class Player extends MapObject  {
     this.world.triggerSpawnAt(this.latitude, this.longitude);
   }
 
+  /**
+   * @param {WildPokemon} pkmn
+   */
+  catchPkmn(pkmn) {
+    this.info.exp += 100;
+    this.info.stardust += 100;
+    this.info.pkmnCaptured += 1;
+    this.currentEncounter = null;
+    this.party.addPkmn(pkmn);
+    pkmn.catchedBy(this);
+  }
+
 }
 
 inherit(Player, _packets);
