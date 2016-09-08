@@ -3,7 +3,7 @@ import WildPokemon from "../../Pokemon/WildPokemon";
 
 import print from "../../../print";
 
-import CFG from "../../../cfg";
+import CFG from "../../../../cfg";
 
 /**
  * @class Party
