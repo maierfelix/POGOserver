@@ -20,29 +20,30 @@ export default class Party {
 
     this.party = [];
 
-    this.addPkmn({
-      dexNumber: 4,
-      pokeball: "ITEM_POKE_BALL",
-      favorite: 0
-    });
-
-    this.fetchFromDatabase();
-
   }
 
-  fetchFromDatabase() {
-    let instance = this.player.world.db;
-    this.player.world.db.query(`SELECT * FROM ${CFG.MYSQL_OWNED_PKMN_TABLE} WHERE owner_id=?`, [this.player.id], (e, rows) => {
-      if (e) return print(e, 31);
+  syncWithDatabase() {
+    let query = `SELECT * FROM ${CFG.MYSQL_OWNED_PKMN_TABLE} WHERE owner_id=?`;
+    return new Promise((resolve) => {
+      this.player.world.db.query(query, [this.player.uid], (e, rows) => {
+        if (e) return print(e, 31);
+        rows.map((row) => {
+          this.addPkmn(row);
+        });
+        resolve();
+      });
     });
   }
 
   /**
    * @param {Object} obj
+   * @return {Pokemon}
    */
   addPkmn(obj) {
     if (!obj.owner) obj.owner = this.player;
-    this.party.push(new Pokemon(obj));
+    let pkmn = new Pokemon(obj);
+    this.party.push(pkmn);
+    return (pkmn);
   }
 
   /**
@@ -50,8 +51,9 @@ export default class Party {
    * @return {Number}
    */
   getPkmnIndexById(id) {
+    id = parseInt(id);
     for (let ii = 0; ii < this.party.length; ++ii) {
-      if (this.party[ii].id === id) return (ii);
+      if (this.party[ii].uid === id) return (ii);
     };
     return (-1);
   }
@@ -67,12 +69,11 @@ export default class Party {
 
   /**
    * @param {Number} id
-   * @return {Pokemon}
    */
   deletePkmn(id) {
     let index = this.getPkmnIndexById(id);
     let pkmn = this.party[index];
-    if (pkmn) this.party.splice(index, 1)[0];
+    if (pkmn) this.party.splice(index, 1);
   }
 
   /**

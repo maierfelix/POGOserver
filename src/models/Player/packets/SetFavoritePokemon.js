@@ -8,7 +8,7 @@ export default function SetFavoritePokemon(msg) {
 
   let buffer = null;
   let pkmn = this.party.getPkmnById(msg.pokemon_id);
-console.log(this.party.party);
+  
   if (pkmn) {
     pkmn.setFavorite(msg.is_favorite);
     buffer = { result: "SUCCESS" };

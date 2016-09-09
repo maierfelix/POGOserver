@@ -20,7 +20,7 @@ export function inherit(cls, prot) {
 
 }
 
-let hashIndex = 0;
+let hashIndex = 1;
 
 /**
  * @return {Number}
@@ -96,6 +96,16 @@ export function idToPkmnBundleName(index) {
 export function capitalize(str) {
   return (
     str[0].toUpperCase() + str.slice(1)
+  );
+}
+
+/**
+ * @param {String} str
+ * @return {String}
+ */
+export function deCapitalize(str) {
+  return (
+    str[0].toLowerCase() + str.slice(1)
   );
 }
 

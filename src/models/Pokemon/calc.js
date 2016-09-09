@@ -11,6 +11,7 @@ export function calcStats() {
   this.attack = stats.base_attack;
   this.defense = stats.base_defense;
   this.stamina = stats.base_stamina;
+  this.staminaMax = this.stamina;
 
   this.ivAttack = ~~(Math.random() * maxIV) + minIV;
   this.ivDefense = ~~(Math.random() * maxIV) + minIV;
@@ -21,6 +22,8 @@ export function calcStats() {
 
   this.cp = this.calcCP();
 
+  this.calcMoves();
+
 }
 
 export function calcMoves() {
@@ -30,8 +33,8 @@ export function calcMoves() {
   let weakMoves = pkmnTmpl.quick_moves;
   let strongMoves = pkmnTmpl.cinematic_moves;
 
-  this.move1 = (Math.random() * weakMoves.length) << 0;
-  this.move2 = (Math.random() * strongMoves.length) << 0;
+  this.move1 = weakMoves[(Math.random() * weakMoves.length) << 0];
+  this.move2 = strongMoves[(Math.random() * strongMoves.length) << 0];
 
 }
 

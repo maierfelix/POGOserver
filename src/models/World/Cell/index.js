@@ -27,13 +27,13 @@ export default class Cell extends MapObject {
 
     super(obj);
 
-    this._uPkmnId = 0;
-
-    this.synced = false;
-
     this.forts = [];
 
     this.type = obj.type;
+
+    this.synced = false;
+
+    this.expiration = 0;
 
   }
 
@@ -46,6 +46,15 @@ export default class Cell extends MapObject {
     return (
       S2Geo.keyToId(S2Geo.latLngToKey(lat, lng, zoom || 15))
     );
+  }
+
+  delete() {
+    let index = this.world.getCellIndexByCellId(this.cellId);
+    let cell = this.world.cells[index];
+    if (cell) {
+      this.world.cells.splice(index, 1);
+      print(`Cell ${cell.cellId} timed out!`, 33);
+    }
   }
 
   /**
@@ -73,6 +82,7 @@ export default class Cell extends MapObject {
 
   loadForts() {
     return new Promise((resolve) => {
+      this.expiration = +new Date() + CFG.CELL_TIMEOUT;
       if (this.synced) {
         this.forts.map((fort) => {
           this.processDeletedFort(fort);
@@ -182,9 +192,10 @@ export default class Cell extends MapObject {
    * @return {Number}
    */
   getFortIndexById(id) {
+    id = parseInt(id);
     let index = 0;
     for (let fort of this.forts) {
-      if (fort.uid === id || fort.uid === id << 0) return (index);
+      if (fort.uid === id) return (index);
       ++index;
     };
     return (-1);
@@ -230,59 +241,23 @@ export default class Cell extends MapObject {
    * @param {Player} player
    * @return {Array}
    */
-  serializeWildPkmns(player) {
+  serializePkmns(player) {
     let ii = 0;
     let length = this.forts.length;
-    let out = [];
-    let fort = null;
-    for (; ii < length; ++ii) {
-      fort = this.forts[ii];
-      if (!(fort.isSpawn === true)) continue;
-      fort.activeSpawns.map((encounter) => {
-        if (!encounter.alreadyCatchedBy(player)) {
-          out.push(encounter.serializeWild());
-        }
-      });
+    let out = {
+      wild: [],
+      nearby: [],
+      catchable: []
     };
-    return (out);
-  }
-
-  /**
-   * @param {Player} player
-   * @return {Array}
-   */
-  serializeCatchablePkmns(player) {
-    let ii = 0;
-    let length = this.forts.length;
-    let out = [];
     let fort = null;
     for (; ii < length; ++ii) {
       fort = this.forts[ii];
       if (!(fort.isSpawn === true)) continue;
       fort.activeSpawns.map((encounter) => {
         if (!encounter.alreadyCatchedBy(player)) {
-          out.push(encounter.serializeCatchable());
-        }
-      });
-    };
-    return (out);
-  }
-
-  /**
-   * @param {Player} player
-   * @return {Array}
-   */
-  serializeNearbyPkmns(player) {
-    let ii = 0;
-    let length = this.forts.length;
-    let out = [];
-    let fort = null;
-    for (; ii < length; ++ii) {
-      fort = this.forts[ii];
-      if (!(fort.isSpawn === true)) continue;
-      fort.activeSpawns.map((encounter) => {
-        if (!encounter.alreadyCatchedBy(player)) {
-          out.push(encounter.serializeNearby());
+          out.wild.push(encounter.serializeWild());
+          out.nearby.push(encounter.serializeNearby());
+          out.catchable.push(encounter.serializeCatchable());
         }
       });
     };
@@ -294,7 +269,7 @@ export default class Cell extends MapObject {
    * @return {Object}
    */
   serialize(player) {
-    return ({
+    let buffer = {
       s2_cell_id: this.cellId,
       current_timestamp_ms: +new Date(),
       forts: this.forts.map((fort) => { if (!fort.isSpawn) return fort.serialize(); }),
@@ -302,10 +277,15 @@ export default class Cell extends MapObject {
       deleted_objects: [],
       fort_summaries: [],
       decimated_spawn_points: [],
-      wild_pokemons: this.serializeWildPkmns(player),
-      catchable_pokemons: this.serializeCatchablePkmns(player),
-      nearby_pokemons: this.serializeNearbyPkmns(player)
-    });
+      wild_pokemons: null,
+      catchable_pokemons: null,
+      nearby_pokemons: null
+    };
+    let pkmns = this.serializePkmns(player);
+    buffer.wild_pokemons = pkmns.wild;
+    buffer.nearby_pokemons = pkmns.nearby;
+    buffer.catchable_pokemons = pkmns.catchable;
+    return (buffer);
   }
 
 }

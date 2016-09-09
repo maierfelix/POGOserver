@@ -132,6 +132,9 @@ export default class Player extends MapObject  {
         case "LEVEL_UP_REWARDS":
           resolve(this.LevelUpRewards(msg));
         break;
+        case "RELEASE_POKEMON":
+          resolve(this.ReleasePokemon(msg));
+        break;
         case "GET_PLAYER_PROFILE":
           resolve(this.GetPlayerProfile(msg));
         break;
@@ -183,9 +186,11 @@ export default class Player extends MapObject  {
   inheritByObject(obj) {
     for (let key in obj) {
       // ignore
-      if (!(key !== "id")) continue;
       if (!(key !== "email")) continue;
-      if (key === "candies") {
+      if (key === "id") {
+        this.uid = obj[key];
+      }
+      else if (key === "candies") {
         this.candyBag.parseJSON(obj[key]);
       }
       else if (key === "items") {
@@ -222,26 +227,26 @@ export default class Player extends MapObject  {
 
   syncWithDatabase() {
     return new Promise((resolve) => {
-      this.loadFromDatabase().then((row) => {
-        this.inheritByObject(row);
-        resolve();
+      this.loadPlayerDatabase().then((row) => {
+        this.party.syncWithDatabase().then(() => {
+          resolve();
+        });
       });
     });
   }
 
-  loadFromDatabase() {
+  loadPlayerDatabase() {
     let query = `SELECT * from ${CFG.MYSQL_USERS_TABLE} WHERE email=? LIMIT 1`;
     return new Promise((resolve) => {
       this.world.db.query(query, [this.email], (e, rows) => {
         if (e) return print(e, 31);
-        if (rows.length >= 1) resolve(rows[0]);
+        if (rows.length >= 1) {
+          this.inheritByObject(rows[0]);
+          resolve();
+        }
         else print(`Failed to sync player ${this.username} with database!`, 31);
       });
     });
-  }
-
-  saveIntoDatabase() {
-
   }
 
   refreshPosition() {
@@ -258,14 +263,36 @@ export default class Player extends MapObject  {
 
   /**
    * @param {WildPokemon} pkmn
+   * @param {String} ball
+   * @return {Object}
    */
-  catchPkmn(pkmn) {
+  catchPkmn(pkmn, ball) {
     this.info.exp += 100;
     this.info.stardust += 100;
     this.info.pkmnCaptured += 1;
     this.currentEncounter = null;
-    this.party.addPkmn(pkmn);
+    pkmn.owner = this;
+    pkmn.calcStats();
     pkmn.catchedBy(this);
+    pkmn.pokeball = ball;
+    return new Promise((resolve) => {
+      pkmn.insertIntoDatabase().then((insertId) => {
+        print(insertId, 36);
+        pkmn.uid = pkmn.insertId;
+        let partyPkmn = this.party.addPkmn(pkmn);
+        print(`${this.username} catched a wild ${pkmn.getPkmnName()}!`);
+        resolve({
+          status: "CATCH_SUCCESS",
+          captured_pokemon_id: partyPkmn.uid,
+          capture_award: {
+            activity_type: ["ACTIVITY_CATCH_POKEMON"],
+            xp: [100],
+            candy: [3],
+            stardust: [100]
+          }
+        });
+      });
+    });
   }
 
 }

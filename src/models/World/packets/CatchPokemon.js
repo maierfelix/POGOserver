@@ -6,47 +6,52 @@ import POGOProtos from "pokemongo-protobuf";
 export default function CatchPokemon(msg) {
 
   let buffer = null;
+  let schema = "POGOProtos.Networking.Responses.CatchPokemonResponse";
 
   let player = msg.player;
   let bag = player.bag;
-  let item = bag.getLocalItemKey(msg.pokeball);
+  let ball = bag.getLocalItemKey(msg.pokeball);
 
   let pkmn = msg.player.currentEncounter;
 
-  player.bag[item] -= 1;
+  player.bag[ball] -= 1;
 
-  // Invalid pkmn
-  if (!pkmn) {
-    buffer = {
-      status: "CATCH_ERROR"
-    };
-  // Missed
-  } else if (!msg.hit_pokemon || !bag[item]) {
-    buffer = {
-      status: "CATCH_MISSED"
-    };
-  // Escaped
-  } else if (Math.random() < .35) {
-    buffer = {
-      status: "CATCH_ESCAPE"
-    };
-  // Catched
-  } else {
-    player.catchPkmn(pkmn);
-    buffer = {
-      status: "CATCH_SUCCESS",
-      captured_pokemon_id: pkmn.encounterId,
-      capture_award: {
-        activity_type: ["ACTIVITY_CATCH_POKEMON"],
-        xp: [100],
-        candy: [3],
-        stardust: [100]
+  return new Promise((resolve) => {
+
+    // Invalid pkmn
+    if (!pkmn) {
+      player.currentEncounter = null;
+      pkmn.catchedBy(player);
+      buffer = {
+        status: "CATCH_ERROR"
+      };
+    // Missed
+    } else if (!msg.hit_pokemon || !bag[ball]) {
+      buffer = {
+        status: "CATCH_MISSED"
+      };
+    } else {
+      // Fleed
+      if (Math.random() < .1) {
+        pkmn.catchedBy(player);
+        player.currentEncounter = null;
+        buffer = {
+          status: "CATCH_FLEE"
+        };
+      // Escaped
+      } else if (Math.random() < .2) {
+        buffer = {
+          status: "CATCH_ESCAPE"
+        };
+      // Catched?
+      } else {
+        player.catchPkmn(pkmn, msg.pokeball).then((result) => {
+          resolve(POGOProtos.serialize(result, schema));
+        });
+        return void 0;
       }
-    };
-  }
-
-  return (
-    POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.CatchPokemonResponse")
-  );
+    }
+    resolve(POGOProtos.serialize(buffer, schema));
+  });
 
 }

@@ -85,7 +85,7 @@ export default class SpawnPoint extends MapObject {
       maxExpire: this.maxExpire
     });
     this.activeSpawns.push(pkmn);
-    print(`Spawned ${pkmn.getPkmnName()} at ${this.cellId}`);
+    print(`Spawned ${pkmn.getPkmnName()}:${pkmn.uid} at ${this.cellId}`);
   }
 
   /**

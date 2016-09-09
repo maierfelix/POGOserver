@@ -34,15 +34,24 @@ export default class World {
 
   /**
    * @param {String} cellId
-   * @return {Cell}
+   * @return {Number}
    */
-  getCellByCellId(cellId) {
+  getCellIndexByCellId(cellId) {
     let ii = 0;
     let length = this.cells.length;
     for (; ii < length; ++ii) {
-      if (this.cells[ii].cellId === cellId) return (this.cells[ii]);
+      if (this.cells[ii].cellId === cellId) return (ii);
     };
-    return (null);
+    return (-1);
+  }
+
+  /**
+   * @param {String} cellId
+   * @return {Cell}
+   */
+  getCellByCellId(cellId) {
+    let index = this.getCellIndexByCellId(cellId);
+    return (this.cells[index] || null);
   }
 
   /**
@@ -93,7 +102,7 @@ export default class World {
    * @return {WildPokemon}
    */
   getEncounterById(id) {
-    id <<= 0;
+    id = parseInt(id);
     let ii = 0;
     let jj = 0;
     let fortLength = 0;

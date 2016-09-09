@@ -211,8 +211,8 @@ export function authenticatePlayer(player) {
     deXOR(this.hash, getHashCodeFrom(this.claim)) === this.repository
   );
 
-  // Register player
   this.world.playerIsRegistered(player.email).then((truth) => {
+    // Register
     if (!truth) {
       this.world.registerPlayer(player).then((id) => {
         player.syncWithDatabase().then(() => {
@@ -220,6 +220,7 @@ export function authenticatePlayer(player) {
         });
       });
     }
+    // Login
     else {
       player.syncWithDatabase().then(() => {
         player.sendResponse(msg);

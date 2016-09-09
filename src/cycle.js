@@ -39,14 +39,15 @@ export function updateTimers() {
 }
 
 export function resetTimers() {
-  if (this.tick >= 25) {
+  if (this.tick >= 1e4) {
     this.fullTick++;
     if (this.fullTick >= 2) {
       this.fullTick = 0;
     }
     this.tick = 0;
-    // Player timeout tick, not precise
+    // Timeout ticks, not precise
     this.playerTimeoutTick();
+    this.cellTimeoutTick();
   }
   this.saveTick++;
   // Save interval
@@ -64,15 +65,11 @@ export function resetTimers() {
 }
 
 export function playerTimeoutTick() {
-
-  let player = null;
   let maxTimeout = CFG.PLAYER_CONNECTION_TIMEOUT;
-
-  let players = this.world.players;
-
   let ii = 0;
   let length = this.world.connectedPlayers;
-
+  let player = null;
+  let players = this.world.players;
   for (; ii < length; ++ii) {
     player = players[ii];
     if (this.time - player.timeout >= maxTimeout) {
@@ -81,5 +78,17 @@ export function playerTimeoutTick() {
       this.removePlayer(player);
     }
   };
+}
 
+export function cellTimeoutTick() {
+  let ii = 0;
+  let length = this.world.cells.length;
+  let cell = null;
+  for (; ii < length; ++ii) {
+    cell = this.world.cells[ii];
+    if (cell.expiration - +new Date() <= 0) {
+      cell.delete();
+      length--;
+    }
+  };
 }
