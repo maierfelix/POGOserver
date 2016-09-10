@@ -14,6 +14,7 @@ import {
 import print from "../../print";
 
 import CFG from "../../../cfg";
+import ENUM from "../../enum";
 
 import * as _calc from "./calc";
 import * as _actions from "./action";
@@ -151,6 +152,25 @@ export default class Pokemon extends MapObject {
   }
 
   /**
+   * @param {Number} dex
+   * @return {String}
+   */
+  getPkmnFamily(dex) {
+    return (
+      this.getPkmnTemplate(dex).family_id
+    );
+  }
+
+  /**
+   * @param {Number} amount
+   */
+  addCandies(amount) {
+    let family = this.getPkmnFamily(this.dexNumber);
+    let id = ENUM.getIdByName(ENUM.POKEMON_FAMILY, family) << 0;
+    if (this.owner) this.owner.candyBag.addCandy(id, parseInt(amount));
+  }
+
+  /**
    * @return {Boolean}
    */
   hasEvolution() {
@@ -216,6 +236,16 @@ export default class Pokemon extends MapObject {
       this.owner.world.db.query(query, data, (e, res) => {
         if (e) return print(e, 31);
         resolve(res.insertId);
+      });
+    });
+  }
+
+  deleteFromDatabase() {
+    let query = `DELETE FROM ${CFG.MYSQL_OWNED_PKMN_TABLE} WHERE id=? AND owner_id=? LIMIT 1`;
+    return new Promise((resolve) => {
+      this.owner.world.db.query(query, [this.uid, this.owner.uid], (e, res) => {
+        if (e) return print(e, 31);
+        resolve(res);
       });
     });
   }

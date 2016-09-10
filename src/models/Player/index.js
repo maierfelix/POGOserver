@@ -133,7 +133,9 @@ export default class Player extends MapObject  {
           resolve(this.LevelUpRewards(msg));
         break;
         case "RELEASE_POKEMON":
-          resolve(this.ReleasePokemon(msg));
+          this.ReleasePokemon(msg).then((result) => {
+            resolve(result);
+          });
         break;
         case "GET_PLAYER_PROFILE":
           resolve(this.GetPlayerProfile(msg));
@@ -264,26 +266,26 @@ export default class Player extends MapObject  {
   /**
    * @param {WildPokemon} pkmn
    * @param {String} ball
-   * @return {Object}
    */
   catchPkmn(pkmn, ball) {
     this.info.exp += 100;
     this.info.stardust += 100;
     this.info.pkmnCaptured += 1;
     this.currentEncounter = null;
-    pkmn.owner = this;
-    pkmn.calcStats();
     pkmn.catchedBy(this);
     pkmn.pokeball = ball;
     return new Promise((resolve) => {
+      pkmn.owner = this;
+      pkmn.calcStats();
       pkmn.insertIntoDatabase().then((insertId) => {
-        print(insertId, 36);
-        pkmn.uid = pkmn.insertId;
-        let partyPkmn = this.party.addPkmn(pkmn);
+        pkmn = this.party.addPkmn(pkmn);
+        pkmn.owner = this;
+        pkmn.uid = insertId;
+        pkmn.addCandies(3);
         print(`${this.username} catched a wild ${pkmn.getPkmnName()}!`);
         resolve({
           status: "CATCH_SUCCESS",
-          captured_pokemon_id: partyPkmn.uid,
+          captured_pokemon_id: pkmn.uid,
           capture_award: {
             activity_type: ["ACTIVITY_CATCH_POKEMON"],
             xp: [100],
@@ -291,6 +293,19 @@ export default class Player extends MapObject  {
             stardust: [100]
           }
         });
+      });
+    });
+  }
+
+  /**
+   * @param {WildPokemon} pkmn
+   */
+  releasePkmn(pkmn) {
+    pkmn.addCandies(3);
+    this.party.deletePkmn(pkmn.uid);
+    return new Promise((resolve) => {
+      pkmn.deleteFromDatabase().then(() => {
+        resolve();
       });
     });
   }

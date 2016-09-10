@@ -17,7 +17,6 @@ export default function CatchPokemon(msg) {
   player.bag[ball] -= 1;
 
   return new Promise((resolve) => {
-
     // Invalid pkmn
     if (!pkmn) {
       player.currentEncounter = null;

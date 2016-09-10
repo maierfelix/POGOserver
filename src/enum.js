@@ -6,6 +6,7 @@ export default {
   GENDER: proto.Enums.Gender,
   TUTORIAL: proto.Enums.TutorialState,
   POKEMON_IDS: proto.Enums.PokemonId,
+  POKEMON_FAMILY: proto.Enums.PokemonFamilyId,
   getNameById: (emu, id) => {
     id <<= 0;
     for (let key in emu) {
