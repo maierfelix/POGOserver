@@ -2,3 +2,6 @@ node_modules/
 scripts/
 data/
 logs/
+cfg.js
+.save
+npm-debug.*

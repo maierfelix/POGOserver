@@ -1,5 +1,5 @@
 id int(11) NOT NULL AUTO_INCREMENT,
-username varchar(16) NOT NULL,
+username varchar(16) NOT NULL DEFAULT '',
 email varchar(32) NOT NULL,
 exp int(11) NOT NULL,
 level smallint(11) NOT NULL,

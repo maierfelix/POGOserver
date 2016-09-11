@@ -91,7 +91,7 @@ export function playerIsRegistered(email) {
 export function registerPlayer(player) {
   return new Promise((resolve) => {
     this.db.query(`INSERT INTO ${CFG.MYSQL_USERS_TABLE} SET email=? `, [player.email], (e, res) => {
-      if (e) return this.print(e, 31);
+      if (e) return print(e, 31);
       resolve();
     });
   });
