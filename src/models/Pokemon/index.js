@@ -7,8 +7,8 @@ import Settings from "../../modes";
 import {
   _toCC,
   inherit,
-  validName,
-  deCapitalize
+  deCapitalize,
+  validUsername
 } from "../../utils";
 
 import print from "../../print";
@@ -129,8 +129,9 @@ export default class Pokemon extends MapObject {
    * @param {String} name
    */
   setNickname(name) {
-    if (!validName(name)) return void 0;
-    this.nickname = name;
+    if (validUsername(name)) {
+      this.nickname = name;
+    }
   }
 
   /**
@@ -271,7 +272,8 @@ export default class Pokemon extends MapObject {
       pokeball: "ITEM_POKE_BALL",
       captured_cell_id: "1337",
       creation_time_ms: +new Date() - 1e3,
-      favorite: this.favorite
+      favorite: this.favorite,
+      nickname: this.nickname
     });
   }
 

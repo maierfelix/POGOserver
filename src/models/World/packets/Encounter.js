@@ -5,7 +5,16 @@ import POGOProtos from "pokemongo-protobuf";
  */
 export default function Encounter(msg) {
 
-  let encounter = msg.player.currentEncounter || this.getEncounterById(msg.encounter_id);
+  // Try to use cached encounter
+  let encounter = msg.player.currentEncounter;
+
+  // Dont use cached encounter
+  if (
+    encounter === null ||
+    encounter.uid !== parseInt(msg.encounter_id)
+  ) {
+    encounter = this.getEncounterById(msg.encounter_id);
+  }
 
   let buffer = {
     status: "ENCOUNTER_SUCCESS",

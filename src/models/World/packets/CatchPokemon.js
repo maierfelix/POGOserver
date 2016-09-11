@@ -20,7 +20,7 @@ export default function CatchPokemon(msg) {
     // Invalid pkmn
     if (!pkmn) {
       player.currentEncounter = null;
-      pkmn.catchedBy(player);
+      pkmn.caughtBy(player);
       buffer = {
         status: "CATCH_ERROR"
       };
@@ -32,7 +32,7 @@ export default function CatchPokemon(msg) {
     } else {
       // Fleed
       if (Math.random() < .1) {
-        pkmn.catchedBy(player);
+        pkmn.caughtBy(player);
         player.currentEncounter = null;
         buffer = {
           status: "CATCH_FLEE"

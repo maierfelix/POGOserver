@@ -112,7 +112,7 @@ export function deCapitalize(str) {
 let rx_username = /[^a-z\d]/i;
 export function validUsername(str) {
   return (
-    !!(rx_username.test(str))
+    !(rx_username.test(str))
   );
 }
 

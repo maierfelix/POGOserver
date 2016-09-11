@@ -152,6 +152,9 @@ export default class Player extends MapObject  {
         case "GET_ASSET_DIGEST":
           resolve(this.GetAssetDigest(msg));
         break;
+        case "NICKNAME_POKEMON":
+          resolve(this.NicknamePokemon(msg));
+        break;
         case "GET_HATCHED_EGGS":
           resolve(this.GetHatchedEggs(msg));
         break;
@@ -272,7 +275,7 @@ export default class Player extends MapObject  {
     this.info.stardust += 100;
     this.info.pkmnCaptured += 1;
     this.currentEncounter = null;
-    pkmn.catchedBy(this);
+    pkmn.caughtBy(this);
     pkmn.pokeball = ball;
     return new Promise((resolve) => {
       pkmn.owner = this;
@@ -282,7 +285,7 @@ export default class Player extends MapObject  {
         pkmn.owner = this;
         pkmn.uid = insertId;
         pkmn.addCandies(3);
-        print(`${this.username} catched a wild ${pkmn.getPkmnName()}!`);
+        print(`${this.username} caught a wild ${pkmn.getPkmnName()}!`);
         resolve({
           status: "CATCH_SUCCESS",
           captured_pokemon_id: pkmn.uid,

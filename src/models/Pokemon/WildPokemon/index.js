@@ -29,7 +29,7 @@ export default class WildPokemon extends Pokemon {
 
     this.expiration = ~~(Math.random() * this.maxExpire) + this.minExpire;
 
-    // players who already catched this pkmn
+    // players who already caught this pkmn
     this.hasCatched = [];
 
   }
@@ -38,7 +38,7 @@ export default class WildPokemon extends Pokemon {
    * @param {Player} player
    * @return {Boolean}
    */
-  catchedBy(player) {
+  caughtBy(player) {
     if (!this.alreadyCatchedBy(player)) {
       this.hasCatched.push(player.uid);
     }

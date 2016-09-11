@@ -20,7 +20,7 @@ export function calcStats() {
   this.height = pkmnTmpl.pokedex_height_m + ((Math.random() * pkmnTmpl.height_std_dev) + .1);
   this.weight = pkmnTmpl.pokedex_weight_kg + ((Math.random() * pkmnTmpl.weight_std_dev) + .1);
 
-  this.cp = this.calcCP();
+  this.cp = Math.floor(Math.random() * this.calcCP()) + 16;
 
   this.calcMoves();
 
