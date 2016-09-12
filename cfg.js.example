@@ -8,8 +8,11 @@ export default {
 
   // show greeting
   GREET: true,
-  // allow api calls
-  ENABLE_API: true,
+
+  // Api things
+  API_ENABLE: true,
+  API_USERNAME: "root",
+  API_PASSWORD: "",
 
   // Server settings
   MAX_CONNECTIONS: 64,
@@ -24,6 +27,7 @@ export default {
   // Timeouts
   BOOT_TIMEOUT: 1e4,
   PLAYER_CONNECTION_TIMEOUT: 1e3 * 60 * 30,
+  CELL_TIMEOUT: 1e3 * 60,
   MINIMUM_CLIENT_VERSION: "0.35.0",
   DEFAULT_CONSOLE_COLOR: 32,
   TRANSFER_ACCOUNTS: false,

@@ -1,6 +1,9 @@
 import Settings from "../../modes";
 
-export function calcStats() {
+/**
+ * @param {Player} owner
+ */
+export function calcStats(owner) {
 
   let pkmnTmpl = this.getPkmnTemplate(this.dexNumber);
   let stats = pkmnTmpl.stats;
@@ -20,7 +23,9 @@ export function calcStats() {
   this.height = pkmnTmpl.pokedex_height_m + ((Math.random() * pkmnTmpl.height_std_dev) + .1);
   this.weight = pkmnTmpl.pokedex_weight_kg + ((Math.random() * pkmnTmpl.weight_std_dev) + .1);
 
-  this.cp = Math.floor(Math.random() * this.calcCP()) + 16;
+  if (owner !== null) {
+    this.cp = Math.floor(Math.random() * this.calcCP(owner)) + 16;
+  }
 
   this.calcMoves();
 
@@ -39,11 +44,13 @@ export function calcMoves() {
 }
 
 /**
+ * @param {Player} owner
  * @return {Number}
  */
-export function calcCP() {
+export function calcCP(owner) {
 
-  let ecpm = this.getCPMultipliers()[this.owner.info.level - 1];
+  let levelSettings = owner.info.getLevelSettings();
+  let ecpm = levelSettings.cp_multiplier[owner.info.level - 1];
 
   let atk = (this.attack + this.ivAttack) * ecpm;
   let def = (this.defense + this.ivDefense) * ecpm;
@@ -53,15 +60,6 @@ export function calcCP() {
     Math.max(10, Math.floor(Math.sqrt(atk * atk * def * sta) / 10))
   );
 
-}
-
-/**
- * @return {Array}
- */
-export function getCPMultipliers() {
-  return (
-    this.owner.info.getLevelSettings().cp_multiplier
-  );
 }
 
 /**

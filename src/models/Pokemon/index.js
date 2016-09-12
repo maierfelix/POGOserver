@@ -66,6 +66,7 @@ export default class Pokemon extends MapObject {
     this.pokeball = null;
 
     this.isWild = false;
+    this.isOwned = false;
 
     this.spawnPoint = null;
 
@@ -78,7 +79,6 @@ export default class Pokemon extends MapObject {
   }
   set level(value) {
     this._level = parseFloat(value);
-    this.calcStats();
   }
 
   /**
@@ -102,10 +102,23 @@ export default class Pokemon extends MapObject {
       else if (key === "move_2") {
         this.move2 = obj[key];
       }
+      else if (key === "height_m") {
+        this.height = obj[key];
+      }
+      else if (key === "weight_kg") {
+        this.weight = obj[key];
+      }
+      else if (key === "individual_attack") {
+        this.ivAttack = obj[key];
+      }
+      else if (key === "individual_defense") {
+        this.ivDefense = obj[key];
+      }
+      else if (key === "individual_stamina") {
+        this.ivStamina = obj[key];
+      }
     };
-    if (!obj.isWild) {
-      this.calcStats();
-    }
+    if (!obj.isWild && !obj.isOwned) this.calcStats(this.owner);
   }
 
   /**
@@ -187,13 +200,6 @@ export default class Pokemon extends MapObject {
   candiesToEvolve() {
     let pkmnTmpl = this.getPkmnTemplate(this.dexNumber);
     return (pkmnTmpl.candy_to_evolve << 0);
-  }
-
-  /**
-   * @return {Number}
-   */
-  candiesToPowerUp() {
-    return (1337);
   }
 
   /**

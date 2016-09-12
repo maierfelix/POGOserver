@@ -61,8 +61,8 @@ export function stdinInput(data) {
   this.processCommand(cmds[0], cmds.splice(0, 1));
 };
 
-export function uncaughtException(excp) {
-  switch (excp.errno) {
+export function uncaughtException(e) {
+  switch (e.errno) {
     case "EADDRINUSE":
       print(`Port ${CFG.PORT} is already in use!`, 31);
     break;
@@ -70,8 +70,9 @@ export function uncaughtException(excp) {
       print("No root privileges!", 31);
     break;
     default:
-      console.log("Unhandled exception occurred: ", excp.code);
-      console.log(excp.stack);
+      print("Unhandled exception occurred: ", 31);
+      print(e, 31);
+      print(e.stack, 31);
     break;
   };
   print("The server has crashed!", 31);

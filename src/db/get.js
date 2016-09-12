@@ -1,3 +1,4 @@
+import print from "../print";
 import CFG from "../../cfg";
 
 /**
@@ -8,7 +9,7 @@ import CFG from "../../cfg";
 export function getQueryByColumnFromTable(column, value, table) {
   return new Promise((resolve) => {
     this.db.query(`SELECT * FROM ${table} WHERE ${column}=?`, [value], (e, rows) => {
-      if (e) console.log(e);
+      if (e) print(e, 31);
       if (rows && rows.length) resolve(rows);
       else resolve(void 0);
     });
@@ -23,7 +24,7 @@ export function getQueryByColumnFromTable(column, value, table) {
 export function deleteQueryByColumnFromTable(column, value, table) {
   return new Promise((resolve) => {
     this.db.query(`DELETE FROM ${table} WHERE ${column}=?`, [value], (e, rows) => {
-      if (e) console.log(e);
+      if (e) print(e, 31);
       else resolve(void 0);
     });
   });

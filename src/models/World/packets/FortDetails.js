@@ -12,7 +12,6 @@ export default function FortDetails(msg) {
   return new Promise((resolve) => {
     this.getFortDataById(msg.fort_id).then((fort) => {
       if (!fort) return void 0;
-      let ts = +new Date();
       let url = fort.image_url;
       let buffer = {
         fort_id: msg.fort_id,

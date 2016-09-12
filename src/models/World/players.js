@@ -122,5 +122,5 @@ export function addPlayer(req, res) {
  * @param {Player} player
  */
 export function removePlayer(player) {
-  console.log("Remove:", player.email);
+  print(`Removed ${player.email}`, 36);
 }

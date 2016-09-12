@@ -40,7 +40,7 @@ export function routeRequest(req, res) {
       }
     break;
     default:
-      console.log(`Unknown request url: https://${host}${req.url}`);
+      print(`Unknown request url: https://${host}${req.url}`, 31);
     break;
   };
 
@@ -125,7 +125,7 @@ export function onRequest(player) {
       request.requests.map((request) => {
         let reqSize = Buffer.byteLength(request.request_message, "utf8");
         let resSize = Buffer.byteLength(returns[index], "utf8");
-        console.log(`[Packet]: ${request.request_type}`, `${reqSize} => ${resSize}`);
+        print(`${request.request_type} ${reqSize} => ${resSize}`, 37);
         index++;
       });
     }

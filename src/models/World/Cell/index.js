@@ -192,7 +192,6 @@ export default class Cell extends MapObject {
    * @return {Number}
    */
   getFortIndexById(id) {
-    id = parseInt(id);
     let index = 0;
     for (let fort of this.forts) {
       if (fort.uid === id) return (index);

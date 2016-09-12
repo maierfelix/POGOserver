@@ -28,6 +28,7 @@ export default class Party {
       this.player.world.db.query(query, [this.player.uid], (e, rows) => {
         if (e) return print(e, 31);
         rows.map((row) => {
+          row.isOwned = true;
           this.addPkmn(row);
         });
         resolve();
@@ -40,7 +41,7 @@ export default class Party {
    * @return {Pokemon}
    */
   addPkmn(obj) {
-    if (!obj.owner) obj.owner = this.player;
+    obj.owner = this.player;
     let pkmn = new Pokemon(obj);
     this.party.push(pkmn);
     return (pkmn);

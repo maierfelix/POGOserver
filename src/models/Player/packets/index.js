@@ -3,6 +3,7 @@ export GetPlayer from "./GetPlayer";
 export GetInventory from "./GetInventory";
 export GetAuthTicket from "./GetAuthTicket";
 export ReleasePokemon from "./ReleasePokemon";
+export UpgradePokemon from "./UpgradePokemon";
 export LevelUpRewards from "./LevelUpRewards";
 export GetHatchedEggs from "./GetHatchedEggs";
 export GetAssetDigest from "./GetAssetDigest";

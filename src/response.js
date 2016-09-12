@@ -43,6 +43,7 @@ export function processResponse(player, req) {
         case "GET_PLAYER":
         case "GET_INVENTORY":
         case "RELEASE_POKEMON":
+        case "UPGRADE_POKEMON":
         case "GET_ASSET_DIGEST":
         case "NICKNAME_POKEMON":
         case "GET_HATCHED_EGGS":

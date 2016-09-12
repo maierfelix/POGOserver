@@ -6,7 +6,7 @@ import CFG from "../../cfg";
 export function createTableIfNotExists(name) {
   return new Promise((resolve) => {
     this.db.query(`SHOW TABLES LIKE '${name}';`, (e, rows, fields) => {
-      if (e) console.log(e);
+      if (e) print(e, 31);
       else {
         // exists
         if (rows && rows.length) resolve();
@@ -48,7 +48,7 @@ export function createTable(name) {
 
   return new Promise((resolve) => {
     this.db.query(query, (e, rows) => {
-      if (e) console.log(e);
+      if (e) print(e, 31);
       else resolve();
     });
   });

@@ -17,11 +17,11 @@ export function powerUp() {
   let pkmnTmpl = this.getPkmnTemplate(this.dexNumber);
   let ownerStardust = this.owner.info.stardust;
   let ownerPkmnCandies = this.owner.candyBag.getCandy(this.dexNumber);
-  let requiredCandies = this.candiesToPowerUp();
-  print(`${this.getPkmnName()} requires ${requiredCandies} to power up!`);
+  let requiredCandies = 1;
+  print(`${this.getPkmnName()} requires ${requiredCandies} candies to power up!`);
   if (ownerPkmnCandies >= requiredCandies) {
     this.level += 1;
-    this.owner.candyBag.removeCandy(this.dexNumber, pkmnTmpl.candy_to_evolve);
+    this.owner.candyBag.removeCandy(this.dexNumber, requiredCandies);
     return (true);
   }
   return (false);

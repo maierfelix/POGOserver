@@ -32,6 +32,9 @@ export default class WildPokemon extends Pokemon {
     // players who already caught this pkmn
     this.hasCatched = [];
 
+    // players who already have seen this pkmn (to store cp)
+    this.hasSeen = [];
+
   }
 
   /**
@@ -52,6 +55,42 @@ export default class WildPokemon extends Pokemon {
     return (
       this.hasCatched.indexOf(player.uid) > -1
     );
+  }
+
+  /**
+   * @param {Player} player
+   * @return {Number}
+   */
+  getSeenCp(player) {
+    for (let item of this.hasSeen) {
+      if (item.uid === player.uid) return (item.cp);
+    };
+    return (-1);
+  }
+
+  /**
+   * @param {Player} player
+   * @return {Boolean}
+   */
+  seenBy(player) {
+    if (!this.alreadySeenBy(player)) {
+      this.calcStats(player);
+      this.hasSeen.push({
+        cp: this.cp,
+        uid: player.uid
+      });
+    }
+  }
+
+  /**
+   * @param {Player} player
+   * @return {Boolean}
+   */
+  alreadySeenBy(player) {
+    for (let item of this.hasSeen) {
+      if (item.uid === player.uid) return (true);
+    };
+    return (false);
   }
 
   /**
@@ -91,7 +130,7 @@ export default class WildPokemon extends Pokemon {
       spawn_point_id: this.spawnPointId,
       pokemon_data: {
         pokemon_id: this.getPkmnId(),
-        cp: 66,
+        cp: this.cp,
         stamina: 10,
         stamina_max: 10,
         move_1: "BUG_BITE_FAST",

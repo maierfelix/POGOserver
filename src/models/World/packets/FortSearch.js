@@ -14,6 +14,8 @@ export default function FortSearch(msg) {
   return new Promise((resolve) => {
     this.getFortDataById(msg.fort_id).then((fort) => {
       if (!fort) return void 0;
+      player.consumeFortRewards(fort);
+      // TODO: disable rewarding when on cooldown
       let buffer = ({
         result: "SUCCESS",
         items_awarded: fort.serializeRewards(),
