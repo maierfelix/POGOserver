@@ -20,20 +20,6 @@ export function setup() {
 
   return new Promise((resolve, reject) => {
 
-    let save = JSON.parse(fs.readFileSync(".save", "utf8"));
-
-    if (save.isFirstRun) {
-      print("Required assets are missing! Preparing dump session..", 33);
-      setTimeout(() => {
-        this.onFirstRun(() => {
-          save.isFirstRun = false;
-          fs.writeFileSync(".save", JSON.stringify(save), "utf8");
-          this.setup().then(resolve);
-        });
-      }, 1e3);
-      return void 0;
-    }
-
     // make sure all assets got loaded properly
     this.validateAssets().then(() => {
 
@@ -54,12 +40,23 @@ export function setup() {
       });
 
     }).catch((e) => {
-      //fse.removeSync(CFG.DUMP_ASSET_PATH);
       print("Error: " + e + " was not found!", 31);
+      this.initDumpSession().then(resolve);
     });
 
   });
 
+}
+
+export function initDumpSession() {
+  print("Required assets are missing! Preparing dump session..", 33);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      this.onFirstRun(() => {
+        this.setup().then(resolve);
+      });
+    }, 1e3);
+  });
 }
 
 /**

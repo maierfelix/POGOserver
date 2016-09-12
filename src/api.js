@@ -17,15 +17,14 @@ let showHint = true;
 
 export function processApiCall(req, res, route) {
 
-  let save = JSON.parse(fs.readFileSync(".save", "utf8"));
-  let allowedHosts = save.allowedApiHosts;
+  let allowedHosts = CFG.API_ALLOWED_HOSTS;
 
   let hoster = url.parse(req.headers.referer).host;
 
   if (!(allowedHosts.indexOf(hoster) > -1)) {
     print(`Denied API access for ${hoster}!`, 31);
     if (showHint) {
-      print(`To grant ${hoster} API access, add it to the allowed hosts in .save`, 33);
+      print(`To grant ${hoster} API access, add it to the allowed hosts in cfg.js`, 33);
       showHint = false;
     }
     let result = {
