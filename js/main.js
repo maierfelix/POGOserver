@@ -217,6 +217,12 @@
     });
   }
 
+  function getFortIcon(fort) {
+    if (fort.type === "CHECKPOINT") return ("img/pokestop_blue.png");
+    else if (fort.uid[fort.uid.length - 1] === "S") return ("img/spawn_point.png");
+    else return ("img/gym_" + fort.owned_by_team + ".png");
+  }
+
   function refreshMapForts() {
     let center = gmap.getCenter();
     let lat = center.lat();
@@ -229,10 +235,7 @@
     }, function(result) {
       gmap.removeMarkers();
       result.forts.map((fort) => {
-        let icon = null;
-        if (fort.type === "CHECKPOINT") icon = "img/pokestop_blue.png";
-        else if (fort.uid[fort.uid.length - 1] === "S") icon = "img/spawn_point.png";
-        else icon = "img/gym_" + fort.owned_by_team + ".png";
+        let icon = getFortIcon(fort);
         gmap.addMarker({
           lat: fort.latitude,
           lng: fort.longitude,
@@ -240,7 +243,7 @@
           icon: icon,
           rightclick: function(e) {
             vex.dialog.confirm({
-              message: "<center><img src='img/pokestop_blue.png' /><br/>Delete this fort?</center>",
+              message: `<center><img src='${getFortIcon(this)}' /><br/>Delete this fort?</center>`,
               callback: function(value) {
                 if (value) removeFort(this);
               }.bind(fort)
