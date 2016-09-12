@@ -18,10 +18,10 @@
   </a>
 </div>
 
-<img width="25%" src="http://image.prntscr.com/image/918383bb5cde453ab2572461084b4601.png" />
-<img width="24%" src="http://image.prntscr.com/image/0ab416fa479f427180476cad8a238f04.png" />
-<img width="24%" src="http://image.prntscr.com/image/b93d4e81e7e24ec1b1bc8c21b089c1f4.png" />
-<img width="25%" src="http://i.imgur.com/iZypeny.png" />
+<img width="25%" src="http://i.imgur.com/7VhPleu.png" />
+<img width="24%" src="http://i.imgur.com/E82eqtk.png" />
+<img width="24%" src="http://i.imgur.com/H692S9d.png" />
+<img width="25%" src="http://i.imgur.com/LGrdUeH.png" />
 
 # Getting started
 
@@ -57,7 +57,8 @@ The required database tables get generated automatically.
 ## Server setup
 
 You need at minimum [Node.js](https://nodejs.org/en/) version 6.x.
-Depending on your OS, you need to run either ``run-linux.sh`` or ``run-windows.bat`` from the root folder.
+
+Open up a terminal and enter ``npm run boot`` to start the server.
 
 ## Docker setup
 
