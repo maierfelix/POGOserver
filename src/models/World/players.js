@@ -74,6 +74,39 @@ export function getPlayerByIP(ip) {
 }
 
 /**
+ * @param {String} name
+ */
+export function getPlayerByName(name) {
+
+  let players = this.players;
+
+  let ii = 0;
+  let length = this.connectedPlayers;
+
+  for (; ii < length; ++ii) {
+    if (players[ii].username === name) {
+      return (players[ii]);
+    }
+  };
+
+  return (null);
+
+}
+
+/**
+ * @param {String} name
+ * @return {Boolean}
+ */
+export function validPlayerName(name) {
+  return !(
+    name === null ||
+    name === void 0 ||
+    typeof name === "string" &&
+    name.length <= 1
+  );
+}
+
+/**
  * @param {String} email
  */
 export function playerIsRegistered(email) {
@@ -123,4 +156,24 @@ export function addPlayer(req, res) {
  */
 export function removePlayer(player) {
   print(`Removed ${player.email}`, 36);
+}
+
+/**
+ * @param {String} name
+ */
+export function kickPlayer(name) {
+
+  if (!this.validPlayerName(name)) {
+    print(`Invalid player name!`, 31);
+    return void 0;
+  }
+
+  let player = this.getPlayerByName(name);
+
+  if (player !== null) {
+    this.removePlayer(player);
+    print(`Kicked ${name} from the server!`);
+  }
+  else print(`Failed to kick ${name} from the server!`, 31);
+
 }

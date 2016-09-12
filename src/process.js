@@ -18,9 +18,9 @@ export function processCommand(cmd, data) {
       this.shutdown();
     break;
     case "/kick":
-      this.kickPlayer(data[1]);
+      this.world.kickPlayer(data[0]);
     break;
-    case "/killall":
+    case "/kickall":
       var length = players.length;
       this.removeAllPlayers();
       var result = length - players.length;
@@ -41,7 +41,7 @@ export function processCommand(cmd, data) {
       print(`Saved ${length} player${length === 1 ? "": "s"} into database!`);
     break;
     case "/spawn":
-      this.spawnPkmnAtPlayer(data[1], data[2], data[3] || 1);
+      this.spawnPkmnAtPlayer(data[0], data[1], data[2] || 1);
     break;
     case "/dump":
       print("Preparing dump session..");
@@ -57,8 +57,9 @@ export function processCommand(cmd, data) {
 
 export function stdinInput(data) {
   if (data.length <= 1) return void 0;
-  let cmds = data.split(" ");
-  this.processCommand(cmds[0], cmds.splice(0, 1));
+  let args = data.split(" ");
+  let cmds = args.shift()
+  this.processCommand(cmds, args);
 };
 
 export function uncaughtException(e) {
