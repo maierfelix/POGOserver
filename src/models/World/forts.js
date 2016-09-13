@@ -127,7 +127,7 @@ export function insertPokestopIntoDatabase(obj) {
   let lng = obj.longitude;
   let name = obj.name;
   let desc = obj.description;
-  let img = obj.image || "";
+  let img = obj.imageUrl || "";
   let exp = obj.experience || 500;
   let query = `INSERT INTO ${Cell.getFortTable(obj.type)} SET cell_id=?, latitude=?, longitude=?, name=?, description=?, image_url=?, experience=?, rewards=?`;
   return new Promise((resolve) => {
