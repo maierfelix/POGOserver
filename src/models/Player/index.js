@@ -4,7 +4,7 @@ import Bag from "./Bag";
 import Info from "./Info";
 import Party from "./Party";
 import Avatar from "./Avatar";
-import Pokedex from "./Pokedex";
+import PokeDex from "./PokeDex";
 import Contact from "./Contact";
 import CandyBag from "./CandyBag";
 import Tutorial from "./Tutorial";
