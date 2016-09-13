@@ -16,8 +16,6 @@ import CFG from "../cfg";
 
 import World from "./models/World";
 
-import pngjs from "pngjs";
-
 import * as _api from "./api";
 import * as _dump from "./dump";
 import * as _http from "./http";
