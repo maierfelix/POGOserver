@@ -27,7 +27,7 @@ export default function GetDownloadUrls(msg) {
   let buffer = {
     download_urls: [{
       asset_id: assetId,
-      url: `http://${this.instance.getLocalIPv4()}:${CFG.PORT}/model/${asset.bundle_name}`,
+      url: `http://${CFG.LOCAL_IP || this.instance.getLocalIPv4()}:${CFG.PORT}/model/${asset.bundle_name}`,
       size: asset.size,
       checksum: asset.checksum
     }]
