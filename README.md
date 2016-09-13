@@ -68,36 +68,38 @@ First of all you should create A API Services through google.
 first go to [API Console](https://console.developers.google.com)
 
 
-And look into the Seccond colum and select google maps JavaScript 
+When you see allot of colums select the colum Google Maps Javascript. 
 
 ![](http://appworks.nl/wp-content/uploads/2016/03/google-api-console.jpg)
 
-than go to Dashboard Tab and prest on google maps JavaScript API Enable.
+go to Dashboard Tab and press on google maps JavaScript API Enable.
 
 ![](http://docs.aws.amazon.com/mobile-hub/latest/developerguide/images/google_enable_api.png)
 
-Than go to credentials Tab and select Create credentials ----> API Key.
+After That go to credentials Tab and select Create credentials ----> API Key.
 
 ![](http://www.daimto.com/wp-content/uploads/2015/08/CreateAPIKey.png)
 
 
-When the API Key hs been Created.
+When the API Key has been Created.
 Copy the Key and press the button close.
 
 ![](https://1.bp.blogspot.com/-adP4dNGRpKk/V3lTxu2f-GI/AAAAAAAAEE8/pkHfCKdsvQg0Wr19V_XQcFEo3r7NzGzDACLcB/s1600/apikey.png)
 
 
-alright after we have setup the API services we need to edit some configs.
+alright after the Services has been setup we need to edit some configs.
 
 Download or clone the https://github.com/maierfelix/POGOserver/tree/api 
-when you have the files place them into youré Xamp/Htdocs.
+when you have the files place them into You're Xamp/Htdocs. should be located C:\Program Files\Xamp\Htdocs.
 
 ### Edit the configs 
 
-first open up the POGOserver/cfg.js and scrol down when you see.
+first open up the POGOserver/cfg.js i Preffer with Notepad ++ and scrol down when you see.
 
   // Google maps api key
-  GMAPS_KEY: "AIzaSyDF9rkP8lhcddBtvH9gVFzjnNo13WtmJIM", replace this API Ket with youré API Key.
+  GMAPS_KEY: "AIzaSyDF9rkP8lhcddBtvH9gVFzjnNo13WtmJIM", replace this API Ket with You're API Key.
+  
+  And press save.
 
 than open up into API/js/init.js and search for
 
@@ -107,25 +109,21 @@ than open up into API/js/init.js and search for
   loadScriptDefered("js/ajax.js");
   loadScriptDefered("js/main.js");
 
-you need to place youré Api KEY Behind /maps/api/js?key=.
+you need to place You're Api KEY Behind /maps/api/js?key=.
 
 example 
-  loadScriptDefered("http://maps.google.com/maps/api/js?key=Place here Youré Api Key" + CFG.GMAPS.API_KEY);
+  loadScriptDefered("http://maps.google.com/maps/api/js?key=Place here You're Api Key" + CFG.GMAPS.API_KEY);
+  
+  And press save.
 
 
-WHen evreything has been edited and been saved.
-
-go to Youré internet Browser and go to localhost or 127.0.0.1
+When evreything has been edited, go to You're internet Browser and go to localhost.
 
 ![](https://cdn.discordapp.com/attachments/216235545393627136/224472383208030210/unknown.png)
 
-Login with root and leave youré password empty click login.
+Login with root and leave You're password empty and click login.
 
 ![](https://images-2.discordapp.net/.eJwFwQEKwyAMAMC_-ABjjdHZ34g6K7SNaAaFsb_v7qs-81S7OkTG2gFKX5ln0Ut4plZ1Y25nTaMvnfmCJJLycdVbFtjNWyRyhBG9DRt6sNZFNBiNC_QyhoKHd39q0eNu6vcHvrYh1w.d5EmSAetGKkh_vj3lnqgHqhVwYQ.png)
-
-
-and if you follow the steps correctly evreything should work like a Charm.
-
 
 
 ## Docker setup
