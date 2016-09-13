@@ -60,8 +60,6 @@ You need at minimum [Node.js](https://nodejs.org/en/) version 6.x.
 
 Open up a terminal and enter ``npm run boot`` to start the server.
 
-
-
 ### Setting up API services
 
 First of all you should create A API Services through google.
@@ -103,7 +101,6 @@ first open up the POGOserver/cfg.js i Preffer with Notepad ++ and scrol down whe
 
 than open up into API/js/init.js and search for
 
-
   loadScriptDefered("http://maps.google.com/maps/api/js?key=" + CFG.GMAPS.API_KEY);
   loadScriptDefered("js/gmaps.js");
   loadScriptDefered("js/ajax.js");
@@ -116,7 +113,6 @@ example
   
   And press save.
 
-
 When evreything has been edited, go to You're internet Browser and go to localhost.
 
 ![](https://cdn.discordapp.com/attachments/216235545393627136/224472383208030210/unknown.png)
@@ -124,7 +120,6 @@ When evreything has been edited, go to You're internet Browser and go to localho
 Login with root and leave You're password empty and click login.
 
 ![](https://images-2.discordapp.net/.eJwFwQEKwyAMAMC_-ABjjdHZ34g6K7SNaAaFsb_v7qs-81S7OkTG2gFKX5ln0Ut4plZ1Y25nTaMvnfmCJJLycdVbFtjNWyRyhBG9DRt6sNZFNBiNC_QyhoKHd39q0eNu6vcHvrYh1w.d5EmSAetGKkh_vj3lnqgHqhVwYQ.png)
-
 
 ## Docker setup
 
