@@ -96,6 +96,9 @@ export default class Pokemon extends MapObject {
       else if (key === "id") {
         this.uid = parseInt(obj[key]);
       }
+      else if (key == "pokemon_id") {
+        this.dexNumber = parseInt(obj[key]);
+      }
       else if (key === "move_1") {
         this.move1 = obj[key];
       }
@@ -215,7 +218,7 @@ export default class Pokemon extends MapObject {
     let query = `
       INSERT INTO ${CFG.MYSQL_OWNED_PKMN_TABLE} SET
         owner_id=?,
-        dex_number=?,
+        pokemon_id=?,
         cp=?,
         stamina=?,
         stamina_max=?,
