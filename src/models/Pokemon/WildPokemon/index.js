@@ -22,6 +22,7 @@ export default class WildPokemon extends Pokemon {
 
     this.encounterId = this.getEncounterId();
 
+    this.despawnIn = -1;
     this.isDespawned = false;
 
     this.minExpire = obj.minExpire;

@@ -60,9 +60,12 @@ export default class SpawnPoint extends MapObject {
     this.activeSpawns.map((pkmn) => {
       if (pkmn.isExpired() && !pkmn.isDespawned) {
         pkmn.isDespawned = true;
-        setTimeout(() => {
+        pkmn.despawnIn = +new Date() + ((MAP_REFRESH_RATE * 1e3) + pkmn.expiration);
+      }
+      else if (pkmn.isDespawned) {
+        if (+new Date() >= pkmn.despawnIn) {
           this.despawnPkmn(pkmn);
-        }, (MAP_REFRESH_RATE * 1e3) * 2);
+        }
       }
     });
   }
