@@ -62,7 +62,7 @@ Open up a terminal and enter ``npm run boot`` to start the server.
 
 ### Setting up API services
 
-First of all you should create A API Services through google.
+1. First of all you should create A API Services through google.
 first go to [API Console](https://console.developers.google.com)
 
 
@@ -70,22 +70,22 @@ When you see allot of colums select the colum Google Maps Javascript Api.
 
 ![](http://appworks.nl/wp-content/uploads/2016/03/google-api-console.jpg)
 
-go to Dashboard Tab and press on google maps JavaScript API Enable.
+2. go to Dashboard Tab and press on google maps JavaScript API Enable.
 
 ![](http://docs.aws.amazon.com/mobile-hub/latest/developerguide/images/google_enable_api.png)
 
-After That go to credentials Tab and select Create credentials ----> API Key.
+3. After That go to credentials Tab and select Create credentials ----> API Key.
 
 ![](http://www.daimto.com/wp-content/uploads/2015/08/CreateAPIKey.png)
 
 
-When the API Key has been Created.
-Copy the Key and press the button close.
+4. When the API Key has been Created.
+   Copy the Key and press the button close.
 
 ![](https://1.bp.blogspot.com/-adP4dNGRpKk/V3lTxu2f-GI/AAAAAAAAEE8/pkHfCKdsvQg0Wr19V_XQcFEo3r7NzGzDACLcB/s1600/apikey.png)
 
 
-alright after the Services has been setup we need to edit some configs.
+5. alright after the Services has been setup we need to edit some configs.
 
 Download or clone the https://github.com/maierfelix/POGOserver/tree/api 
 when you have the files place them into You're Xamp/Htdocs. should be located C:\Program Files\Xamp\Htdocs.
