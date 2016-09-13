@@ -113,7 +113,7 @@ example
   
   And press save.
 
-When evreything has been edited, go to You're internet Browser and go to localhost.
+When everything has been edited, go to You're internet Browser and go to localhost.
 
 ![](https://cdn.discordapp.com/attachments/216235545393627136/224472383208030210/unknown.png)
 
