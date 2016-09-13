@@ -66,7 +66,7 @@ First of all you should create A API Services through google.
 first go to [API Console](https://console.developers.google.com)
 
 
-When you see allot of colums select the colum Google Maps Javascript. 
+When you see allot of colums select the colum Google Maps Javascript Api. 
 
 ![](http://appworks.nl/wp-content/uploads/2016/03/google-api-console.jpg)
 
