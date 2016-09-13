@@ -102,7 +102,8 @@ export function validPlayerName(name) {
     name === null ||
     name === void 0 ||
     typeof name === "string" &&
-    name.length <= 1
+    name.length <= 3 ||
+    name.length > 16
   );
 }
 
@@ -123,7 +124,7 @@ export function playerIsRegistered(email) {
  */
 export function registerPlayer(player) {
   return new Promise((resolve) => {
-    this.db.query(`INSERT INTO ${CFG.MYSQL_USERS_TABLE} SET email=? `, [player.email], (e, res) => {
+    this.db.query(`INSERT INTO ${CFG.MYSQL_USERS_TABLE} SET email=?, username=? `, [player.email, player.username], (e, res) => {
       if (e) return this.print(e, 31);
       resolve();
     });

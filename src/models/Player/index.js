@@ -316,6 +316,8 @@ export default class Player extends MapObject  {
         let cp = pkmn.getSeenCp(this);
         pkmn.isOwned = false;
         pkmn = this.party.addPkmn(pkmn);
+        pkmn.isWild = false;
+        pkmn.isOwned = true;
         pkmn.cp = cp;
         pkmn.uid = insertId;
         pkmn.addCandies(3);

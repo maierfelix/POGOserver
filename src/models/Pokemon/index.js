@@ -40,7 +40,7 @@ export default class Pokemon extends MapObject {
     this.capturedLevel = 0;
 
     this.cp = 0;
-    this.cpMultiplier = Math.random();
+    this.cpMultiplier = Math.random() + 1.0;
     this.addCpMultiplier = 0;
 
     this.move1 = 0;
@@ -277,7 +277,7 @@ export default class Pokemon extends MapObject {
       cp_multiplier: this.cpMultiplier,
       pokeball: "ITEM_POKE_BALL",
       captured_cell_id: "1337",
-      creation_time_ms: +new Date() - 1e3,
+      creation_time_ms: +new Date(),
       favorite: this.favorite,
       nickname: this.nickname
     });

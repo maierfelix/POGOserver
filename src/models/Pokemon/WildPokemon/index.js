@@ -22,12 +22,14 @@ export default class WildPokemon extends Pokemon {
 
     this.encounterId = this.getEncounterId();
 
+    this.isDespawned = false;
+
     this.minExpire = obj.minExpire;
     this.maxExpire = obj.maxExpire;
 
     this.creation = +new Date();
 
-    this.expiration = ~~(Math.random() * this.maxExpire) + this.minExpire;
+    this.expiration = (Math.floor((Math.random() * this.maxExpire) + this.minExpire) * 1e3);
 
     // players who already caught this pkmn
     this.hasCatched = [];
@@ -98,7 +100,7 @@ export default class WildPokemon extends Pokemon {
    */
   isExpired() {
     return (
-      ((this.creation + this.expiration) - +new Date()) <= 0
+      +new Date() - this.creation >= this.expiration
     );
   }
 
@@ -124,7 +126,7 @@ export default class WildPokemon extends Pokemon {
   serializeWild() {
     return ({
       encounter_id: this.encounterId,
-      last_modified_timestamp_ms: +new Date(),
+      last_modified_timestamp_ms: this.creation,
       latitude: this.latitude,
       longitude: this.longitude,
       spawn_point_id: this.spawnPointId,

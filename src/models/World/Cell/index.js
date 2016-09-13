@@ -253,7 +253,10 @@ export default class Cell extends MapObject {
       fort = this.forts[ii];
       if (!(fort.isSpawn === true)) continue;
       fort.activeSpawns.map((encounter) => {
-        if (!encounter.alreadyCatchedBy(player)) {
+        if (
+          !encounter.alreadyCatchedBy(player) &&
+          !encounter.isDespawned
+        ) {
           out.wild.push(encounter.serializeWild());
           out.nearby.push(encounter.serializeNearby());
           out.catchable.push(encounter.serializeCatchable());

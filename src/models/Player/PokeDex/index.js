@@ -21,16 +21,39 @@ export default class PokeDex {
 
   /**
    * @param {Number} dex
+   * @return {Boolean}
    */
-  addEntry(dex) {
+  entryExists(dex) {
+    return (
+      this.pkmns.hasOwnProperty(dex)
+    );
+  }
 
+  /**
+   * @param {Number} dex
+   * @param {Number} capture
+   * @param {Number} encounter
+   */
+  addEntry(dex, capture, encounter) {
+    if (this.entryExists(dex)) {
+      this.pkmns[dex].captured += capture << 0;
+      this.pkmns[dex].encountered += encounter << 0;
+    } else {
+      this.pkmns[dex] = {
+        captured: 0,
+        encountered: 0
+      };
+      this.addEntry(dex, capture, encounter);
+    }
   }
 
   /**
    * @param {Number} dex
    */
   removeEntry(dex) {
-
+    if (this.entryExists(dex)) {
+      delete this.pkmns[dex];
+    }
   }
 
   /**
@@ -45,8 +68,8 @@ export default class PokeDex {
         inventory_item_data: {
           pokedex_entry: {
             pokemon_id: key,
-            times_encountered: 1,
-            times_captured: 1
+            times_captured: this.pkmns[key].captured,
+            times_encountered: this.pkmns[key].encountered
           }
         }
       });

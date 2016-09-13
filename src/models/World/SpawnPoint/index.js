@@ -6,7 +6,11 @@ import WildPokemon from "../../Pokemon/WildPokemon";
 import print from "../../../print";
 import CFG from "../../../../cfg";
 
+import Settings from "../../../modes";
+
 const pokename = require("pokename")();
+
+const MAP_REFRESH_RATE = Settings.GAME_SETTINGS.map_settings.get_map_objects_max_refresh_seconds;
 
 /**
  * @class SpawnPoint
@@ -27,8 +31,8 @@ export default class SpawnPoint extends MapObject {
 
     this.spawns = JSON.parse(obj.encounters);
 
-    this.minExpire = ((obj.min_spawn_expire * 1e3) * 60) << 0;
-    this.maxExpire = ((obj.max_spawn_expire * 1e3) * 60) << 0;
+    this.minExpire = ((obj.min_spawn_expire) * 60) << 0;
+    this.maxExpire = ((obj.max_spawn_expire) * 60) << 0;
 
     this.isSpawn = true;
 
@@ -54,7 +58,12 @@ export default class SpawnPoint extends MapObject {
 
   refresh() {
     this.activeSpawns.map((pkmn) => {
-      if (pkmn.isExpired()) this.despawnPkmn(pkmn);
+      if (pkmn.isExpired() && !pkmn.isDespawned) {
+        pkmn.isDespawned = true;
+        setTimeout(() => {
+          this.despawnPkmn(pkmn);
+        }, (MAP_REFRESH_RATE * 1e3) * 2);
+      }
     });
   }
 
@@ -85,7 +94,7 @@ export default class SpawnPoint extends MapObject {
       maxExpire: this.maxExpire
     });
     this.activeSpawns.push(pkmn);
-    print(`Spawned ${pkmn.getPkmnName()}:${pkmn.uid} at ${this.cellId}`);
+    print(`Spawned 1x ${pkmn.getPkmnName()}:${pkmn.uid} at ${this.cellId}`);
   }
 
   /**
@@ -95,7 +104,7 @@ export default class SpawnPoint extends MapObject {
     let index = 0;
     this.activeSpawns.map((encounter) => {
       if (encounter.uid === pkmn.uid) {
-        print(`Killed 1x ${pkmn.getPkmnName()} at ${this.cellId}`, 33);
+        print(`Killed 1x ${pkmn.getPkmnName()}:${pkmn.uid} at ${this.cellId}`, 33);
         this.activeSpawns.splice(index, 1);
       }
       index++;
