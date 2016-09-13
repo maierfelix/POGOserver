@@ -26,7 +26,6 @@
     "mysql": "^2.11.1",
     "node-pogo-protos": "^1.4.0",
     "pcrypt": "git+https://github.com/laverdet/pcrypt.git",
-    "pngjs": "^3.0.0",
     "pogo-asset-downloader": "^0.3.1",
     "pokerare": "^0.1.1",
     "pokemongo-protobuf": "^1.11.0",

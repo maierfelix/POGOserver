@@ -4,8 +4,6 @@ export default {
 
   VERSION: JSON.parse(fs.readFileSync("./package.json")).version,
 
-  PROJECT_REPOSITORY: "https://github.com/maierfelix/POGOServer",
-
   // show greeting
   GREET: true,
 
