@@ -101,19 +101,16 @@ first open up the POGOserver/cfg.js i Preffer with Notepad ++ and scrol down whe
 
 than open up into API/cfg.js and search for
 
-var CFG = {
-  API: {
+  API:
     HOST: "127.0.0.1",
     PORT: 3000,
     ROUTE: "/api"
-  },
+
   GMAPS: {
     API_KEY: "XXXXX", Enter API Key Here
     BASE_ZOOM: 20,
     BASE_LAT: 39.18875480450959,
     BASE_LNG: -96.58109955489635
-  }
-};
 
   And press save.
 
