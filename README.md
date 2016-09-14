@@ -131,7 +131,7 @@ Login with root and leave You're password empty and click login.
 2. Place ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` into the same folder. Rename ``cfg.js.example`` to ``cfg.js``.
 3. Modify ``cfg.js`` to your requirements as described above.
 4. Create a container and run it.
-5. Open a bash prompt, enter: ``cd /POGOserver/. and ./run-linux.sh.
+5. Open a bash prompt, enter: ``cd /POGOserver/ and ./run-linux.sh.
 6. Connect the Pokemon Go app to the server.
 7. Done.
 
