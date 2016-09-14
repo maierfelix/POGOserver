@@ -99,18 +99,22 @@ first open up the POGOserver/cfg.js i Preffer with Notepad ++ and scrol down whe
   
   And press save.
 
-than open up into API/js/init.js and search for
+than open up into API/cfg.js and search for
 
-  loadScriptDefered("http://maps.google.com/maps/api/js?key=" + CFG.GMAPS.API_KEY);
-  loadScriptDefered("js/gmaps.js");
-  loadScriptDefered("js/ajax.js");
-  loadScriptDefered("js/main.js");
+var CFG = {
+  API: {
+    HOST: "127.0.0.1",
+    PORT: 3000,
+    ROUTE: "/api"
+  },
+  GMAPS: {
+    API_KEY: "XXXXX", Enter API Key Here
+    BASE_ZOOM: 20,
+    BASE_LAT: 39.18875480450959,
+    BASE_LNG: -96.58109955489635
+  }
+};
 
-you need to place You're Api KEY Behind /maps/api/js?key=.
-
-example 
-  loadScriptDefered("http://maps.google.com/maps/api/js?key=Place here You're Api Key" + CFG.GMAPS.API_KEY);
-  
   And press save.
 
 When everything has been edited, go to You're internet Browser and go to localhost.
@@ -127,7 +131,7 @@ Login with root and leave You're password empty and click login.
 2. Place ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` into the same folder. Rename ``cfg.js.example`` to ``cfg.js``.
 3. Modify ``cfg.js`` to your requirements as described above.
 4. Create a container and run it.
-5. Open a bash prompt, enter: ``cd /POGOserver/``.
+5. Open a bash prompt, enter: ``cd /POGOserver/. and ./run-linux.sh.
 6. Connect the Pokemon Go app to the server.
 7. Done.
 
