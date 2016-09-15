@@ -52,7 +52,7 @@ export function resetTimers() {
   this.saveTick++;
   // Save interval
   if (this.saveTick >= CFG.SAVE_INTERVAL) {
-    //this.saveAllPlayers();
+    this.saveAllPlayers();
     this.saveTick = 0;
   }
   this.spawnTick++;

@@ -17,6 +17,7 @@ import CFG from "../cfg";
 import World from "./models/World";
 
 import * as _api from "./api";
+import * as _commands from "./commands";
 import * as _dump from "./dump";
 import * as _http from "./http";
 import * as _setup from "./setup";
@@ -192,6 +193,7 @@ export default class GameServer {
 }
 
 inherit(GameServer, _api);
+inherit(GameServer, _commands);
 inherit(GameServer, _dump);
 inherit(GameServer, _http);
 inherit(GameServer, _setup);
