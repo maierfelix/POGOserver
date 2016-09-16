@@ -36,7 +36,6 @@ RUN git clone --recursive https://github.com/google/protobuf.git
 RUN cd /protobuf && ./autogen.sh && ./configure && make && make check && make install && ldconfig
 RUN cd /
 RUN git clone --recursive https://github.com/maierfelix/POGOserver.git
-RUN chmod +x /POGOserver/run-linux.sh
 COPY cfg.js /POGOserver/
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN service mysql start && mysql -u root -e "create database pogosql";
