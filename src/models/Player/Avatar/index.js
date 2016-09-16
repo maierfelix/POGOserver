@@ -154,6 +154,23 @@ export default class Avatar {
   }
 
   /**
+   * @return {String}
+   */
+  querify() {
+    return (JSON.stringify({
+      skin: this.skin,
+      hair: this.hair,
+      shirt: this.shirt,
+      pants: this.pants,
+      hat: this.hat,
+      shoes: this.shoes,
+      eyes: this.eyes,
+      gender: this.gender,
+      backpack: this.backpack
+    }));
+  }
+
+  /**
    * @param {String} str
    */
   parseJSON(str) {

@@ -50,8 +50,10 @@ export default class Tutorial {
    * @return {String}
    */
   querify() {
-    let buffer = {
-      "states": this.serialize()
+    let buffer = {};
+    for (let key in this.states) {
+      let itemId = this.getItemName(key);
+      buffer[itemId] = this[key];
     };
     return (JSON.stringify(buffer));
   }

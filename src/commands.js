@@ -56,8 +56,8 @@ export function getUserQueryData(obj) {
     0, //obj.contact.sendPushNotifications,
     // inventory
     '{}', //obj.candyBag,
-    '{}', //obj.bag,
-    '{}', //obj.avatar,
+    obj.bag.querify(), //obj.bag,
+    obj.avatar.querify(), //obj.avatar,
     '{"0":1,"1":1,"3":1,"4":1,"7":1}', //obj.tutorial,
     // WHERE
     obj.email
