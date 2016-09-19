@@ -13,17 +13,17 @@ export default class Bag {
 
     this.player = player;
 
-    this.poke_ball = 50;
-    this.great_ball = 20;
-    this.ultra_ball = 10;
-    this.master_ball = 1;
+    this.poke_ball = 0;
+    this.great_ball = 0;
+    this.ultra_ball = 0;
+    this.master_ball = 0;
 
     this.potion = 0;
     this.super_potion = 0;
     this.hyper_potion = 0;
-    this.max_potion = 1;
+    this.max_potion = 0;
 
-    this.revive = 10;
+    this.revive = 0;
     this.max_revive = 0;
 
     this.lucky_egg = 0;
