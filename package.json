@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\"",
     "babel-node": "babel-node --presets=es2015",
-    "boot": "npm run babel-node -- ./src/index.js"
+    "boot": "npm run babel-node -- ./src/index.js",
+    "api": "npm run babel-node -- ./api/index.js"
   },
   "engines": {
     "node": ">= 6.x",
