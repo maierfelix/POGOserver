@@ -66,7 +66,7 @@ Open up a terminal and enter ``npm run boot`` to start the server or ``npm run a
 2. Place ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` into the same folder. Rename ``cfg.js.example`` to ``cfg.js``.
 3. Modify ``cfg.js`` to your requirements as described above.
 4. Create a container and run it.
-5. Open a bash prompt, enter: ``cd /POGOserver/`` and ``./run-linux.sh``.
+5. Open a bash prompt, enter: ``cd /POGOserver/`` and enter ``npm run boot``.
 6. Connect the Pokemon Go app to the server.
 7. Done.
 
