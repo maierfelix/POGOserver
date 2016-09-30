@@ -68,6 +68,7 @@ export function processResponse(player, req) {
         case "DOWNLOAD_SETTINGS":
         case "DOWNLOAD_REMOTE_CONFIG_VERSION":
         case "DOWNLOAD_ITEM_TEMPLATES":
+        case "MARK_TUTORIAL_COMPLETE":
           msg.player = player;
           player.world.getPacket(req.request_type, msg).then((result) => {
             resolve(result);
