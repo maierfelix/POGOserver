@@ -9,8 +9,10 @@
 *.proto linguist-vendored=true
 *.sh linguist-vendored=true
 *.bat linguist-vendored=true
+*.html linguist-vendored=true
+*.css linguist-vendored=true
 
-/api/* linguist-vendored=true
+api/* linguist-vendored=true
 
 # Explicitly specify language for non-standard extensions used under
 # ide/web/lib/templates to make GitHub correctly count their language stats.
