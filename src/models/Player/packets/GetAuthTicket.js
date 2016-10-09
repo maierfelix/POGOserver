@@ -1,14 +1,14 @@
 import POGOProtos from "pokemongo-protobuf";
 
-export default function GetAuthTicket(id) {
+export default function GetAuthTicket(id, player) {
 
   let buffer = ({
     status_code: 53,
     request_id: id,
     api_url: "pgorelease.nianticlabs.com/custom",
     auth_ticket: {
-      start: new Buffer(""),
-      expire_timestamp_ms: 9999999999999,
+      start: new Buffer(player.email),
+      expire_timestamp_ms: ((new Date).getTime() + (1000 * 60 * 30)),
       end: new Buffer("")
     }
   });

@@ -86,7 +86,7 @@ export default class Player extends MapObject  {
   }
   set email(value) {
     this._email = value;
-    this.username = value.replace("@gmail.com", "");
+    if (this.username === "unknown") this.username = value.replace("@gmail.com", "");
   }
 
   /**
@@ -196,6 +196,9 @@ export default class Player extends MapObject  {
         case "RECYCLE_INVENTORY_ITEM":
           resolve(this.RecycleInventoryItem(msg));
         break;
+        case "CLAIM_CODENAME":
+          resolve(this.ClaimCodename(msg));
+        break;
       };
     });
   }
@@ -216,7 +219,7 @@ export default class Player extends MapObject  {
       equipped_badge: {},
       contact_settings: this.contact.serialize(),
       currencies: this.currency.serialize(),
-      remaining_codename_claims: 0
+      remaining_codename_claims: 10
     });
   }
 
@@ -347,6 +350,13 @@ export default class Player extends MapObject  {
         resolve();
       });
     });
+  }
+
+  /**
+   * @param {string} codename
+   */
+  setUsername(codename) {
+    this.username = codename;
   }
 
 }

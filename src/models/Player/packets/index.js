@@ -12,3 +12,4 @@ export GetPlayerProfile from "./GetPlayerProfile";
 export SetFavoritePokemon from "./SetFavoritePokemon";
 export CheckAwardedBadges from "./CheckAwardedBadges";
 export RecycleInventoryItem from "./RecycleInventoryItem";
+export ClaimCodename from "./ClaimCodename";
