@@ -30,6 +30,9 @@ export function routeRequest(req, res) {
     case "model":
       this.processModelRequest(req, res, route);
     break;
+    case "proxy":
+        this.processProxyFiles(req,res,route);
+    break;
     case "api":
       if (!CFG.API_ENABLE) {
         print(`API is disabled! Denied API access for ${host}!`, 31);

@@ -31,6 +31,15 @@ export default {
   DEFAULT_CONSOLE_COLOR: 32,
   TRANSFER_ACCOUNTS: false,
 
+  // Proxy Server settings
+  PROXY: {
+    port: 3001,
+    forceSNI: process.env.PROXY_SNI || true,
+    sslCaDir: process.cwd() + '/ssl',
+    debug: (typeof process.env.PROXY_DEBUG === "boolean") ? process.env.PROXY_DEBUG : false,
+    silent: (typeof process.env.PROXY_SILENT === "boolean") ? process.env.PROXY_SILENT : true,
+  },
+
   // Server debug options
   DEBUG_DUMP_PATH: "logs/",
   DEBUG_DUMP_TRAFFIC: true,
