@@ -116,6 +116,18 @@ export default class CandyBag {
   }
 
   /**
+   * @return {String}
+   */
+  querify() {
+    let buffer = {};
+    for (let key in this.candies) {
+      let candy = this.candies[key].amount;
+      buffer[key] = candy;
+    };
+    return (JSON.stringify(buffer));
+  }
+
+  /**
    * @param {String} str
    */
   parseJSON(str) {
