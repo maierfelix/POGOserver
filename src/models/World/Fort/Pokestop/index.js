@@ -59,7 +59,10 @@ export default class Pokestop extends Fort {
     let out = [];
     for (let key in this.rewards) {
       let amount = this.rewards[key] << 0;
-      for (let ii = 0; ii < amount; ++ii) {
+      //random function-
+      let RandAmound= Math.floor(Math.random() * amount) + 1 //randomize value, minimal=1 and max are value you set in DB.
+      //end
+      for (let ii = 0; ii < RandAmound; ++ii) { //changed amount to RandAmound
         out.push({
           item_id: ENUM.getNameById(ENUM.ITEMS, key << 0)
         });
