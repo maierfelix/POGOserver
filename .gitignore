@@ -5,3 +5,4 @@ logs/
 cfg.js
 .save
 npm-debug.*
+.idea

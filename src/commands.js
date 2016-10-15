@@ -1,9 +1,19 @@
 import print from "./print";
 import CFG from "../cfg";
+import Populate from "pogo-populate";
 
+let populate = new Populate(CFG);
 export function saveAllPlayers() {
+
+
 	if (this.world.players.length > 0) {
 	  for (let player of this.world.players) {
+        CFG.RANDOM_SPAWNS_AT_PLAYERS && populate.createRandomPokemon(player.latitude, player.longitude).then((res, rej)=>{
+          if(rej){print(rej, 31)}
+          else {
+            print(`(${player.username})` + res, 33)
+          }
+        })
         this.savePlayer(player);
       };
 	}
