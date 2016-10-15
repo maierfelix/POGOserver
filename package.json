@@ -11,7 +11,7 @@
     "babel-node": "babel-node --presets=es2015",
     "boot": "npm run babel-node -- ./src/index.js",
     "api": "npm run babel-node -- ./api/index.js",
-    "update": "npm run babel-node -- ./update.js"
+    "update": "npm run babel-node -- ./updater.js"
   },
   "engines": {
     "node": ">= 6.x",
