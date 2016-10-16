@@ -33,9 +33,11 @@ export function setup() {
           return void 0;
         }
         this.socket = this.createHTTPServer();
+        this.proxy = this.createServerProxy();
         setTimeout(this::this.cycle, 1);
         let localIPv4 = this.getLocalIPv4();
-        print(`Server listening at ${localIPv4}:${CFG.PORT}`, 33);
+        print(`Server listening at ${CFG.LOCAL_IP || localIPv4}:${CFG.PORT}`, 33);
+        print(`Proxy Server listening at ${CFG.LOCAL_IP || localIPv4}:${CFG.PROXY.port}`, 33);
         resolve();
       });
 

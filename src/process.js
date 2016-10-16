@@ -16,6 +16,7 @@ export function processCommand(cmd, data) {
     // Exit the server
     case "/exit":
       this.shutdown();
+      this.shutdownProxy();
     break;
     case "/kick":
       this.world.kickPlayer(data[0]);

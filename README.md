@@ -54,6 +54,18 @@ MYSQL_PASSWORD: "",
 
 The required database tables get generated automatically.
 
+## Proxy Setup
+Newer versions of Pokemon Go application have negated the custom endpoint support of [rastapasta](https://github.com/rastapasta)'s [Pokemon Go Xposed](https://github.com/rastapasta/pokemon-go-xposed/releases) app. But the certificate pinning bypass still appears functional.
+
+Based on a rough dissection of [rastapasta](https://github.com/rastapasta)'s [pokemon-go-mitm](https://github.com/rastapasta/pokemon-go-mitm) for reference, an MITM proxy server, PAC generator and cert downloader have all been added.
+
+Multiple client connection/configuration options are available:
+
+ * (Android) Settings->Wi-Fi->[Connect]->Advanced Options->Proxy->Proxy Auto-Config `http://<server_ip>:<web port>/proxy/pac`
+ * (Android) Settings->Wi-Fi->[Connect]->Advanced Options->Proxy->Manual: Proxy hostname `<server_ip>`, Proxy port: `<proxy port>` (May require CA cert)
+
+In-case the client device needs the CA cert: `http://<server_ip>:<web port>/proxy/ca.(pem|crt|der)`
+
 ## Server setup
 
 You need at minimum [Node.js](https://nodejs.org/en/) version 6.x.
