@@ -44,7 +44,7 @@ export default {
   MYSQL_HOST_IP: "127.0.0.1",
   MYSQL_DB_NAME: "pogosql",
   MYSQL_USERNAME: "root",
-  MYSQL_PASSWORD: "",
+  MYSQL_PASSWORD: "ronaldocr7",
   MYSQL_GYM_TABLE: "gym",
   MYSQL_USERS_TABLE: "users",
   MYSQL_SPAWN_TABLE: "spawn_points",
@@ -53,14 +53,14 @@ export default {
 
   // Used for asset download session
   DOWNLOAD_PROVIDER: "GOOGLE",
-  DOWNLOAD_USERNAME: "USERNAME",
-  DOWNLOAD_PASSWORD: "PASSWORD",
+  DOWNLOAD_USERNAME: "Jeff22222323",
+  DOWNLOAD_PASSWORD: "Ronaldocr7",
 
   // Google maps api key
   GMAPS_KEY: "AIzaSyDF9rkP8lhcddBtvH9gVFzjnNo13WtmJIM",
 
   // Currently supported pokemon
-  MAX_POKEMON_NATIONAL_ID: 151,
+  MAX_POKEMON_NATIONAL_ID:145,
   DUMP_ASSET_PATH: "data/"
 
 }
