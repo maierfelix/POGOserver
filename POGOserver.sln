@@ -38,7 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{2B8FA559-25FB-
 		api\js\main.js = api\js\main.js
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{76A6EB13-BA43-4877-9D64-BB15A548360A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{76A6EB13-BA43-4877-9D64-BB15A548360A}"
 	ProjectSection(SolutionItems) = preProject
 		.babelrc = .babelrc
 		.greet = .greet
