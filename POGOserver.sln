@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{76A6EB
 		run-api-windows.bat = run-api-windows.bat
 		run-bot-windows.bat = run-bot-windows.bat
 		run-install-windows.bat = run-install-windows.bat
+		run-updater-windows.bat = run-updater-windows.bat
 		supervisord.conf = supervisord.conf
 		updater.js = updater.js
 	EndProjectSection
