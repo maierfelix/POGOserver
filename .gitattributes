@@ -1,20 +1,126 @@
-# Line endings: enforce LF in GitHub, convert to native on checkout.
-
+###############################################################################
+2
+# Set default behavior to automatically normalize line endings.
+3
+###############################################################################
+4
 * text=auto
-*.js text
-
-# Make GitHub ignore vendor libraries while computing language stats.
-# See https://github.com/github/linguist#overrides.
-
-*.proto linguist-vendored=true
-*.sh linguist-vendored=true
-*.bat linguist-vendored=true
-*.html linguist-vendored=true
-*.css linguist-vendored=true
-
-api/* linguist-vendored=true
-
-# Explicitly specify language for non-standard extensions used under
-# ide/web/lib/templates to make GitHub correctly count their language stats.
+5
+​
+6
+###############################################################################
+7
+# Set default behavior for command prompt diff.
+8
+#
+9
+# This is need for earlier builds of msysgit that does not have it on by
+10
+# default for csharp files.
+11
+# Note: This is only used by command line
+12
+###############################################################################
+13
+#*.cs     diff=csharp
+14
+​
+15
+###############################################################################
+16
+# Set the merge driver for project and solution files
+17
+#
+18
+# Merging from the command prompt will add diff markers to the files if there
+19
+# are conflicts (Merging from VS is not affected by the settings below, in VS
+20
+# the diff markers are never inserted). Diff markers may cause the following 
+21
+# file extensions to fail to load in VS. An alternative would be to treat
+22
+# these files as binary and thus will always conflict and require user
+23
+# intervention with every merge. To do so, just uncomment the entries below
+24
+###############################################################################
+25
+#*.sln       merge=binary
+26
+#*.csproj    merge=binary
+27
+#*.vbproj    merge=binary
+28
+#*.vcxproj   merge=binary
+29
+#*.vcproj    merge=binary
+30
+#*.dbproj    merge=binary
+31
+#*.fsproj    merge=binary
+32
+#*.lsproj    merge=binary
+33
+#*.wixproj   merge=binary
+34
+#*.modelproj merge=binary
+35
+#*.sqlproj   merge=binary
+36
+#*.wwaproj   merge=binary
+37
+​
+38
+###############################################################################
+39
+# behavior for image files
+40
+#
+41
+# image files are treated as binary by default.
+42
+###############################################################################
+43
+#*.jpg   binary
+44
+#*.png   binary
+45
+#*.gif   binary
+46
+​
+47
+###############################################################################
+48
+# diff behavior for common document formats
+49
 # 
-*.js_ linguist-language=JavaScript
+50
+# Convert binary document formats to text before diffing them. This feature
+51
+# is only available from the command line. Turn it on by uncommenting the 
+52
+# entries below.
+53
+###############################################################################
+54
+#*.doc   diff=astextplain
+55
+#*.DOC   diff=astextplain
+56
+#*.docx  diff=astextplain
+57
+#*.DOCX  diff=astextplain
+58
+#*.dot   diff=astextplain
+59
+#*.DOT   diff=astextplain
+60
+#*.pdf   diff=astextplain
+61
+#*.PDF   diff=astextplain
+62
+#*.rtf   diff=astextplain
+63
+#*.RTF   diff=astextplain
+64
