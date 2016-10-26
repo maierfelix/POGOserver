@@ -46,12 +46,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{76A6EB
 		.travis.yml = .travis.yml
 		cfg.js.example = cfg.js.example
 		Dockerfile = Dockerfile
-		install-windows.bat = install-windows.bat
 		LICENSE = LICENSE
 		package.json = package.json
 		README.md = README.md
 		run-api-windows.bat = run-api-windows.bat
 		run-bot-windows.bat = run-bot-windows.bat
+		run-install-windows.bat = run-install-windows.bat
 		supervisord.conf = supervisord.conf
 		updater.js = updater.js
 	EndProjectSection
