@@ -5,7 +5,7 @@ ECHO.
 TYPE %CD%\.greet
 ECHO.
 ECHO.
-ECHO 1  - Run Install
+ECHO 1  - Run Build-Install
 ECHO 2  - Run POGOserver
 ECHO 3  - Run Web-API
 ECHO 4  - Run POGOserver Update
@@ -20,18 +20,18 @@ IF ERRORLEVEL 1 GOTO one
 GOTO end
 
 :one
-ECHO POGOserver Install and build
+ECHO POGOserver Build-Install
 SET LIBPROTOBUF=%CD%\protobuf
 npm install node-protobuf && npm install
 GOTO end
 
 :two
-ECHO Run POGOserver Localhost
+ECHO Run POGOserver
 npm run boot
 GOTO end
 
 :three
-ECHO Start POGOserver web-api on port 9000
+ECHO Start POGOserver Web-API on port 9000
 npm run api
 GOTO end
 
