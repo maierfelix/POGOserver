@@ -10,11 +10,7 @@ import * as shared from "./shared";
 
 import GameMaster from "./models/GameMaster";
 
-import {
-  _toCC,
-  capitalize,
-  idToPkmnBundleName
-} from "./utils";
+import { _toCC, capitalize, idToPkmnBundleName } from "./utils";
 
 export function setup() {
 
