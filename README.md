@@ -58,9 +58,7 @@ The required database tables get generated automatically.
 
 You need at minimum [Node.js](https://nodejs.org/en/) version 6.x.
 
-Open up a terminal and enter ``npm run boot`` to start the server or ``npm run api`` to start the web-api.
-
-To Update the Server enter ``npm run update``
+Open up a terminal and enter ``run.bat`` to start the server options.
 
 ## Docker setup
 
