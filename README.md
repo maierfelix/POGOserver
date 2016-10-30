@@ -58,7 +58,7 @@ The required database tables get generated automatically.
 
 You need at minimum [Node.js](https://nodejs.org/en/) version 6.x.
 
-Open up a terminal and enter ``run`` to select server options.
+Open up a terminal and enter ``run.bat`` to select server options.
 
 ## Docker setup
 
@@ -66,7 +66,7 @@ Open up a terminal and enter ``run`` to select server options.
 2. Place ``Dockerfile``, ``cfg.js.example`` and ``supervisord.conf`` into the same folder. Rename ``cfg.js.example`` to ``cfg.js``.
 3. Modify ``cfg.js`` to your requirements as described above.
 4. Create a container and run it.
-5. Open a bash prompt, enter: ``cd /POGOserver/`` and enter ``run`` select option.
+5. Open a bash prompt, enter: ``cd /POGOserver/`` and enter ``run.bat`` select option.
 6. Connect the Pokemon Go app to the server.
 7. Done.
 
