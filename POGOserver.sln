@@ -1,0 +1,276 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{AD3559CA-8963-4B6F-978A-A30B7374D7CF}"
+	ProjectSection(SolutionItems) = preProject
+		api\cfg.js.example = api\cfg.js.example
+		api\index.html = api\index.html
+		api\index.js = api\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{38DCA3C6-0DBF-4CC6-A544-E54E0D84E3C2}"
+	ProjectSection(SolutionItems) = preProject
+		api\css\main.css = api\css\main.css
+		api\css\pure.min.css = api\css\pure.min.css
+		api\css\vex.css = api\css\vex.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{94155C8E-1239-4F4F-8130-716E07E83A85}"
+	ProjectSection(SolutionItems) = preProject
+		api\img\gym_blue.png = api\img\gym_blue.png
+		api\img\gym_NEUTRAL.png = api\img\gym_NEUTRAL.png
+		api\img\gym_red.png = api\img\gym_red.png
+		api\img\gym_yellow.png = api\img\gym_yellow.png
+		api\img\license.txt = api\img\license.txt
+		api\img\pokestop_blue.png = api\img\pokestop_blue.png
+		api\img\pokestop_lure.png = api\img\pokestop_lure.png
+		api\img\pokestop_puple.png = api\img\pokestop_puple.png
+		api\img\spawn_point.png = api\img\spawn_point.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{2B8FA559-25FB-4D84-B1C0-3F540422EDD9}"
+	ProjectSection(SolutionItems) = preProject
+		api\js\ajax.js = api\js\ajax.js
+		api\js\gmaps.js = api\js\gmaps.js
+		api\js\init.js = api\js\init.js
+		api\js\main.js = api\js\main.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{76A6EB13-BA43-4877-9D64-BB15A548360A}"
+	ProjectSection(SolutionItems) = preProject
+		.babelrc = .babelrc
+		.greet = .greet
+		.help = .help
+		.travis.yml = .travis.yml
+		cfg.js.example = cfg.js.example
+		Dockerfile = Dockerfile
+		LICENSE = LICENSE
+		package.json = package.json
+		README.md = README.md
+		run-api-windows.bat = run-api-windows.bat
+		run-bot-windows.bat = run-bot-windows.bat
+		run-install-windows.bat = run-install-windows.bat
+		run-update-windows.bat = run-update-windows.bat
+		supervisord.conf = supervisord.conf
+		updater.js = updater.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DC1F2EB6-BD4C-431A-8E21-CEDEBD5F22A5}"
+	ProjectSection(SolutionItems) = preProject
+		src\api.js = src\api.js
+		src\commands.js = src\commands.js
+		src\cycle.js = src\cycle.js
+		src\dump.js = src\dump.js
+		src\enum.js = src\enum.js
+		src\http.js = src\http.js
+		src\index.js = src\index.js
+		src\print.js = src\print.js
+		src\process.js = src\process.js
+		src\request.js = src\request.js
+		src\response.js = src\response.js
+		src\setup.js = src\setup.js
+		src\shared.js = src\shared.js
+		src\utils.js = src\utils.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{14065967-606E-4D6C-BB9C-02FE3766D99E}"
+	ProjectSection(SolutionItems) = preProject
+		src\db\create.js = src\db\create.js
+		src\db\get.js = src\db\get.js
+		src\db\index.js = src\db\index.js
+		src\db\query.js = src\db\query.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tables", "tables", "{87A55728-6EB5-4431-A1E3-334D241CF800}"
+	ProjectSection(SolutionItems) = preProject
+		src\db\tables\gym.table = src\db\tables\gym.table
+		src\db\tables\owned_pkmn.table = src\db\tables\owned_pkmn.table
+		src\db\tables\pokestop.table = src\db\tables\pokestop.table
+		src\db\tables\spawn_points.table = src\db\tables\spawn_points.table
+		src\db\tables\users.table = src\db\tables\users.table
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "models", "models", "{E795718F-7A10-448D-B8C7-CB83A1649B0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameMaster", "GameMaster", "{425B86CE-A64D-4B49-8237-0E5C2EE896B5}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\GameMaster\index.js = src\models\GameMaster\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Player", "Player", "{32E134B9-D876-4598-A962-400454C8E6B0}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\index.js = src\models\Player\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Avatar", "Avatar", "{3BE41308-E0D8-4D46-9421-041C8AD49935}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\Avatar\index.js = src\models\Player\Avatar\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bag", "Bag", "{AEE7D9DB-0554-4DC1-BBB4-F48810A04D43}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\Bag\index.js = src\models\Player\Bag\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CandyBag", "CandyBag", "{94D80C23-8B1D-476D-8511-ED2C9F4D4074}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\CandyBag\index.js = src\models\Player\CandyBag\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contact", "Contact", "{AA2B5D8B-FA6D-4DC8-AEF9-1A204AB6FFBD}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\Contact\index.js = src\models\Player\Contact\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Currency", "Currency", "{50909CB3-A815-4135-8B23-C0F9CAAD4B08}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\Currency\index.js = src\models\Player\Currency\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Info", "Info", "{B60E5E7D-BE01-4ECC-B154-909909615E88}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\Info\index.js = src\models\Player\Info\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packets", "packets", "{7905C53D-8BCB-4833-AAE4-6D5899AC24E8}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\packets\CheckAwardedBadges.js = src\models\Player\packets\CheckAwardedBadges.js
+		src\models\Player\packets\ClaimCodename.js = src\models\Player\packets\ClaimCodename.js
+		src\models\Player\packets\GetAssetDigest.js = src\models\Player\packets\GetAssetDigest.js
+		src\models\Player\packets\GetAuthTicket.js = src\models\Player\packets\GetAuthTicket.js
+		src\models\Player\packets\GetHatchedEggs.js = src\models\Player\packets\GetHatchedEggs.js
+		src\models\Player\packets\GetInventory.js = src\models\Player\packets\GetInventory.js
+		src\models\Player\packets\GetPlayer.js = src\models\Player\packets\GetPlayer.js
+		src\models\Player\packets\GetPlayerProfile.js = src\models\Player\packets\GetPlayerProfile.js
+		src\models\Player\packets\index.js = src\models\Player\packets\index.js
+		src\models\Player\packets\LevelUpRewards.js = src\models\Player\packets\LevelUpRewards.js
+		src\models\Player\packets\NicknamePokemon.js = src\models\Player\packets\NicknamePokemon.js
+		src\models\Player\packets\RecycleInventoryItem.js = src\models\Player\packets\RecycleInventoryItem.js
+		src\models\Player\packets\ReleasePokemon.js = src\models\Player\packets\ReleasePokemon.js
+		src\models\Player\packets\SetAvatar.js = src\models\Player\packets\SetAvatar.js
+		src\models\Player\packets\SetFavoritePokemon.js = src\models\Player\packets\SetFavoritePokemon.js
+		src\models\Player\packets\UpgradePokemon.js = src\models\Player\packets\UpgradePokemon.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Party", "Party", "{BE7023B2-7F93-4F90-B1C7-06440B3D7940}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\Party\index.js = src\models\Player\Party\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PokeDex", "PokeDex", "{85A8D4C7-9DBE-4A4A-B43E-0C50FF684A75}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\PokeDex\index.js = src\models\Player\PokeDex\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tutorial", "Tutorial", "{50805FE1-93E4-42A4-9BEA-BC6B8669AA4B}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Player\Tutorial\index.js = src\models\Player\Tutorial\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pokemon", "Pokemon", "{5E940F9D-2E95-438D-9005-7A3FDD56EAB2}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Pokemon\action.js = src\models\Pokemon\action.js
+		src\models\Pokemon\calc.js = src\models\Pokemon\calc.js
+		src\models\Pokemon\index.js = src\models\Pokemon\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WildPokemon", "WildPokemon", "{03CF3CA8-3362-496B-B35A-7939FA39EFC5}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\Pokemon\WildPokemon\index.js = src\models\Pokemon\WildPokemon\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "World", "World", "{FF17361C-63A6-4317-9921-9590FD3F1C7B}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\forts.js = src\models\World\forts.js
+		src\models\World\index.js = src\models\World\index.js
+		src\models\World\players.js = src\models\World\players.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cell", "Cell", "{E52B5F26-3F86-486A-8ED3-F7B33D23724F}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\Cell\index.js = src\models\World\Cell\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fort", "Fort", "{4F635A80-5192-4671-A7A9-2E3B31970C6D}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\Fort\index.js = src\models\World\Fort\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gym", "Gym", "{AE8B830C-66F3-462C-A0DD-63A94D99E49D}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\Fort\Gym\index.js = src\models\World\Fort\Gym\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pokestop", "Pokestop", "{A1185AF4-2D3E-4B14-AF4B-1AF65E6DF7C0}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\Fort\Pokestop\index.js = src\models\World\Fort\Pokestop\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MapObject", "MapObject", "{3A4EA812-4A83-41BF-B063-84084A375F73}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\MapObject\index.js = src\models\World\MapObject\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packets", "packets", "{5DAEA364-C527-4441-8708-1CAE39815D6B}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\packets\CatchPokemon.js = src\models\World\packets\CatchPokemon.js
+		src\models\World\packets\CheckChallenge.js = src\models\World\packets\CheckChallenge.js
+		src\models\World\packets\DownloadItemTemplates.js = src\models\World\packets\DownloadItemTemplates.js
+		src\models\World\packets\DownloadRemoteConfigVersion.js = src\models\World\packets\DownloadRemoteConfigVersion.js
+		src\models\World\packets\DownloadSettings.js = src\models\World\packets\DownloadSettings.js
+		src\models\World\packets\Encounter.js = src\models\World\packets\Encounter.js
+		src\models\World\packets\FortDetails.js = src\models\World\packets\FortDetails.js
+		src\models\World\packets\FortSearch.js = src\models\World\packets\FortSearch.js
+		src\models\World\packets\GetDownloadUrls.js = src\models\World\packets\GetDownloadUrls.js
+		src\models\World\packets\GetMapObjects.js = src\models\World\packets\GetMapObjects.js
+		src\models\World\packets\index.js = src\models\World\packets\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpawnPoint", "SpawnPoint", "{E9D1D34B-A625-41B3-96D0-150CC7896DA6}"
+	ProjectSection(SolutionItems) = preProject
+		src\models\World\SpawnPoint\index.js = src\models\World\SpawnPoint\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modes", "modes", "{415F43FD-EDF9-400A-BC16-2271A304CB48}"
+	ProjectSection(SolutionItems) = preProject
+		src\modes\index.js = src\modes\index.js
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{38DCA3C6-0DBF-4CC6-A544-E54E0D84E3C2} = {AD3559CA-8963-4B6F-978A-A30B7374D7CF}
+		{94155C8E-1239-4F4F-8130-716E07E83A85} = {AD3559CA-8963-4B6F-978A-A30B7374D7CF}
+		{2B8FA559-25FB-4D84-B1C0-3F540422EDD9} = {AD3559CA-8963-4B6F-978A-A30B7374D7CF}
+		{14065967-606E-4D6C-BB9C-02FE3766D99E} = {DC1F2EB6-BD4C-431A-8E21-CEDEBD5F22A5}
+		{87A55728-6EB5-4431-A1E3-334D241CF800} = {14065967-606E-4D6C-BB9C-02FE3766D99E}
+		{E795718F-7A10-448D-B8C7-CB83A1649B0C} = {DC1F2EB6-BD4C-431A-8E21-CEDEBD5F22A5}
+		{425B86CE-A64D-4B49-8237-0E5C2EE896B5} = {E795718F-7A10-448D-B8C7-CB83A1649B0C}
+		{32E134B9-D876-4598-A962-400454C8E6B0} = {E795718F-7A10-448D-B8C7-CB83A1649B0C}
+		{3BE41308-E0D8-4D46-9421-041C8AD49935} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{AEE7D9DB-0554-4DC1-BBB4-F48810A04D43} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{94D80C23-8B1D-476D-8511-ED2C9F4D4074} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{AA2B5D8B-FA6D-4DC8-AEF9-1A204AB6FFBD} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{50909CB3-A815-4135-8B23-C0F9CAAD4B08} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{B60E5E7D-BE01-4ECC-B154-909909615E88} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{7905C53D-8BCB-4833-AAE4-6D5899AC24E8} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{BE7023B2-7F93-4F90-B1C7-06440B3D7940} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{85A8D4C7-9DBE-4A4A-B43E-0C50FF684A75} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{50805FE1-93E4-42A4-9BEA-BC6B8669AA4B} = {32E134B9-D876-4598-A962-400454C8E6B0}
+		{5E940F9D-2E95-438D-9005-7A3FDD56EAB2} = {E795718F-7A10-448D-B8C7-CB83A1649B0C}
+		{03CF3CA8-3362-496B-B35A-7939FA39EFC5} = {5E940F9D-2E95-438D-9005-7A3FDD56EAB2}
+		{FF17361C-63A6-4317-9921-9590FD3F1C7B} = {E795718F-7A10-448D-B8C7-CB83A1649B0C}
+		{E52B5F26-3F86-486A-8ED3-F7B33D23724F} = {FF17361C-63A6-4317-9921-9590FD3F1C7B}
+		{4F635A80-5192-4671-A7A9-2E3B31970C6D} = {FF17361C-63A6-4317-9921-9590FD3F1C7B}
+		{AE8B830C-66F3-462C-A0DD-63A94D99E49D} = {4F635A80-5192-4671-A7A9-2E3B31970C6D}
+		{A1185AF4-2D3E-4B14-AF4B-1AF65E6DF7C0} = {4F635A80-5192-4671-A7A9-2E3B31970C6D}
+		{3A4EA812-4A83-41BF-B063-84084A375F73} = {FF17361C-63A6-4317-9921-9590FD3F1C7B}
+		{5DAEA364-C527-4441-8708-1CAE39815D6B} = {FF17361C-63A6-4317-9921-9590FD3F1C7B}
+		{E9D1D34B-A625-41B3-96D0-150CC7896DA6} = {FF17361C-63A6-4317-9921-9590FD3F1C7B}
+		{415F43FD-EDF9-400A-BC16-2271A304CB48} = {DC1F2EB6-BD4C-431A-8E21-CEDEBD5F22A5}
+	EndGlobalSection
+EndGlobal
