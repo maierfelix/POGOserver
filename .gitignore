@@ -261,6 +261,7 @@ node_modules/
 scripts/
 data/
 logs/
+tmp/
 cfg.js
 .save
 npm-debug.*
