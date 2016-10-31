@@ -7,7 +7,9 @@ import Cell from "./models/World/Cell";
 import print from "./print";
 import CFG from "../cfg";
 
-import { getHashCodeFrom } from "./utils";
+import {
+  getHashCodeFrom
+} from "./utils";
 
 const S2Geo = s2.S2;
 

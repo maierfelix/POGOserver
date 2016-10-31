@@ -4,7 +4,12 @@ import request from "request";
 import readline from "readline";
 import POGOProtos from "pokemongo-protobuf";
 
-import { _toCC, deXOR, inherit, getHashCodeFrom } from "./utils";
+import {
+  _toCC,
+  deXOR,
+  inherit,
+  getHashCodeFrom
+} from "./utils";
 
 import print from "./print";
 import CFG from "../cfg";

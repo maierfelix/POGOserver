@@ -6,7 +6,11 @@ import POGOProtos from "pokemongo-protobuf";
 import print from "./print";
 import CFG from "../cfg";
 
-import { deXOR, validEmail, getHashCodeFrom } from "./utils";
+import {
+  deXOR,
+  validEmail,
+  getHashCodeFrom
+} from "./utils";
 
 /**
  * @param {Request} req
