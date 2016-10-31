@@ -46,7 +46,7 @@ ECHO.
 ECHO			Run POGOserver
 ECHO.
 ECHO.
-npm run bot
+npm run boot
 GOTO end
 
 :three
