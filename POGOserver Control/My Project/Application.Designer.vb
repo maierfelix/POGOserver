@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.Panel_Control.POGOserver
+            Me.MainForm = Global.POGOserver_Control.POGOserver
         End Sub
     End Class
 End Namespace

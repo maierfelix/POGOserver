@@ -6,9 +6,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BF7FA37B-9C74-4FA1-9EDE-A88C77BB920D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Panel_Control.My.MyApplication</StartupObject>
-    <RootNamespace>Panel_Control</RootNamespace>
-    <AssemblyName>Panel Control</AssemblyName>
+    <StartupObject>POGOserver_Control.My.MyApplication</StartupObject>
+    <RootNamespace>POGOserver_Control</RootNamespace>
+    <AssemblyName>POGOserver Control</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
@@ -21,7 +21,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Panel Control.xml</DocumentationFile>
+    <DocumentationFile>POGOserver Control.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -31,7 +31,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Panel Control.xml</DocumentationFile>
+    <DocumentationFile>POGOserver Control.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>

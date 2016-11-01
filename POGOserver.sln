@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "POGOserver", "POGOserver.jsproj", "{623ED577-0A06-4A07-A70B-D179FBCCC78D}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "POGOserver Control", "Panel Control\POGOserver Control.vbproj", "{BF7FA37B-9C74-4FA1-9EDE-A88C77BB920D}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "POGOserver Control", "POGOserver Control\POGOserver Control.vbproj", "{BF7FA37B-9C74-4FA1-9EDE-A88C77BB920D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{623ED577-0A06-4A07-A70B-D179FBCCC78D} = {623ED577-0A06-4A07-A70B-D179FBCCC78D}
 	EndProjectSection
