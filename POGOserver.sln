@@ -14,7 +14,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-		Description = Pokemon GO Server Emulator 
+		Description = 🍙Pokemon GO Server Emulator 
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{623ED577-0A06-4A07-A70B-D179FBCCC78D}.Debug|Any CPU.ActiveCfg = Debug|Android
