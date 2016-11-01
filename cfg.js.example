@@ -11,7 +11,7 @@ export default {
   API_ENABLE: true,
   API_USERNAME: "root",
   API_PASSWORD: "",
-  API_ALLOWED_HOSTS: ["localhost", "127.0.0.1"],
+  API_ALLOWED_HOSTS: ["localhost", "127.0.0.1", "localhost:9000", "127.0.0.1:9000"],
 
   // Server settings
   MAX_CONNECTIONS: 64,
