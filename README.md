@@ -64,7 +64,7 @@ To Update the Server enter ``npm run update``
 
 or
 
-Try ``POGOserver Control`` gui mode.
+Try ``POGOserver Control`` GUI mode.
 
 ## Docker setup
 
