@@ -62,5 +62,4 @@ export default {
   // Currently supported pokemon
   MAX_POKEMON_NATIONAL_ID: 151,
   DUMP_ASSET_PATH: "data/"
-
 }
