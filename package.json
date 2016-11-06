@@ -1,7 +1,7 @@
 {
   "name": "POGOServer",
   "version": "0.6.1",
-  "description": "",
+  "description": "?? Pokemon GO Server Emulator",
   "repository": {
     "type": "git",
     "url": "git://github.com/maierfelix/POGOServer.git"
@@ -37,5 +37,6 @@
     "s2-geometry": "^1.2.9",
     "url": "^0.11.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+  }
 }
