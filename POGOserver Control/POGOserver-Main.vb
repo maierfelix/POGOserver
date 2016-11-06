@@ -2,7 +2,7 @@
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim ID As Integer
         Hide()
-        ID = Shell("cmd /c set LIBPROTOBUF=%CD%\protobuf | npm install node-protobuf && npm install", AppWinStyle.NormalFocus, True, -1)
+        ID = Shell("cmd /c set LIBPROTOBUF=%CD%\protobuf | npm install node-protobuf && npm install && pause", AppWinStyle.NormalFocus, True, -1)
         Show()
     End Sub
 
@@ -23,7 +23,7 @@
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
         Dim ID As Integer
         Hide()
-        ID = Shell("cmd /c npm run update", AppWinStyle.NormalFocus, True, -1)
+        ID = Shell("cmd /c npm run update && pause", AppWinStyle.NormalFocus, True, -1)
         Show()
     End Sub
 
