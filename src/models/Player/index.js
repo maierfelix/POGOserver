@@ -9,6 +9,8 @@ import Contact from "./Contact";
 import CandyBag from "./CandyBag";
 import Tutorial from "./Tutorial";
 import Currency from "./Currency";
+import addEntry from "./PokeDex";
+
 
 import MapObject from "../World/MapObject";
 
@@ -199,7 +201,16 @@ export default class Player extends MapObject  {
         case "CLAIM_CODENAME":
           resolve(this.ClaimCodename(msg));
         break;
-      };
+		case "EVOLVE_POKEMON":
+		resolve(this.EvolvePokemon(msg));
+		break;
+		case "USE_ITEM_POTION":
+		resolve(this.UsePotion(msg));
+		break;
+		case "USE_ITEM_REVIVE":
+		resolve(this.UseRevive(msg));
+		break;
+		};
     });
   }
 
@@ -301,7 +312,14 @@ export default class Player extends MapObject  {
       }
     };
   }
-
+  removeItems(rewards) {
+    for (let key in rewards) {
+      let name = ENUM.getNameById(ENUM.ITEMS, key << 0).replace("ITEM_", "").toLowerCase();
+      if (this.bag.hasOwnProperty(name)) {
+        this.bag[name] -= rewards[key] << 0;
+      }
+    };
+  }
   /**
    * @param {WildPokemon} pkmn
    * @param {String} ball
@@ -313,6 +331,8 @@ export default class Player extends MapObject  {
     this.currentEncounter = null;
     pkmn.caughtBy(this);
     pkmn.pokeball = ball;
+	 try{this.pokeDex.addEntry(pkmn.dexNumber,1,1);}
+      catch(e){print(e,31);}
     return new Promise((resolve) => {
       pkmn.owner = this;
       pkmn.insertIntoDatabase().then((insertId) => {
@@ -351,6 +371,8 @@ export default class Player extends MapObject  {
       });
     });
   }
+  
+  
 
   /**
    * @param {string} codename
