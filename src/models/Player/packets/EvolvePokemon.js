@@ -11,15 +11,14 @@ export default function EvolvePokemon(msg) {
  let buffer = null;
 
   let pkmn = this.party.getPkmnById(msg.pokemon_id);
-
   if (pkmn) {
     if (pkmn.evolve()) {
       buffer = { result: "SUCCESS" };
     } else {
       buffer = { result: "FAILED_INSUFFICIENT_RESOURCES" };
     }
-	pkmn.calcStats(pkmn.owner);
 	pkmn.calcMoves();
+	pkmn.cp = pkmn.calcCP(pkmn.owner);
     buffer.evolved_pokemon_data = pkmn.serialize();
 	pkmn.updateDatabase();
 	buffer.experience_awarded = 500;
