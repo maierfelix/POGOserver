@@ -12,12 +12,12 @@ export default function UseXpBoost(msg) {
 			{
 				item_id: msg.item_id,
 				item_type: "ITEM_TYPE_XP_BOOST",
-				expire_ms: +new Date()+20000,//1800000 ,
+				expire_ms: +new Date()+1800000 ,
 				applied_ms:+new Date()
 			}
  ]}};
  this.removeItems({"301":1});
- this.info.LuckyEggExp = +new Date()+20000;
+ this.info.LuckyEggExp = +new Date()+1800000;
   return (
     POGOProtos.serialize(buffer, "POGOProtos.Networking.Responses.UseItemXpBoostResponse")
   );
