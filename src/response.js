@@ -16,6 +16,7 @@ export function parseMessage(req, type) {
   let proto = `POGOProtos.Networking.Requests.Messages.${type}Message`;
   if (req.request_message) {
     try {
+	
       return (this.parseProtobuf(req.request_message, proto));
     } catch (e) {
       print(`Failed to parse ${type}: ${e}`, 31);
@@ -53,6 +54,10 @@ export function processResponse(player, req) {
         case "CHECK_AWARDED_BADGES":
         case "SET_FAVORITE_POKEMON":
         case "RECYCLE_INVENTORY_ITEM":
+		case "EVOLVE_POKEMON":
+		case "USE_ITEM_POTION":
+		case "USE_ITEM_REVIVE":
+		case "USE_ITEM_XP_BOOST":
           player.getPacket(req.request_type, msg).then((result) => {
             resolve(result);
           });

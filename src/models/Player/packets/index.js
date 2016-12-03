@@ -13,3 +13,7 @@ export SetFavoritePokemon from "./SetFavoritePokemon";
 export CheckAwardedBadges from "./CheckAwardedBadges";
 export RecycleInventoryItem from "./RecycleInventoryItem";
 export ClaimCodename from "./ClaimCodename";
+export EvolvePokemon from "./EvolvePokemon";
+export UsePotion from "./UsePotion";
+export UseRevive from "./UseRevive";
+export UseXpBoost from "./UseXpBoost";

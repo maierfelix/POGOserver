@@ -9,6 +9,8 @@ import Contact from "./Contact";
 import CandyBag from "./CandyBag";
 import Tutorial from "./Tutorial";
 import Currency from "./Currency";
+import addEntry from "./PokeDex";
+
 
 import MapObject from "../World/MapObject";
 
@@ -143,7 +145,7 @@ export default class Player extends MapObject  {
         this.isIOS = sig.device_info.device_brand === "Apple";
         this.isAndroid = !this.isIOS;
         this.platform = this.isIOS ? "ios" : "android";
-        print(`${this.email} is playing with an ${this.isIOS ? "Apple" : "Android"} device!`, 36);
+        print(`${this.username} is playing with an ${this.isIOS ? "Apple" : "Android"} device!`, 36);
       }
     }
   }
@@ -199,7 +201,19 @@ export default class Player extends MapObject  {
         case "CLAIM_CODENAME":
           resolve(this.ClaimCodename(msg));
         break;
-      };
+		case "EVOLVE_POKEMON":
+		resolve(this.EvolvePokemon(msg));
+		break;
+		case "USE_ITEM_POTION":
+		resolve(this.UsePotion(msg));
+		break;
+		case "USE_ITEM_REVIVE":
+		resolve(this.UseRevive(msg));
+		break;
+		case "USE_ITEM_XP_BOOST":
+		resolve(this.UseXpBoost(msg));
+		break;
+		};
     });
   }
 
@@ -301,13 +315,22 @@ export default class Player extends MapObject  {
       }
     };
   }
-
+  removeItems(rewards) {
+    for (let key in rewards) {
+      let name = ENUM.getNameById(ENUM.ITEMS, key << 0).replace("ITEM_", "").toLowerCase();
+      if (this.bag.hasOwnProperty(name)) {
+        this.bag[name] -= rewards[key] << 0;
+      }
+    };
+  }
   /**
    * @param {WildPokemon} pkmn
    * @param {String} ball
    */
   catchPkmn(pkmn, ball) {
-    this.info.exp += 100;
+	let exp=100;
+	if(this.info.LuckyEggExp !=0 && this.info.LuckyEggExp > new Date() ){exp = exp*2;}
+    this.info.exp += exp;
     this.info.stardust += 100;
     this.info.pkmnCaptured += 1;
     this.currentEncounter = null;
@@ -330,7 +353,7 @@ export default class Player extends MapObject  {
           captured_pokemon_id: pkmn.uid,
           capture_award: {
             activity_type: ["ACTIVITY_CATCH_POKEMON"],
-            xp: [100],
+            xp: [exp],
             candy: [3],
             stardust: [100]
           }
@@ -351,6 +374,8 @@ export default class Player extends MapObject  {
       });
     });
   }
+  
+  
 
   /**
    * @param {string} codename

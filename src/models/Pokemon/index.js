@@ -256,6 +256,44 @@ export default class Pokemon extends MapObject {
       });
     });
   }
+ updateDatabase() {
+    let query = `
+      UPDATE ${CFG.MYSQL_OWNED_PKMN_TABLE} SET
+        owner_id=?,
+        dex_number=?,
+        cp=?,
+        stamina=?,
+        stamina_max=?,
+        move_1=?,
+        move_2=?,
+        height_m=?,
+        weight_kg=?,
+        individual_attack=?,
+        individual_defense=?,
+        individual_stamina=?,
+        cp_multiplier=?,
+        pokeball=?,
+        favorite=?,
+        nickname=?
+        WHERE
+        id=?
+    `;
+    let data = [
+      this.owner.uid, this.dexNumber, this.cp,
+      this.stamina, this.staminaMax,
+      this.move1, this.move2,
+      this.height, this.weight,
+      this.ivAttack, this.ivDefense, this.ivStamina,
+      this.cpMultiplier, this.pokeball, this.favorite, this.nickname,this.uid || ""
+    ];
+    return new Promise((resolve) => {
+      this.owner.world.db.query(query, data, (e, res) => {
+        if (e) return print(e, 31);
+        resolve(res);
+      });
+    });
+  }
+
 
   /**
    * @return {Object}
