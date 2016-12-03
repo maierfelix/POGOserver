@@ -145,7 +145,7 @@ export default class Player extends MapObject  {
         this.isIOS = sig.device_info.device_brand === "Apple";
         this.isAndroid = !this.isIOS;
         this.platform = this.isIOS ? "ios" : "android";
-        print(`${this.email} is playing with an ${this.isIOS ? "Apple" : "Android"} device!`, 36);
+        print(`${this.username} is playing with an ${this.isIOS ? "Apple" : "Android"} device!`, 36);
       }
     }
   }
@@ -209,6 +209,9 @@ export default class Player extends MapObject  {
 		break;
 		case "USE_ITEM_REVIVE":
 		resolve(this.UseRevive(msg));
+		break;
+		case "USE_ITEM_XP_BOOST":
+		resolve(this.UseXpBoost(msg));
 		break;
 		};
     });
@@ -325,14 +328,14 @@ export default class Player extends MapObject  {
    * @param {String} ball
    */
   catchPkmn(pkmn, ball) {
-    this.info.exp += 100;
+	let exp=100;
+	if(this.info.LuckyEggExp !=0 && this.info.LuckyEggExp > new Date() ){exp = exp*2;}
+    this.info.exp += exp;
     this.info.stardust += 100;
     this.info.pkmnCaptured += 1;
     this.currentEncounter = null;
     pkmn.caughtBy(this);
     pkmn.pokeball = ball;
-	 try{this.pokeDex.addEntry(pkmn.dexNumber,1,1);}
-      catch(e){print(e,31);}
     return new Promise((resolve) => {
       pkmn.owner = this;
       pkmn.insertIntoDatabase().then((insertId) => {
@@ -350,7 +353,7 @@ export default class Player extends MapObject  {
           captured_pokemon_id: pkmn.uid,
           capture_award: {
             activity_type: ["ACTIVITY_CATCH_POKEMON"],
-            xp: [100],
+            xp: [exp],
             candy: [3],
             stardust: [100]
           }

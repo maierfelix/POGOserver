@@ -30,9 +30,9 @@ export default class Info {
     this.levelReward = false;
 
     this.kmWalked = 0;
-    this.pkmnEncountered = 1;
-    this.uniquePokedexEntries = 1;
-    this.pkmnCaptured = 1;
+    this.pkmnEncountered = 151;
+    this.uniquePokedexEntries = 100;
+    this.pkmnCaptured = 101;
     this.pokeStopVisits = 2;
     this.pokeballsThrown = 3;
     this.eggsHatched = 0;
@@ -41,6 +41,8 @@ export default class Info {
 
     this.maxPkmnStorage = 250;
     this.maxItemStorage = 350;
+	
+	this.LuckyEggExp = 0;
 
   }
 
@@ -48,7 +50,7 @@ export default class Info {
     return (this._exp);
   }
   set exp(value) {
-    this._exp = value;
+	this._exp = value;
     this.updatePrevNextExp();
   }
 
@@ -58,6 +60,7 @@ export default class Info {
   set level(value) {
     this._level = value;
     this.updatePrevNextExp();
+	
   }
 
   get team() {
@@ -108,6 +111,8 @@ export default class Info {
    * @param {Number} exp
    */
   upgradeExp(exp) {
+	 if(this.LuckyEggExp !=0 && this.LuckyEggExp > new Date() ){exp = exp*2;}
+	 print(exp);
     if (!this.maxLevelReached()) {
       let currentLevelExp = this.getLevelExp(this.level);
       let nextLevelExp = this.getLevelExp(this.level + 1);
