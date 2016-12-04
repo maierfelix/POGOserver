@@ -10,12 +10,13 @@ export default function NicknamePokemon(msg) {
   let schema = "POGOProtos.Networking.Responses.NicknamePokemonResponse";
 
   let pkmn = this.party.getPkmnById(msg.pokemon_id);
-
   buffer = { result: null };
 
-  if (pkmn) pkmn.setNickname(String(msg.nickname));
-  buffer.result = pkmn ? "SUCCESS" : "ERROR_INVALID_NICKNAME";
-
+  //if (pkmn) {pkmn.setNickname(String(msg.nickname));
+  pkmn.nickname = msg.nickname;
+  pkmn.updateDatabase();
+  buffer.result = "SUCCESS"; //: "ERROR_INVALID_NICKNAME";
+ // }
   return (POGOProtos.serialize(buffer, schema));
 
 }
