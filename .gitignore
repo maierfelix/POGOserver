@@ -270,3 +270,4 @@ npm-debug.*
 [Pp]lugins/wp8.json
 [Pp]lugins/remote_ios.json
 /[Pp]latforms/
+/plugins
