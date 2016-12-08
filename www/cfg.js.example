@@ -2,7 +2,7 @@ const CFG = {
   API: {
     HOST: "127.0.0.1",
     PORT: 3000,
-    ROUTE: "/api"
+    ROUTE: "/www"
   },
   GMAPS: {
     API_KEY: "XXXXX",
