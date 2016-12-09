@@ -1,0 +1,6 @@
+1) Open the server folder and open the file at the following directory: src\packets\Responses.GetInventory.js
+2) Search for the word "proto.Enums.PokemonId.PIDGEY" (which is the only Pokèmon you find in your inventory if you download a release of the server)
+3) There you can copy the entire function to add more than one Pokèmon, for example I filled mine with all the legendary ones that you can't find in the official client
+4) To be sure everything is working you will have to edit the pokemon_id field which will be "proto.Enums.PokemonId.NAMEOFYOURPOKEMON" (for example "proto.Enums.PokemonId.MEW")
+5) Don't forget also to edit the id field with the number of your Pokèmon (Pokedex), you can find it by googling the name.
+6) When you're ready you can save the file and start the server.
