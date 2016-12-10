@@ -1,0 +1,51 @@
+﻿<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="viewport" content="width=device-width">
+    <meta content="origin-when-cross-origin" name="referrer" />
+    <title>POGOserver api</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/pure.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vex-js/2.3.4/js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = "vex-theme-plain";</script>
+    <link rel="stylesheet" type="text/css" href="css/vex.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/2.3.4/css/vex-theme-plain.css">
+  </head>
+  <body class="body">
+
+    <p class="ping area" id="server_ping" style="position: absolute;top: 0px;left: 10px; display:none;">Ping: 0ms</p>
+
+    <div class="area">
+      <p>POGOserver</p>
+      <p id="version" class="version"> </p>
+      <p><button class="btn color-1 view login_input" id="connection_status" href="#" style="color:yellow;">Connecting..</button></p>
+    </div>
+
+    <div id="login_area" class="area">
+      <p class="login_area">Login</p>
+      <p><input class="btn color-1 view input login_input" id="login_username" style="margin:-20px;" autocomplete="new-password" value="root"></input></p>
+      <p><input class="btn color-1 view input login_input" id="login_password" type="password" autocomplete="new-password"></input></p>
+      <p><button class="btn color-1 view login_input" id="login_attempt">Login</button></p>
+    </div>
+
+    <div id="world_manager" class="area" style="display:none;">
+      <p class="info" id="server_version">Server version: v0.1.0</p>
+      <p class="info" id="connected_players">Connected players: 0</p>
+      <p class="login_area" style="padding-bottom: 15px;">World Manager</p>
+      <p><button class="btn color-1 view cmd_label label">Spawn</button><input class="btn color-1 view input login_input with_label" id="spawn_user" placeholder="Username" autocomplete="new-password"></input><input class="btn color-1 view input login_input with_label" autocomplete="new-password" id="spawn_pkmn" placeholder="Pokemon"></input><button id="submit_spawn" class="btn color-1 view login_input with_label submit">Submit</button></p>
+      <br/>
+    </div>
+
+    <div class="area" id="map_manager">
+      <div id="map"></div>
+    </div>
+
+    <script src="cfg.js"></script>
+    <script src="js/init.js"></script>
+
+  </body>
+</html>
