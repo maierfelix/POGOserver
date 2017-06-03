@@ -1,7 +1,6 @@
 import { GAME_MASTER } from "../../../shared";
 
 import ENUM from "../../../enum";
-
 /**
  * @class CandyBag
  */
@@ -70,9 +69,8 @@ export default class CandyBag {
    * @return {Number}
    */
   getCandy(dex) {
-    return (
-      this.getCandyByDexNumber(dex)
-    );
+    let candy = this.getCandyByDexNumber(dex);
+    return (candy.amount);
   }
 
   /**

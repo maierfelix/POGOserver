@@ -11,7 +11,7 @@ export default {
   API_ENABLE: true,
   API_USERNAME: "root",
   API_PASSWORD: "",
-  API_ALLOWED_HOSTS: ["localhost", "127.0.0.1"],
+  API_ALLOWED_HOSTS: ["localhost", "127.0.0.1", "localhost:9000", "127.0.0.1:9000", "192.168.1.25", "localhost:4400"],
 
   // Server settings
   MAX_CONNECTIONS: 64,
@@ -57,10 +57,9 @@ export default {
   DOWNLOAD_PASSWORD: "PASSWORD",
 
   // Google maps api key
-  GMAPS_KEY: "AIzaSyDF9rkP8lhcddBtvH9gVFzjnNo13WtmJIM",
+  GMAPS_KEY: "AIzaSyBjrq_CCDjmgNLJZnLBrMRgIxTJrgW_LaY",
 
   // Currently supported pokemon
   MAX_POKEMON_NATIONAL_ID: 151,
   DUMP_ASSET_PATH: "data/"
-
 }
